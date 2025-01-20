@@ -4,6 +4,7 @@ import express from "express"
 import mongoose from "mongoose"
 import cors from "cors"
 import "dotenv/config"
+import authRouter from "./router/authRouter.js"
 
 
 const app = express()
@@ -32,6 +33,10 @@ app.get("/", (req,res) => {
 })
 
 
+// ROUTER
+app.use('/api/auth', authRouter)
+
+
 app.listen(PORT,(err) => {
 
     if(err)
@@ -43,5 +48,15 @@ app.listen(PORT,(err) => {
         console.log(`SERVER RUNNING ON PORT ${PORT}`)
     }
 
+})
+
+
+app.use((err,req,res,next) => {
+
+    const statusCode = err.statusCode || 500
+
+    const message = err.message || "Internal Server Error"
+
+    res.status(statusCode).message({success:false , message:message})
 })
 
