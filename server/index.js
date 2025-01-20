@@ -5,6 +5,7 @@ import mongoose from "mongoose"
 import cors from "cors"
 import "dotenv/config"
 import authRouter from "./router/authRouter.js"
+import userRouter from "./router/userRouter.js"
 
 
 const app = express()
@@ -25,6 +26,7 @@ mongoose.connect(process.env.MONGO_URL)
 .catch((err) => console.log(err))
 
 
+
 // API
 app.get("/", (req,res) => {
 
@@ -33,8 +35,16 @@ app.get("/", (req,res) => {
 })
 
 
+
 // ROUTER
 app.use('/api/auth', authRouter)
+
+
+app.use('/api/user' , userRouter)
+
+
+
+
 
 
 app.listen(PORT,(err) => {
@@ -49,6 +59,8 @@ app.listen(PORT,(err) => {
     }
 
 })
+
+
 
 
 app.use((err,req,res,next) => {
