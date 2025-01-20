@@ -57,6 +57,8 @@ app.use((err,req,res,next) => {
 
     const message = err.message || "Internal Server Error"
 
-    res.status(statusCode).message({success:false , message:message})
+    res.status(statusCode).json({success:false , message:message})
+
 })
+
 
