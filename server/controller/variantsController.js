@@ -5,6 +5,7 @@ import Category from "../model/variant/categoryModel.js"
 import Collection from "../model/variant/collectionModel.js"
 import Color from "../model/variant/colorModel.js"
 import Role from "../model/variant/roleModel.js"
+import Sauce from "../model/variant/sauceModel.js"
 import Size from "../model/variant/sizeModel.js"
 import Spice from "../model/variant/spicesModel.js"
 import Type from "../model/variant/typeModel.js"
@@ -1189,6 +1190,153 @@ export const deleteSpice = async (req,res,next) => {
         await Spice.findByIdAndDelete(spiceId)
 
         res.status(200).json({success:true ,message:`${spice.name} is deleted`})
+    }
+    catch(error)
+    {
+        next(error)
+    }
+
+}
+
+
+// SPICE
+
+export const createsauce = async (req,res,next) => {
+
+    if(!req.user.isAdmin)
+    {
+        return next(errorHandler(403 ,"You are not allowed add sauce"))
+    }
+
+
+    const {name} = req.body
+
+    if(!name || name === "")
+    {
+        return next(errorHandler(400, "please enter the sauce"))
+    }
+
+    try
+    {
+        const sauce = new Sauce({name})
+
+        await sauce.save()
+
+        res.status(200).json({success:true , sauce})
+
+    }
+    catch(error)
+    {
+        next(error)
+    }
+
+}
+
+
+export const getsauce = async (req,res,next) => {
+    
+    const {sauceId} = req.params
+
+    const sauce = await Sauce.findById(sauceId)
+
+    if(!sauce)
+    {
+        return next(errorHandler(404,"sauce not found"))
+    }
+
+    try
+    {
+        res.status(200).json({success:true , sauce})
+    }
+    catch(error)
+    {
+        next(error)
+    }
+
+}
+
+
+export const getSauces = async (req,res,next) => {
+
+    if(!req.user.isAdmin)
+    {
+        return next(errorHandler(403 ,"You are not allowed to accesss sauces"))
+    }
+    
+    try
+    {
+        const sauces = await Sauce.find({}).sort({_id:-1})
+
+        res.status(200).json({success:true , sauces})
+    }
+    catch(error)
+    {
+        next(error)
+    }
+
+}
+
+
+export const updatesauce = async (req,res,next) => { 
+
+    if(!req.user.isAdmin)
+    {
+        return next(errorHandler(403 ,"You are not allowed to update sauce"))
+    }
+
+    const {sauceId} = req.params
+
+    const sauce = await Sauce.findById(sauceId)
+
+    if(!sauce)
+    {
+        return next(errorHandler(404,"sauce not found"))
+    }
+    
+
+    try
+    {
+
+        const updatedsauce = await Sauce.findByIdAndUpdate(sauceId,
+                    {
+                        $set:{
+                            name:req.body.name
+                        }
+                    },
+                    {new:true}
+            )
+        
+        res.status(200).json({success:true , updatedsauce})
+    }
+    catch(error)
+    {
+        next(error)
+    }
+
+}
+
+
+export const deleteSauce = async (req,res,next) => {
+
+    if(!req.user.isAdmin)
+    {
+        return next(errorHandler(403 ,"You are not allowed to delete sauce"))
+    }
+
+    const {sauceId} = req.params
+
+    const sauce = await Sauce.findById(sauceId)
+
+    if(!sauce)
+    {
+        return next(errorHandler(404,"sauce not found"))
+    }
+
+    try
+    {
+        await Sauce.findByIdAndDelete(sauceId)
+
+        res.status(200).json({success:true ,message:`${sauce.name} is deleted`})
     }
     catch(error)
     {

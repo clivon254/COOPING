@@ -3,11 +3,11 @@
 import express from "express"
 import { verifyToken } from "../Utils/verify.js"
 import {  
-     createbrand, createCategory, createCollection, createcolor, createRole, createSize, createSpice, createType,
-     deletebrand, deleteCategory, deleteCollection, deleteColor, deleteRole, deleteSize, deleteSpice, deleteType, 
+     createbrand, createCategory, createCollection, createcolor, createRole, createsauce, createSize, createSpice, createType,
+     deletebrand, deleteCategory, deleteCollection, deleteColor, deleteRole, deleteSauce, deleteSize, deleteSpice, deleteType, 
      getbrand, getBrands, getCategory, getCategorys, getCollection, getCollections, getcolor, getcolors, 
-     getRole, getRoles, getsize, getsizes, getspice, getSpices, getType, getTypes, 
-     updatebrand, updateCategory, updatecollection, updateColor, updateRole, updateSize, updateSpice, updateType
+     getRole, getRoles, getsauce, getSauces, getsize, getsizes, getspice, getSpices, getType, getTypes, 
+     updatebrand, updateCategory, updatecollection, updateColor, updateRole, updatesauce, updateSize, updateSpice, updateType
    } from "../controller/variantsController.js"
 
 
@@ -122,6 +122,19 @@ variantRouter.get('/spice/get-spices' ,verifyToken, getSpices)
 variantRouter.put('/spice/update-spice/:spiceId' ,verifyToken, updateSpice)
 
 variantRouter.delete('/spice/delete-spice/:spiceId' ,verifyToken, deleteSpice)
+
+
+//SAUCE
+
+variantRouter.post('/sauce/create-sauce' ,verifyToken , createsauce)
+
+variantRouter.get('/sauce/get-sauce/:sauceId' , getsauce)
+
+variantRouter.get('/sauce/get-sauces' ,verifyToken, getSauces)
+
+variantRouter.put('/sauce/update-sauce/:sauceId' ,verifyToken, updatesauce)
+
+variantRouter.delete('/sauce/delete-sauce/:sauceId' ,verifyToken, deleteSauce)
 
 
 
