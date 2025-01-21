@@ -8,6 +8,7 @@ import authRouter from "./router/authRouter.js"
 import userRouter from "./router/userRouter.js"
 import storeRouter from "./router/storeRouter.js"
 import variantRouter from "./router/variantRouter.js"
+import productRouter from "./router/productRouter.js"
 
 
 const app = express()
@@ -49,6 +50,9 @@ app.use('/api/store' , storeRouter)
 
 
 app.use('/api/variant' , variantRouter)
+
+
+app.use('/api/product' , productRouter)
 
 
 

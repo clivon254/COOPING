@@ -21,7 +21,9 @@ const userSchema = new mongoose.Schema(
 
         lastFailedLogin:{type:Date},
 
-        isBanned:{type:Boolean ,default:false}
+        isBanned:{type:Boolean ,default:false},
+
+        cartData:{type:Object ,default:{}}
     },
     {timestamps:true}
 )

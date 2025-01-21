@@ -1,5 +1,5 @@
 
-import Store from "../model/storeSchema.js";
+import Store from "../model/storeModel.js";
 import { errorHandler } from "../Utils/error.js";
 import axios from "axios"
 
