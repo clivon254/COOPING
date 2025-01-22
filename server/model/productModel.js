@@ -27,6 +27,8 @@ const productSchema = new mongoose.Schema(
 
         instock:{type:Number},
 
+        sold:{type:Number , default:0},
+
         available:{type:Boolean , default:true},
 
         colors:{type:Array , default:undefined},
