@@ -11,7 +11,7 @@ const orderSchema = new mongoose.Schema(
 
         address:{type:Object , required:true},
 
-        date:{type:Date , required:Date.now()},
+        date:{type:Date , default:Date.now()},
 
         amount:{type:Number, required:true},
 
@@ -21,7 +21,7 @@ const orderSchema = new mongoose.Schema(
 
         delivery:{type:Object , required:true},
 
-        status:{type:String , required:"Order Placed"}
+        status:{type:String , default:"Order Placed"}
     },
     {
         timestamps:true 
@@ -30,3 +30,6 @@ const orderSchema = new mongoose.Schema(
 
 
 const Order = mongoose.model('Order', orderSchema)
+
+
+export default Order
