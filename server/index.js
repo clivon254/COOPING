@@ -9,6 +9,7 @@ import userRouter from "./router/userRouter.js"
 import storeRouter from "./router/storeRouter.js"
 import variantRouter from "./router/variantRouter.js"
 import productRouter from "./router/productRouter.js"
+import cartRouter from "./router/cartRouter.js"
 
 
 const app = express()
@@ -53,6 +54,9 @@ app.use('/api/variant' , variantRouter)
 
 
 app.use('/api/product' , productRouter)
+
+
+app.use('/api/cart', cartRouter)
 
 
 

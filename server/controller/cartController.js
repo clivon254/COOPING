@@ -1,6 +1,8 @@
-import Product from "../model/productModel"
-import User from "../model/userModel"
-import { errorHandler } from "../Utils/error"
+
+import Product from "../model/productModel.js"
+import User from "../model/userModel.js"
+import { errorHandler } from "../Utils/error.js"
+
 
 
 export const addToCart = async (req,res,next) => {
@@ -11,14 +13,14 @@ export const addToCart = async (req,res,next) => {
 
     try
     {
-        const product = Product.findById(itemId)
+        const product = await Product.findById(itemId)
 
         if(!product)
         {
-            return next(errorHandle(404, "product not found"))
+            return next(errorHandler(404, "product not found"))
         }
 
-        const userData = await User.findbyId(userId)
+        const userData = await User.findById(userId)
 
         if(!userData)
         {
@@ -201,6 +203,7 @@ export const addToCart = async (req,res,next) => {
 
 }
 
+
 export const removeToCart = async (req,res,next) => {
 
     const {spice,sauce,color,size,itemId} = req.body
@@ -374,6 +377,7 @@ export const removeToCart = async (req,res,next) => {
 
 }
 
+
 export const getCart = async (req,res,next) => {
 
     const userId = req.user.id
@@ -415,7 +419,7 @@ export const getCart = async (req,res,next) => {
 
                             totalProducts += quantity 
 
-                            totalPrice += quantity * product.offer ? product.discountPrice : product.regularPrice
+                            totalPrice += (quantity * (product.offer ? product.discountPrice : product.regularPrice))
                         }
 
                     }
@@ -426,7 +430,7 @@ export const getCart = async (req,res,next) => {
 
                         totalProducts += quantity 
 
-                        totalPrice += quantity * product.offer ? product.discountPrice : product.regularPrice
+                        totalPrice += (quantity * (product.offer ? product.discountPrice : product.regularPrice))
                             
                     }
 
