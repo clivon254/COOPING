@@ -5,6 +5,8 @@ import mongoose from "mongoose"
 
 const orderSchema = new mongoose.Schema(
     {
+        orderNumber:{type:String , required:true , unique:true},
+
         userId:{type:String , required:true},
 
         items:{type:Array, required:true},

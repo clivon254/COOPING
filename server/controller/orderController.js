@@ -6,6 +6,8 @@ import User from "../model/userModel.js"
 import Pay from "../model/payModel.js"
 import Product from "../model/productModel.js"
 import { errorHandler } from "../Utils/error.js"
+import { generateRandomOrderNumber } from "../Utils/verify.js"
+
 
 
 let clients = []
@@ -63,11 +65,12 @@ export const mpesa = async (req,res,next) => {
 
     try
     {
+        const orderNumber = generateRandomOrderNumber()
 
         const order = new Order({
-            userId,items,address,delivery,amount,paymentmethod
+            userId,items,address,delivery,amount,paymentmethod,orderNumber
         })
-
+    
         await order.save()
 
         const date = new Date()
@@ -354,8 +357,10 @@ export const COD = async (req,res,next) => {
     try
     {
 
+        const orderNumber = generateRandomOrderNumber()
+
         const newOrder = new Order({
-            items,delivery,amount,paymentmethod,address,userId
+            items,delivery,amount,paymentmethod,address,userId,orderNumber
         })
 
         await newOrder.save()

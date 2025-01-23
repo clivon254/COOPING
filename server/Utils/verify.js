@@ -61,4 +61,15 @@ export const generateAccessToken = async (req,res,next) => {
 
 } 
 
- 
+
+export const generateRandomOrderNumber = () => {
+
+    const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
+    const randomLetter = letters[Math.floor(Math.random() * letters.length)];
+
+    const randomNumbers = Math.floor(Math.random() * 9000) + 1000; // Generate 4-digit random number
+
+    return `${randomLetter}${randomNumbers}`;
+    
+  };
