@@ -16,7 +16,11 @@ export const createEvent = async (req,res,next) => {
 
     try
     {
-        const availableTickets = 23
+
+        const availableTickets = ticketTypes.reduce(
+            (total, type) => total + type.quantity, 
+            0
+          );
 
         const event = new Event({
             name,category,date,location,description,image,ticketTypes,availableTickets
@@ -95,7 +99,7 @@ export const updateEvent = async (req,res,next) => {
     try
     {
 
-        const updatedEvent = await Event.findById(
+        const updatedEvent = await Event.findByIdAndUpdate(
             eventId ,
             {
                 $set:{
@@ -117,6 +121,8 @@ export const updateEvent = async (req,res,next) => {
     catch(error)
     {
         next(error)
+
+        console.log(error)
     }
 
 }
