@@ -34,7 +34,7 @@ export const addFaq = async (req,res,next) => {
 
 export const getFaq = async (req,res,next) => {
 
-    const {faqId} = req.body
+    const {faqId} = req.params
 
     try
     {
@@ -82,7 +82,7 @@ export const updateFaq = async (req,res,next) => {
         return next(errorHandler(403, "You are not allowed to update faq"))
     }
 
-    const {faqId} = req.body
+    const {faqId} = req.params
 
     const faq = await Faq.findById(faqId)
 
@@ -124,7 +124,7 @@ export const deleteFaq = async (req,res,next) => {
         return next(errorHandler(403, "You are not allowed to delete faq"))
     }
 
-    const {faqId} = req.body
+    const {faqId} = req.params
 
     const faq = await Faq.findById(faqId)
 
