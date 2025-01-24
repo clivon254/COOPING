@@ -136,7 +136,7 @@ export const deleteFaq = async (req,res,next) => {
     try
     {
 
-        await Faq.finByIdAndDelete(faqId)
+        await Faq.findByIdAndDelete(faqId)
 
         res.status(200).json({success:true , message:"Faq has been delete"})
 
