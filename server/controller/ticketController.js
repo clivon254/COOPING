@@ -90,6 +90,17 @@ export const bookTicket = async (req,res,next) => {
 
         ticket.pdfTicket = pdfDataURL;
 
+        const pdfData = Buffer.from(ticket.pdfTicket, 'base64'); 
+
+        // Create a temporary file (optional)
+        const tempFilePath = path.join(__dirname, `../temp/${ticket._id}.pdf`); 
+        fs.writeFileSync(tempFilePath, pdfData); 
+
+        // Serve the PDF file
+        res.setHeader('Content-Type', 'application/pdf');
+        res.setHeader('Content-Disposition', `attachment; filename="${ticketId}.pdf"`); 
+        res.send(pdfData);
+
 
 
         await ticket.save()
