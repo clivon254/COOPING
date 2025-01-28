@@ -53,7 +53,7 @@ const userSlice = createSlice({
 
         updateUserSuccess:(state,action) => {
 
-            state.currentUser = action.palyload
+            state.currentUser = action.payload
 
             state.error = null
 
@@ -65,7 +65,7 @@ const userSlice = createSlice({
 
             state.loading = false
 
-            state.error = action.palyload
+            state.error = action.payload
 
         },
 

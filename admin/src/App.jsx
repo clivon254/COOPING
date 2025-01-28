@@ -11,6 +11,7 @@ import ResetPassword from './pages/ResetPassword'
 import DashBoard from './pages/DashBoard'
 import Header from './components/Header'
 import DashSidebar from './components/DashSidebar'
+import Profile from './pages/Profile'
 
 
 
@@ -68,6 +69,8 @@ export default function App() {
           <Route element={<LayOut/>}>
 
               <Route path="/" element={<DashBoard/>}/>
+
+              <Route path="/profile" element={<Profile/>}/>
 
           </Route>
 

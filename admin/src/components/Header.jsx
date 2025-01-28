@@ -12,6 +12,8 @@ import { Link, useNavigate } from 'react-router-dom'
 
 
 
+
+
 export default function Header() {
 
     const {open,setOpen} = useContext(StoreContext)
@@ -76,12 +78,13 @@ export default function Header() {
             </div>
 
             {/* logo */}
-            <div className="h-10 md:h-16 w-30 md:w-48 ">
+            <div className="h-10 md:h-16 w-30 md:w-48 cursor-pointer">
 
                 <img 
                     src={LOGO}
                     alt="" 
                     className="h-full w-full" 
+                    onClick={() => navigate("/")}
                 />
 
             </div>
