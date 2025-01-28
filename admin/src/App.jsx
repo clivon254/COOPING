@@ -12,6 +12,11 @@ import DashBoard from './pages/DashBoard'
 import Header from './components/Header'
 import DashSidebar from './components/DashSidebar'
 import Profile from './pages/Profile'
+import Food from './pages/Food'
+import Drink from './pages/Drink'
+import Merchendise from './pages/Merchendise'
+import Liqour from './pages/Liqour'
+import Event from './pages/Event'
 
 
 
@@ -30,14 +35,14 @@ const LayOut = () => {
         <div className="w-full flex border-t shadow-xl">
 
           {/* sidebar */}
-          <div className="px-5 hidden lg:flex overscroll-y-auto">
+          <div className="p-5 hidden lg:flex lg:w-[20%] overscroll-y-auto border-r border-zinc-700 ">
 
             <DashSidebar/>
 
           </div>
 
           {/* main side */}
-          <div className="w-full flex-1 overflow-y-scroll overflow-hidden">
+          <div className="w-full lg:w-[80%] overflow-y-scroll overflow-hidden">
 
             <Outlet/>
 
@@ -71,6 +76,17 @@ export default function App() {
               <Route path="/" element={<DashBoard/>}/>
 
               <Route path="/profile" element={<Profile/>}/>
+
+              <Route path="/food" element={<Food/>}/>
+
+              <Route path="/drink" element={<Drink/>}/>
+
+              <Route path="/merchendise" element={<Merchendise/>}/>
+
+              <Route path="/liquor" element={<Liqour/>}/>
+
+              <Route path="/event" element={<Event/>}/>
+
 
           </Route>
 

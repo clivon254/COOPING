@@ -15,7 +15,7 @@ import axios from "axios"
 export default function SignIn() {
 
 
-    const {url} = useContext(StoreContext)
+    const {url,setToken} = useContext(StoreContext)
 
     const {loading,error} = useSelector(state => state.user)
 
@@ -52,6 +52,8 @@ export default function SignIn() {
                 dispatch(signInSuccess(res.data.rest))
 
                 localStorage.setItem("token", res.data.token)
+
+                setToken(res.data.token)
             }
             
         }

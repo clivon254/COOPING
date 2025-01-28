@@ -87,7 +87,8 @@ export const updateUser = async (req,res,next) => {
             req.body.password = bcryptjs.hashSync(req.body.password)
         }
 
-        const updatedUser = await User.findByIdAndUpdate(userId,
+        const updatedUser = await User.findByIdAndUpdate(
+            userId,
             {
                 $set:{
                     username:req.body.username,

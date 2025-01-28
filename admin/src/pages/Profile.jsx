@@ -42,6 +42,7 @@ export default function Profile() {
     const dispatch = useDispatch()
 
 
+
     // handleImageChange
     const handleImageChange = (e) => {
 
@@ -98,6 +99,8 @@ export default function Profile() {
                 setImageFile(null)
 
                 setImageFileUploading(false)
+
+                console.log(error)
             },
             () => {
 
@@ -211,7 +214,7 @@ export default function Profile() {
             <input 
                 type="file" 
                 onChange={handleImageChange}
-                accept='/image*'
+                accept='image/*'
                 ref={filePickerRef}
                 hidden
             />
@@ -232,6 +235,7 @@ export default function Profile() {
                             root:{
                                 width:'100%',
                                 height:'100%',
+                                position:'absolute',
                                 top:0,
                                 left:0,
                             },
@@ -244,10 +248,10 @@ export default function Profile() {
                 )}
                     
                 <img 
-                    src={imageFileUrl || currentUser.profilePicture}
+                    src={imageFileUrl || currentUser?.profilePicture}
                     alt="user" 
                     className={`rounded-full w-full h-full object-cover border-8 
-                        ${imageFileUploadProgress && imageFileUploadProgress < 100 && `opaciy-${imageFileUploadProgress}`}`}
+                     ${imageFileUploadProgress && imageFileUploadProgress < 100 && `opacity-${imageFileUploadProgress}`}`}
                 />
                 
             </div>
@@ -291,7 +295,7 @@ export default function Profile() {
             <button 
                 className="flex w-full justify-center rounded-md bg-[#FF9900] px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-[#ff9900] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FF9900] disabled:cursor-not-allowed cursor-pointer disabled:bg-[#FF9900]/80 "
                 type='submit'
-                disabled={loading}
+                disabled={loading || imageFileUploading}
             >
                 {loading ? 
                 (
