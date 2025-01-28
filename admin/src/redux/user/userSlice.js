@@ -92,7 +92,7 @@ const userSlice = createSlice({
 
             state.loading = false
 
-            state.curentUser = null
+            state.currentUser = null
 
         }
     }

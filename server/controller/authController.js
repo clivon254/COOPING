@@ -133,7 +133,7 @@ export const forgotPassword = async (req,res,next) => {
 
         if(!user)
         {
-            return next(errorHandler(404, "email provided was not registered"))
+            return next(errorHandler(404, "email provided has not been registered"))
         }
 
         const token = jwt.sign(
