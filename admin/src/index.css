@@ -1,2 +1,14 @@
 
 @import "tailwindcss";
+@plugin "flowbite/plugin";
+
+
+@theme{
+
+    /* colors */
+    --color-blue:"#003399",
+    --color-orange:"#FF9900",
+    --color-green:"#00CC00"
+
+}
+

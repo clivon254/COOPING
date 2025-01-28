@@ -1,17 +1,30 @@
 
 
 import React from 'react'
-import { BrowserRouter, Route, Routes } from "react-router-dom"
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom"
+import { useSelector } from "react-redux"
 import {Toaster} from "sonner"
 import SignIn from './pages/SignIn'
 import LandingPage from './pages/LandingPage'
 import ForgotPassword from './pages/ForgotPassword'
 import ResetPassword from './pages/ResetPassword'
+import DashBoard from './pages/DashBoard'
 
 
 
 const LayOut = () => {
 
+    const {currentUser} = useSelector(state => state.user)
+
+    return(
+
+      currentUser?.isAdmin  ?
+
+      <div className=""></div>
+      
+      :
+      <Navigate to="/sign-in"/>
+    )
 
 }
 
@@ -29,6 +42,9 @@ export default function App() {
         <Routes>
 
           <Route element={<LayOut/>}>
+
+              <Route path="/" element={<DashBoard/>}/>
+
           </Route>
 
           <Route path="/landing-page" element={<LandingPage/>}/>

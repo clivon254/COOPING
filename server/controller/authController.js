@@ -69,27 +69,27 @@ export const Login = async (req,res,next) => {
             return next(errorHandler(403, "You are no allowed to login .Your account is banned"))
         }
 
-        const isMatch =  bcryptjs.compare(password , user.password)
+        const isMatch =  await bcryptjs.compare(password , user.password)
 
         if(!isMatch)
         {
-            user.failedLoginAttempts++
+            // user.failedLoginAttempts++
 
-            user.lastFailedLogin = Date.now()
+            // user.lastFailedLogin = Date.now()
 
             //check if the user should be banned
-            if(user.failedLoginAttempts >= 10)
-            {
-                const twoMinutesAgo = Date.now() - (2 * 60 * 1000)
+            // if(user.failedLoginAttempts >= 10)
+            // {
+            //     const twoMinutesAgo = Date.now() - (2 * 60 * 1000)
 
-                if(user.lastFailedLogin > twoMinutesAgo)
-                {
-                    user.isBanned = true
-                }
+            //     if(user.lastFailedLogin > twoMinutesAgo)
+            //     {
+            //         user.isBanned = true
+            //     }
 
-            }
+            // }
 
-            await user.save()
+            // await user.save()
 
             return next(errorHandler(401 ,"The provided password is Invalid"))
         }
@@ -116,8 +116,6 @@ export const Login = async (req,res,next) => {
     }
 
 }
-
-
 
 
 export const forgotPassword = async (req,res,next) => {
