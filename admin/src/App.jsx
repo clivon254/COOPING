@@ -17,6 +17,9 @@ import Drink from './pages/Drink'
 import Merchendise from './pages/Merchendise'
 import Liqour from './pages/Liqour'
 import Event from './pages/Event'
+import AddFood from './pages/AddFood'
+import UpdateFood from './pages/UpdateFood'
+import ProductPage from './pages/ProductPage'
 
 
 
@@ -78,6 +81,12 @@ export default function App() {
               <Route path="/profile" element={<Profile/>}/>
 
               <Route path="/food" element={<Food/>}/>
+
+              <Route path="/update-food/:foodId" element={<UpdateFood/>}/>
+
+              <Route path="/add-food" element={<AddFood/>}/>
+
+              <Route path="/product/:productId" element={<ProductPage/>}/>
 
               <Route path="/drink" element={<Drink/>}/>
 

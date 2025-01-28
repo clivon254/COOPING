@@ -1,4 +1,5 @@
-import { createContext,useState } from "react"
+import axios from "axios"
+import { createContext,useEffect,useState } from "react"
 
 
 
@@ -14,11 +15,59 @@ export default function StoreContextProvider(props)
 
     const [open ,setOpen] = useState(false)
 
+    const [openDelete , setOpenDelete] = useState(false)
+
+    const [products ,setProducts] = useState([])
+
+    const [productLoading , setProductLoading] = useState(false)
+
+    const [productError , setProductError] = useState(false)
+
+
+    // fetchProduct
+    const fetchProducts = async () => {
+
+        try
+        {
+            setProductLoading(true)
+
+            setProductError(false)
+
+            const res = await axios.get(url + "/api/product/get-products")
+
+            if(res.data.success)
+            {
+                setProductLoading(false)
+
+                setProducts(res.data.products)
+            }
+
+
+        }
+        catch(error)
+        {
+            console.log(error.message)
+
+            setProductError(true)
+        }
+
+    }
+
+    useEffect(() => {
+
+        fetchProducts()
+
+    },[])
 
     const contextValue = {
         url,
         token,setToken,
-        open , setOpen
+        open , setOpen,
+        openDelete , setOpenDelete,
+        products , setProducts,
+        productLoading , setProductLoading,
+        productError , setProductError,
+        fetchProducts,
     }
 
     return (
