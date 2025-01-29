@@ -6,9 +6,9 @@ export default function Loader() {
 
   return (
 
-    <div className="flex items-center justify-center ">
+    <div className="flex items-center justify-center gap-x-3 mt-20 mb-5">
 
-        <div className=""></div>
+        <span className="animate-spin block rounded-full h-12 w-12 border-4 border-transparent border-r-orange-600"/> Loading . . . . .
 
     </div>
 

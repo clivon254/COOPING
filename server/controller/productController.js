@@ -11,14 +11,14 @@ export const createFood = async (req,res,next) => {
         return next(errorHandler(403 ,"You are not allowed to add Food"))
     }
 
-    const {type,collection,category,name,regularPrice,discountPrice,offer,images,description,sauces,spices} = req.body
+    const {type,collections,category,name,regularPrice,discountPrice,offer,images,description,sauces,spices} = req.body
 
 
     try
     {
 
         const food = new Product({
-            type,collection,category,name,regularPrice,discountPrice,offer,images,description,sauces,spices
+            type,collections,category,name,regularPrice,discountPrice,offer,images,description,sauces,spices
         })
 
         await food.save()
@@ -42,13 +42,13 @@ export const createDrinks = async (req,res,next) => {
         return next(errorHandler(403 ,"You are not allowed to add Food"))
     }
 
-    const {type,collection,category,name,regularPrice,discountPrice,offer,images,description,instock} = req.body
+    const {type,collections,category,name,regularPrice,discountPrice,offer,images,description,instock} = req.body
 
     try
     {
 
         const drink = new Product({
-            type,collection,category,name,regularPrice,discountPrice,offer,images,description,instock
+            type,collections,category,name,regularPrice,discountPrice,offer,images,description,instock
         })
 
         await drink.save()
@@ -72,13 +72,13 @@ export const createMerchendise = async (req,res,next) => {
         return next(errorHandler(403,"Your are not allowed to add merchendise"))
     }
 
-    const {type,collection,category,name,regularPrice,discountPrice,offer,images,description,instock,color,sizes} = req.body
+    const {type,collections,category,name,regularPrice,discountPrice,offer,images,description,instock,color,sizes} = req.body
 
     try
     {
 
         const merchendise = new Product({
-            type,collection,category,name,regularPrice,discountPrice,offer,images,description,instock,color,sizes
+            type,collections,category,name,regularPrice,discountPrice,offer,images,description,instock,color,sizes
         })
 
         await merchendise.save()
@@ -101,12 +101,12 @@ export const createLiquor = async (req,res,next) => {
         return next(errorHandler(403 ,"You are not allowed to add Food"))
     }
 
-    const {type,collection,category,name,regularPrice,discountPrice,offer,images,description,instock} = req.body
+    const {type,collections,category,name,regularPrice,discountPrice,offer,images,description,instock} = req.body
 
     try
     {
         const liquor = new Product({
-            type,collection,name,category,regularPrice,discountPrice,offer,images,description,instock
+            type,collections,name,category,regularPrice,discountPrice,offer,images,description,instock
         })
 
 
@@ -179,7 +179,7 @@ export const updateProduct = async (req,res,next) => {
 
     const {productId} = req.params
 
-    const product = await Product.findOnefindById(productId)
+    const product = await Product.findById(productId)
 
     if(!product)
     {
@@ -194,7 +194,7 @@ export const updateProduct = async (req,res,next) => {
             {
                 $set:{
                     type:req.body.type,
-                    collection:req.body.collection,
+                    collections:req.body.collections,
                     category:req.body.category,
                     name:req.body.name,
                     offer:req.body.offer,

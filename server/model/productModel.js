@@ -7,7 +7,7 @@ const productSchema = new mongoose.Schema(
     {
         type:{type:String , required:true},
 
-        collection:{type:String ,required:true},
+        collections:{type:String ,required:true},
 
         category:{type:String ,required:true},
 

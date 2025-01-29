@@ -45,6 +45,7 @@ app.get("/", (req,res) => {
 
 
 
+
 // ROUTER
 app.use('/api/auth', authRouter)
 

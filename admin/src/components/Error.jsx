@@ -6,7 +6,7 @@ export default function Error({retry}) {
 
   return (
 
-    <div className="mx-auto max-w-xs space-y-3 mt-10">
+    <div className="mx-auto max-w-xs space-y-3 mt-10 mb-5">
 
         <h1 className="text-center text-xl font-bold">
             Connection Failed !!!

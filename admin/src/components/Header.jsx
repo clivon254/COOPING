@@ -9,6 +9,7 @@ import { MdClose, MdMenu, MdShoppingBag } from 'react-icons/md'
 import LOGO from "../assets/LOGOO.png"
 import { Avatar, Dropdown } from 'flowbite-react'
 import { Link, useNavigate } from 'react-router-dom'
+import DashSidebar from './DashSidebar'
 
 
 
@@ -48,113 +49,150 @@ export default function Header() {
 
   return (
 
-    <header className="p-3">
+    <>
 
-        <div className="flex items-center justify-between">
+        <header className="p-3">
 
-            {/* toggle */}
-            <div className="lg:hidden cursor-pointer">
-                {open ? 
-                    (
-                        <button className="">
-                            <MdClose
-                                size={30}
-                                onClick={() => setOpen(false)}
-                                className="cursor-pointer"
-                            />
-                        </button>
-                    ) 
-                    : 
-                    (
-                        <button className="">
-                            <MdMenu
-                                size={30}
-                                onClick={() => setOpen(true)}
-                                className="cursor-pointer"
-                            />
-                        </button>
-                    )
-                }
-            </div>
+            <div className="flex items-center justify-between">
 
-            {/* logo */}
-            <div className="h-10 md:h-16 w-30 md:w-48 cursor-pointer">
+                {/* toggle */}
+                <div className="lg:hidden cursor-pointer">
+                    {open ? 
+                        (
+                            <button className="">
+                                <MdClose
+                                    size={30}
+                                    onClick={() => setOpen(false)}
+                                    className="cursor-pointer"
+                                />
+                            </button>
+                        ) 
+                        : 
+                        (
+                            <button className="">
+                                <MdMenu
+                                    size={30}
+                                    onClick={() => setOpen(true)}
+                                    className="cursor-pointer"
+                                />
+                            </button>
+                        )
+                    }
+                </div>
 
-                <img 
-                    src={LOGO}
-                    alt="" 
-                    className="h-full w-full" 
-                    onClick={() => navigate("/")}
-                />
+                {/* logo */}
+                <div className="h-10 md:h-16 w-30 md:w-48 cursor-pointer">
 
-            </div>
-
-            {/* actions */}
-            <div className="flex items-center gap-x-4">
-
-                {/* cart */}
-                <div className="relative cursor-pointer">
-
-                    <MdShoppingBag
-                        size={30}
-                        onClick={() => navigate('/cart')}
+                    <img 
+                        src={LOGO}
+                        alt="" 
+                        className="h-full w-full" 
+                        onClick={() => navigate("/")}
                     />
 
-                    <span className="absolute -right-3 -top-2 flex items-center justify-center h-6 w-6 text-white bg-[#003399] rounded-full text-xs font-semibold">
-                        1
+                </div>
+
+                {/* actions */}
+                <div className="flex items-center gap-x-4">
+
+                    {/* cart */}
+                    <div className="relative cursor-pointer">
+
+                        <MdShoppingBag
+                            size={30}
+                            onClick={() => navigate('/cart')}
+                        />
+
+                        <span className="absolute -right-3 -top-2 flex items-center justify-center h-6 w-6 text-white bg-[#003399] rounded-full text-xs font-semibold">
+                            1
+                        </span>
+
+                    </div>
+
+                    {/* dropdown */}
+                    <div className="">
+                        {currentUser && (
+
+                            <Dropdown
+                                inline
+                                arrowIcon={false}
+                                label={
+                                    <Avatar
+                                        alt="user"
+                                        img={currentUser?.profilePicture}
+                                        rounded
+                                    />
+                                }
+                                className="cursor-pointer"
+                            >
+
+                                <Dropdown.Header>
+
+                                    <span className="block text-xs">{currentUser?.username}</span>
+
+                                    <span className="block text-xs">{currentUser?.email}</span>
+
+                                    <span className="block text-xs">{currentUser?.role}</span>
+
+                                </Dropdown.Header>
+
+                                <Link to="/profile">
+
+                                    <Dropdown.Item>Profile</Dropdown.Item>
+
+                                </Link>
+
+                                <Dropdown.Item
+                                    onClick={() => handleSignOut()}
+                                >
+                                    Sign out
+                                </Dropdown.Item>
+
+                            </Dropdown>
+
+                        )}
+                    </div>
+
+                </div>
+
+            </div>
+
+        </header>
+
+        {/* drawer */}
+        <div className={`w-full h-full fixed top-0 bg-black/50 backdrop-blur-sm  origin-right transition-all  duration-200 ease-in lg:hidden overflow-y-hidden z-50 ${open ? "left-0" :"left-[-100%]"}`}>
+                    
+            <div className="absolute  left-0 w-[70%] h-full bg-white space-y-6 overflow-y-scroll px-3">
+                
+                <div className="flex justify-end p-2">
+
+                    <span className="cursor-pointer" onClick={() => setOpen(false)} >
+
+                        <MdClose size={30} className="font-bold"/>
+
                     </span>
 
                 </div>
 
-                {/* dropdown */}
-                <div className="">
-                    {currentUser && (
+                <img 
+                    src={LOGO}
+                    alt="" 
+                    className="cursor-pointer"
+                    onClick={() => {
 
-                        <Dropdown
-                            inline
-                            arrowIcon={false}
-                            label={
-                                <Avatar
-                                    alt="user"
-                                    img={currentUser?.profilePicture}
-                                    rounded
-                                />
-                            }
-                            className="cursor-pointer"
-                        >
+                        navigate("/")
 
-                            <Dropdown.Header>
+                        setOpen(false)
+                    }}
+                />
 
-                                <span className="block text-xs">{currentUser?.username}</span>
-
-                                <span className="block text-xs">{currentUser?.email}</span>
-
-                                <span className="block text-xs">{currentUser?.role}</span>
-
-                            </Dropdown.Header>
-
-                            <Link to="/profile">
-
-                                <Dropdown.Item>Profile</Dropdown.Item>
-
-                            </Link>
-
-                            <Dropdown.Item
-                                onClick={() => handleSignOut()}
-                            >
-                                Sign out
-                            </Dropdown.Item>
-
-                        </Dropdown>
-
-                    )}
-                </div>
+                <DashSidebar/>
 
             </div>
 
         </div>
 
-    </header>
+    </>
 
   )
 
