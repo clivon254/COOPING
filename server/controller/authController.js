@@ -73,23 +73,23 @@ export const Login = async (req,res,next) => {
 
         if(!isMatch)
         {
-            // user.failedLoginAttempts++
+            user.failedLoginAttempts++
 
-            // user.lastFailedLogin = Date.now()
+            user.lastFailedLogin = Date.now()
 
             //check if the user should be banned
-            // if(user.failedLoginAttempts >= 10)
-            // {
-            //     const twoMinutesAgo = Date.now() - (2 * 60 * 1000)
+            if(user.failedLoginAttempts >= 10)
+            {
+                const twoMinutesAgo = Date.now() - (2 * 60 * 1000)
 
-            //     if(user.lastFailedLogin > twoMinutesAgo)
-            //     {
-            //         user.isBanned = true
-            //     }
+                if(user.lastFailedLogin > twoMinutesAgo)
+                {
+                    user.isBanned = true
+                }
 
-            // }
+            }
 
-            // await user.save()
+            await user.save()
 
             return next(errorHandler(401 ,"The provided password is Invalid"))
         }

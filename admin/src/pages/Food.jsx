@@ -10,11 +10,14 @@ import { IoMdAdd } from "react-icons/io";
 import { Table } from 'flowbite-react'
 import { MdOutlinePreview } from "react-icons/md";
 import { FaEdit, FaTrashAlt } from "react-icons/fa"
+import Error from '../components/Error'
 
 
 export default function Food() {
 
   const {openDelete , setOpenDelete ,url , token ,products ,setProducts ,productLoading ,productError,fetchProducts} = useContext(StoreContext)
+
+  const [loader ,setLoader] = useState([{},{},{},{}])
 
   const [product ,setProduct] = useState({})
 
@@ -193,7 +196,7 @@ export default function Food() {
                             <img 
                               src={food?.images[0]} 
                               alt="" 
-                              className="" 
+                              className="h-16 w-16" 
                             />
 
                           </Table.Cell>
@@ -268,6 +271,80 @@ export default function Food() {
                   )
                   }
                 </>
+              )}
+
+              {productLoading && !productError && (
+
+                <>
+
+                  {loader.map((load,index) => (
+
+                    <Table.Body>
+
+                      <Table.Cell>
+
+                        <span className="block h-5 w-5 rounded-md animate-pulse bg-slate-300"/>
+
+                      </Table.Cell>
+
+                      <Table.Cell>
+
+                          <span className="block h-10 w-12 rounded-md animate-pulse bg-slate-300"/>
+
+                      </Table.Cell>
+
+                      <Table.Cell>
+
+                          <span className="block h-5 w-20 rounded-md animate-pulse bg-slate-300"/>
+
+                      </Table.Cell>
+
+                      <Table.Cell>
+
+                          <span className="block h-5 w-20 rounded-md animate-pulse bg-slate-300"/>
+
+                      </Table.Cell>
+
+                      <Table.Cell>
+
+                        <span className="block h-5 w-12 rounded-md animate-pulse bg-slate-300"/>
+
+                      </Table.Cell>
+
+                      <Table.Cell>
+
+                        <div className="flex items-center gap-x-3">
+
+                          <span className="block h-5 w-5 rounded-full animate-pulse bg-slate-300"/>
+
+                          <span className="block h-5 w-5 rounded-full animate-pulse bg-slate-300"/>
+
+                          <span className="block h-5 w-5 rounded-full animate-pulse bg-slate-300"/>
+
+                        </div>
+
+                      </Table.Cell>
+
+                    </Table.Body>
+
+                  ))}
+
+                </>
+
+              )}
+
+              {productError && (
+
+                <Table.Body>
+
+                  <Table.Cell colSpan={6}>
+
+                      <Error retry={fetchProducts}/>
+
+                  </Table.Cell>
+
+                </Table.Body>
+
               )}
 
           </Table>

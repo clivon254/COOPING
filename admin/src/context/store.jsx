@@ -23,6 +23,48 @@ export default function StoreContextProvider(props)
 
     const [productError , setProductError] = useState(false)
 
+    const [categorys ,setCategorys] = useState([])
+
+    const [categoryLoading ,setCategoryLoading] = useState(false)
+
+    const [categoryError , setCategoryError ] = useState(false)
+
+    const [collections ,setCollections] = useState([])
+
+    const [collectionLoading ,setCollectionLoading] = useState(false)
+
+    const [collectionError , setCollectionError ] = useState(false)
+
+    const [sauces ,setSauces] = useState([])
+
+    const [sauceLoading ,setSauceLoading] = useState(false)
+
+    const [sauceError , setSauceError ] = useState(false)
+
+    const [spices ,setSpices] = useState([])
+
+    const [spiceLoading ,setSpiceLoading] = useState(false)
+
+    const [spiceError , setSpiceError ] = useState(false)
+
+    const [sizes ,setSizes] = useState([])
+
+    const [sizeLoading ,setSizeLoading] = useState(false)
+
+    const [sizeError , setSizeError ] = useState(false)
+
+    const [colors ,setColors] = useState([])
+
+    const [colorLoading ,setColorLoading] = useState(false)
+
+    const [colorError , setColorError ] = useState(false)
+
+    const [roles ,setRoles] = useState([])
+
+    const [roleLoading ,setRoleLoading] = useState(false)
+
+    const [roleError , setRoleError ] = useState(false)
+
 
     // fetchProduct
     const fetchProducts = async () => {
@@ -53,11 +95,224 @@ export default function StoreContextProvider(props)
 
     }
 
+    // fetchCategory
+    const fetchCategorys = async () => {
+
+        try
+        {
+            setCategoryError(false)
+
+
+            setCategoryLoading(true)
+
+            const res = await axios.get(url + "/api/variant/category/get-categorys",{headers:{token}})
+
+            if(res.data.success)
+            {
+                setCategoryLoading(false)
+
+
+                setCategorys(res.data.categorys)
+            }
+
+        }
+        catch(error)
+        {
+            setCategoryError(true)
+        }
+
+    }
+    
+
+    // fetchCollections
+    const fetchCollections = async () => {
+
+        try
+        {
+            setCollectionError(false)
+
+            setCollectionLoading(true)
+
+            const res = await axios.get(url +"/api/variant/collection/get-collections",{headers:{token}})
+
+            if(res.data.success)
+            {
+                setCollectionLoading(false)
+
+                setCollections(res.data.collections)
+            }
+
+        }
+        catch(error)
+        {
+
+            setCollectionError(true)
+
+            setCollectionLoading(false)
+
+            console.log(error.message)
+        }
+
+    }
+
+    // fetctSauces
+    const fetchSauces = async () => {
+
+        try
+        {
+            setSauceError(false)
+
+            setSauceLoading(true)
+
+            const res = await axios.get(url +"/api/variant/sauce/get-sauces",{headers:{token}})
+
+            if(res.data.success)
+            {
+                setSauceLoading(false)
+
+                setSauces(res.data.sauces)
+            }
+
+        }
+        catch(error)
+        {
+
+            setSauceError(true)
+
+            setSauceLoading(false)
+
+            console.log(error.message)
+        }
+
+    }
+
+    // fetchSpice
+    const fetchSpices = async () => {
+
+        try
+        {
+            setSpiceError(false)
+
+            setSpiceLoading(true)
+
+            const res = await axios.get(url + "/api/variant/spice/get-spices",{headers:{token}})
+
+            if(res.data.success)
+            {
+                setSpiceLoading(false)
+
+                setSpices(res.data.spices)
+            }
+
+        }
+        catch(error)
+        {
+            setSpiceError(true)
+        }
+
+    }
+
+    // fetchColor
+    const fetchColors = async () => {
+
+        try
+        {
+            setColorError(false)
+
+            setColorLoading(true)
+
+            const res = await axios.get(url + "/api/variant/color/get-colors",{headers:{token}})
+
+            if(res.data.success)
+            {
+                setColorLoading(false)
+
+                setColors(res.data.colors)
+            }
+
+        }
+        catch(error)
+        {
+            setColorError(true)
+        }
+
+    }
+
+    // fetchSize
+    const fetchSizes = async () => {
+
+        try
+        {
+            setSizeError(false)
+
+            setSizeLoading(true)
+
+            const res = await axios.get(url + "/api/variant/size/get-sizes",{headers:{token}})
+
+            if(res.data.success)
+            {
+                setSizeLoading(false)
+
+                setSizes(res.data.sizes)
+            }
+
+        }
+        catch(error)
+        {
+            setSizeError(true)
+        }
+
+    }
+
+    // fetchRole
+    const fetchRoles = async () => {
+
+        try
+        {
+            setRoleError(false)
+
+            setRoleLoading(true)
+
+            const res = await axios.get(url + "/api/variant/Role/get-Roles",{headers:{token}})
+
+            if(res.data.success)
+            {
+                setRoleLoading(false)
+
+                setRoles(res.data.roles)
+            }
+
+        }
+        catch(error)
+        {
+            setRoleError(true)
+        }
+
+    }
+ 
+
+
     useEffect(() => {
 
         fetchProducts()
 
+        fetchCategorys()
+
+        fetchCollections()
+
+        fetchSpices()
+
+        fetchSauces()
+
+        fetchColors()
+
+        fetchSizes()
+
+        fetchRoles()
+
     },[])
+
+    
 
     const contextValue = {
         url,
@@ -68,6 +323,34 @@ export default function StoreContextProvider(props)
         productLoading , setProductLoading,
         productError , setProductError,
         fetchProducts,
+        categorys , setCategorys,
+        categoryLoading , setCategoryLoading,
+        categoryError , setCategoryError,
+        fetchCategorys,
+        collections , setCollections,
+        collectionLoading , setCollectionLoading,
+        collectionError , setCollectionError,
+        fetchCollections,
+        spices , setSpices,
+        spiceLoading , setSpiceLoading,
+        spiceError , setSpiceError,
+        fetchSpices,
+        sizes ,setSizes,
+        sizeLoading , setSizeLoading,
+        sizeError , setSizeError,
+        fetchSizes,
+        colors , setColors,
+        colorLoading , setColorLoading,
+        colorError , setColorError,
+        fetchColors,
+        sauces , setSauces,
+        sauceLoading , setSauceLoading,
+        sauceError , setSauceError,
+        fetchSauces,
+        roles , setRoles,
+        roleLoading , setRoleLoading,
+        roleError , setRoleError,
+        fetchRoles
     }
 
     return (
