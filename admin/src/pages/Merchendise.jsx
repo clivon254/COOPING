@@ -223,7 +223,7 @@ export default function Merchendise() {
 
                               <span className="cursor-pointer">
 
-                                <Link to={`/update-food/${food._id}`}>
+                                <Link to={`/update-merchendise/${food._id}`}>
 
                                   <FaEdit size={24} className="text-[#00CC00]"/>
 

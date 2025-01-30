@@ -22,6 +22,10 @@ import UpdateFood from './pages/UpdateFood'
 import ProductPage from './pages/ProductPage'
 import AddMerchendise from './pages/AddMerchendise'
 import UpdateMerchendise from './pages/UpdateMerchendise'
+import UpdateDrink from './pages/UpdateDrink'
+import AddDrink from './pages/AddDrink'
+import AddLiqour from './pages/AddLiquor'
+import UpdateLiquor from './pages/UpdateLiquor'
 
 
 
@@ -91,14 +95,22 @@ export default function App() {
               <Route path="/product/:productId" element={<ProductPage/>}/>
 
               <Route path="/drink" element={<Drink/>}/>
+              
+              <Route path="/add-drink" element={<AddDrink/>}/>
+
+              <Route path="/update-drink/:drinkId" element={<UpdateDrink/>}/>
 
               <Route path="/merchendise" element={<Merchendise/>}/>
 
               <Route path="/add-merchendise" element={<AddMerchendise/>}/>
 
-              <Route path="/update-merchendise" element={<UpdateMerchendise/>}/>
+              <Route path="/update-merchendise/:merchendiseId" element={<UpdateMerchendise/>}/>
 
               <Route path="/liquor" element={<Liqour/>}/>
+
+              <Route path="/add-liqour" element={<AddLiqour/>}/>
+
+              <Route path="/update-liqour/:liqourId" element={<UpdateLiquor/>}/>
 
               <Route path="/event" element={<Event/>}/>
 

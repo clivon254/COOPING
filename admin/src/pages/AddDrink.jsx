@@ -18,7 +18,7 @@ import clsx from "clsx"
 
 
 
-export default function AddMerchendise() {
+export default function AddDrink() {
 
     const {url,token,fetchProducts,collections,categorys,colors ,sizes} = useContext(StoreContext)
 
@@ -36,15 +36,12 @@ export default function AddMerchendise() {
 
     const [formData , setFormData] = useState({
         images:[],
-        type:"Merchendise",
+        type:"Drink",
         discountPrice:0
     })
 
-    const [selectedColors , setSelectedColors] = useState([])
-
-    const [selectedSizes , setSelectedSizes] = useState([])
-
     const navigate = useNavigate()
+
 
     // handleChange
     const handleChange = (e) => {
@@ -53,23 +50,6 @@ export default function AddMerchendise() {
 
     }
 
-    // handleChangeSelectedColor
-    const handleChangeSelectedColor = (el) => {
-
-        setSelectedColors(el)
-
-        setFormData({...formData , colors: el})
-
-    }
-
-    // handleChangeSelectedSize
-    const handleChangeSelectedSize = (el) => {
-
-        setSelectedSizes(el)
-
-        setFormData({...formData , sizes: el})
-        
-    }
 
     // handleImageSubmit
     const handleImageSubmit = () => {
@@ -184,15 +164,15 @@ export default function AddMerchendise() {
         {
             setloading(true)
 
-            const res = await axios.post(url + "/api/product/create-merchendise",formData,{headers:{token}})
+            const res = await axios.post(url + "/api/product/create-drink",formData,{headers:{token}})
 
             if(res.data.success)
             {
                 setFormData()
 
-                navigate(`/product/${res.data.merchendise._id}`)
+                navigate(`/product/${res.data.drink._id}`)
 
-                toast.success(`${res.data.merchendise.name} is added successfully `)
+                toast.success(`${res.data.drink.name} is added successfully `)
 
                 setloading(false)
 
@@ -225,27 +205,7 @@ export default function AddMerchendise() {
 
     }
 
-    useEffect(() => {
 
-        if(formData?.colors?.length < 1)
-        {
-            colors && setSelectedColors([colors[0]])
-        }
-        else
-        {
-            setSelectedColors(formData.colors)
-        }
-
-        if(formData?.sizes?.length < 1)
-        {
-            sizes && setSelectedSizes([sizes[0]])
-        }
-        else
-        {
-            setSelectedSizes(formData?.sizes)
-        }
-
-    },[])
     
     console.log(formData)
 
@@ -253,7 +213,7 @@ export default function AddMerchendise() {
 
     <section className="w-full p-5 space-y-10">
 
-        <h2 className="text-center text-4xl/9 font-bold">Add Merchendise</h2>
+        <h2 className="text-center text-4xl/9 font-bold">Add Drink</h2>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-y-4 max-w-2xl mx-auto">
 
@@ -375,22 +335,6 @@ export default function AddMerchendise() {
 
             </div>
             
-            {/* instock */}
-            <div className="flex flex-col gap-y-2">
-
-                <label className="block text-sm/6 font-semibold text-gray-900">instock</label>
-
-                <input 
-                    type="number" 
-                    className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-[#FF9900] sm:text-sm/6" 
-                    placeholder="instock"
-                    name="instock"
-                    onChange={handleChange}
-                    value={formData?.instock}
-                />
-
-            </div>
-            
             {formData?.offer && (
 
                 <> 
@@ -415,171 +359,6 @@ export default function AddMerchendise() {
 
             )}
 
-            {/* sizes */}
-            <div className="flex flex-col gap-y-2">
-
-                <label className="block text-sm/6 font-semibold text-gray-900">Sizes</label>
-
-                <Listbox
-                    value={selectedSizes}
-                    onChange={(el) => handleChangeSelectedSize(el)}
-                    multiple
-                >
-                    <div className="relative mt-1">
-
-                        <ListboxButton className="relative w-full cursor-default rounded pl-1 pr-3 text-left px-3 py-4 2xl:py-6 border border-gray-600">
-
-                            <span className="">
-                                {selectedSizes?.map((size) => size?.name).join(",")}
-                            </span>
-
-                            <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
-                                <BsChevronBarExpand size={26}/>
-                            </span>
-
-                        </ListboxButton>
-
-                        <Transition
-                            as={Fragment}
-                            leave="transition ease-in duration-100"
-                            leaveFrom="opacity-0"
-                            className="border shadow-md"
-                        >
-
-                            <ListboxOptions>
-                                
-                                {sizes?.map((size,index) => (
-
-                                    <ListboxOption
-                                        key={index}
-                                        className={({active}) => 
-                                            `relative cursor-default select-none py-2 pl-10 pr-4 
-                                          ${active ? "bg-orange-100" :"text-black"}`
-                                        }
-                                        value={size}
-                                    >
-                                        {({selected}) => (
-
-                                            <>
-                                                <div 
-                                                    className={clsx(
-                                                        "flex items-center gap-2 truncate",
-                                                         selected ? "font-medium": "font-normal" )}
-                                                >
-
-                                                    <span className="">{size.name}</span>
-
-                                                </div>
-
-                                                {selected && (
-
-                                                    <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-orange-500">
-
-                                                        <BsCheck className="h-5 w-5"/>
-
-                                                    </span>
-
-                                                )}
-
-                                            </>
-
-                                        )}
-                                    </ListboxOption>
-
-                                ))}
-
-                            </ListboxOptions>
-
-                        </Transition>
-
-                    </div>
-
-                </Listbox>
-
-            </div>
-            
-            {/* colors */}
-            <div className="flex flex-col gap-y-2">
-
-                <label className="block text-sm/6 font-semibold text-gray-900">Colors</label>
-
-                <Listbox
-                    value={selectedColors}
-                    onChange={(el) => handleChangeSelectedColor(el)}
-                    multiple
-                >
-                    <div className="relative mt-1">
-
-                        <ListboxButton className="relative w-full cursor-default rounded pl-1 pr-3 text-left px-3 py-4 2xl:py-6 border border-gray-600">
-
-                            <span className="">
-                                {selectedColors?.map((color) => color.name).join(",")}
-                            </span>
-
-                            <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
-                                <BsChevronBarExpand size={26}/>
-                            </span>
-
-                        </ListboxButton>
-
-                        <Transition
-                            as={Fragment}
-                            leave="transition ease-in duration-100"
-                            leaveFrom="opacity-0"
-                            className="border shadow-md"
-                        >
-
-                            <ListboxOptions>
-                                
-                                {colors?.map((color,index) => (
-
-                                    <ListboxOption
-                                        key={index}
-                                        className={({active}) => 
-                                            `relative cursor-default select-none py-2 pl-10 pr-4 
-                                          ${active ? "bg-orange-100" :"text-black"}`
-                                        }
-                                        value={color}
-                                    >
-                                        {({selected}) => (
-
-                                            <>
-                                            
-                                                <div 
-                                                    className={clsx(
-                                                        "flex items-center gap-2 truncate",
-                                                         selected ? "font-medium": "font-normal" )}
-                                                >
-
-                                                    <span className="">{color.name}</span>
-
-                                                </div>
-
-                                                {selected && (
-
-                                                    <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-orange-500">
-
-                                                        <BsCheck className="h-5 w-5"/>
-
-                                                    </span>
-
-                                                )}
-
-                                            </>
-
-                                        )}
-                                    </ListboxOption>
-
-                                ))}
-                            </ListboxOptions>
-
-                        </Transition>
-
-                    </div>
-
-                </Listbox>
-
-            </div>
 
             {/* description */}
             <div className="flex flex-col gap-y-2">
@@ -678,7 +457,7 @@ export default function AddMerchendise() {
                 {loading ? 
                 ("Adding . . . . . ") 
                 : 
-                ("Add Merchendise")}
+                ("Add Drink")}
             </button>
 
             {error && (
@@ -694,3 +473,4 @@ export default function AddMerchendise() {
   )
 
 }
+ 

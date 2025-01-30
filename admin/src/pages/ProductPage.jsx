@@ -32,7 +32,7 @@ export default function ProductPage() {
 
   const [image, setImage] = useState(null)
 
-
+  const ProductType = products.filter((item) => item.type === product.type)
 
 
   // fetchProduct
@@ -159,7 +159,7 @@ export default function ProductPage() {
                       </span>
 
                       <span className="block bg-orange-100 text-[#ff9900] lowercase px-4 py-0.5 rounded-full text-xs font-semibold">
-                        {product?.collection}
+                        {product?.collections}
                       </span>
 
                     </div>
@@ -188,7 +188,7 @@ export default function ProductPage() {
                       dangerouslySetInnerHTML={{__html:product?.description}}
                     />
 
-                    {/* Food items */}
+                    {/* Food type */}
                     {product?.type === 'Food' && (
 
                         <>
@@ -246,6 +246,55 @@ export default function ProductPage() {
                           </div>
 
                         </>
+
+                    )}
+
+
+                    {/* Merchendise type */}
+                    {product?.type === 'Merchendise' && (
+
+                      <>
+
+
+                          {/* sizes */}
+                          <div className="space-y-2">
+
+                            <h2 className="text-xs font-bold">select size</h2>
+                            
+                            <div className="flex items-center gap-x-3 gap-y-1">
+
+                              {product?.sizes?.map((size,index) => (
+
+                                <span key={index} className={`block border px-3 py-0.5 rounded-md text-sm font-medium text-gray-600 cursor-pointer`}>
+                                  {size.name}
+                                </span>
+
+                              ))}
+
+                            </div>
+
+                          </div>
+                          
+                          {/* color */}
+                          <div className="space-y-2">
+
+                            <h2 className="text-xs font-bold">select a color</h2>
+                            
+                            <div className="flex items-center gap-x-3 gap-y-1">
+
+                              {product?.colors?.map((color,index) => (
+
+                                <span key={index} className={`block border px-3 py-0.5 rounded-md text-sm font-medium text-gray-600 cursor-pointer`}>
+                                  {color.name}
+                                </span>
+
+                              ))}
+
+                            </div>
+
+                          </div>
+
+                      </>
 
                     )}
  
@@ -318,7 +367,7 @@ export default function ProductPage() {
                         nextEl:'.next'
                             }}
                     >
-                            {products?.map((product,index) => (
+                            {ProductType?.map((product,index) => (
 
                                 <SwiperSlide key={index}>
 

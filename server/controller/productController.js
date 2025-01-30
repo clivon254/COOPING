@@ -39,16 +39,16 @@ export const createDrinks = async (req,res,next) => {
 
     if(!req.user.isAdmin)
     {
-        return next(errorHandler(403 ,"You are not allowed to add Food"))
+        return next(errorHandler(403 ,"You are not allowed to add Drink"))
     }
 
-    const {type,collections,category,name,regularPrice,discountPrice,offer,images,description,instock} = req.body
+    const {type,collections,category,name,regularPrice,discountPrice,offer,images,description} = req.body
 
     try
     {
 
         const drink = new Product({
-            type,collections,category,name,regularPrice,discountPrice,offer,images,description,instock
+            type,collections,category,name,regularPrice,discountPrice,offer,images,description
         })
 
         await drink.save()
@@ -72,13 +72,13 @@ export const createMerchendise = async (req,res,next) => {
         return next(errorHandler(403,"Your are not allowed to add merchendise"))
     }
 
-    const {type,collections,category,name,regularPrice,discountPrice,offer,images,description,instock,color,sizes} = req.body
+    const {type,collections,category,name,regularPrice,discountPrice,offer,images,description,instock,colors,sizes} = req.body
 
     try
     {
 
         const merchendise = new Product({
-            type,collections,category,name,regularPrice,discountPrice,offer,images,description,instock,color,sizes
+            type,collections,category,name,regularPrice,discountPrice,offer,images,description,instock,colors,sizes
         })
 
         await merchendise.save()
