@@ -1,5 +1,6 @@
 
 
+
 import React, { Fragment, useContext, useEffect, useState } from 'react'
 import { StoreContext } from '../context/store'
 import { useNavigate } from 'react-router-dom'
@@ -15,9 +16,11 @@ import { Listbox, ListboxButton, ListboxOption, ListboxOptions, Transition } fro
 import { BsCheck, BsChevronBarExpand } from "react-icons/bs"
 import clsx from "clsx"
 
-export default function AddFood() {
 
-    const {url,token,fetchProducts,collections,categorys,spices,sauces} = useContext(StoreContext)
+
+export default function AddMerchendise() {
+
+    const {url,token,fetchProducts,collections,categorys,colors ,sizes} = useContext(StoreContext)
 
     const [files ,setFiles] = useState([])
 
@@ -33,13 +36,13 @@ export default function AddFood() {
 
     const [formData , setFormData] = useState({
         images:[],
-        type:"Food",
+        type:"Merchendise",
         discountPrice:0
     })
 
-    const [selectedSauces , setSelectedSauces] = useState([])
+    const [selectedColors , setSelectedColors] = useState([])
 
-    const [selectedSpices , setSelectedSpices] = useState([])
+    const [selectedSizes , setSelectedSizes] = useState([])
 
     const navigate = useNavigate()
 
@@ -50,21 +53,21 @@ export default function AddFood() {
 
     }
 
-    // handleChangeSelectedSpice
-    const handleChangeSelectedSpice = (el) => {
+    // handleChangeSelectedColor
+    const handleChangeSelectedColor = (el) => {
 
-        setSelectedSpices(el)
+        setSelectedColors(el)
 
-        setFormData({...formData , spices: el})
+        setFormData({...formData , colors: el})
 
     }
 
-    // handleChangeSelectedSauce
-    const handleChangeSelectedSauce = (el) => {
+    // handleChangeSelectedSize
+    const handleChangeSelectedSize = (el) => {
 
-        setSelectedSauces(el)
+        setSelectedSizes(el)
 
-        setFormData({...formData , sauces: el})
+        setFormData({...formData , sizes: el})
         
     }
 
@@ -181,15 +184,15 @@ export default function AddFood() {
         {
             setloading(true)
 
-            const res = await axios.post(url + "/api/product/create-food",formData,{headers:{token}})
+            const res = await axios.post(url + "/api/product/create-merchendise",formData,{headers:{token}})
 
             if(res.data.success)
             {
                 setFormData()
 
-                navigate(`/product/${res.data.food._id}`)
+                navigate(`/product/${res.data.merchendise._id}`)
 
-                toast.success(`${res.data.food.name} is added successfully `)
+                toast.success(`${res.data.merchendise.name} is added successfully `)
 
                 setloading(false)
 
@@ -224,22 +227,22 @@ export default function AddFood() {
 
     useEffect(() => {
 
-        if(formData?.spices?.length < 1)
+        if(formData?.colors?.length < 1)
         {
-            spices && setSelectedSpices([spices[0]])
+            colors && setSelectedColors([colors[0]])
         }
         else
         {
-            setSelectedSpices(formData.spices)
+            setSelectedColors(formData.colors)
         }
 
-        if(formData?.sauces?.length < 1)
+        if(formData?.sizes?.length < 1)
         {
-            sauces && setSelectedSauces([sauces[0]])
+            sizes && setSelectedSizes([sizes[0]])
         }
         else
         {
-            setSelectedSauces(formData?.sauces)
+            setSelectedSizes(formData?.sizes)
         }
 
     },[])
@@ -250,7 +253,7 @@ export default function AddFood() {
 
     <section className="w-full p-5 space-y-10">
 
-        <h2 className="text-center text-4xl/9 font-bold">Add Food</h2>
+        <h2 className="text-center text-4xl/9 font-bold">Add Merchendise</h2>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-y-4 max-w-2xl mx-auto">
 
@@ -281,7 +284,7 @@ export default function AddFood() {
                     className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-[#FF9900] sm:text-sm/6" 
                     name="category"
                     onChange={handleChange}
-                    value={formData.category}
+                    value={formData?.category}
                 >
 
                     <option value="" className="">Select Category</option>
@@ -308,7 +311,7 @@ export default function AddFood() {
                     value={formData?.collections}
                 >
 
-                    <option value="" className="">Select Category</option>
+                    <option value="" className="">Select Collection</option>
 
                     {collections?.map((collection,index) => (
 
@@ -347,7 +350,7 @@ export default function AddFood() {
                         className="block rounded " 
                         name="featured"
                         onChange={(e) => setFormData({...formData , featured : e.target.checked})}
-                        checked={formData.featured} 
+                        checked={formData?.featured} 
                    />
 
                     <label className="block text-sm/6 font-semibold text-gray-900">featured</label>
@@ -368,6 +371,22 @@ export default function AddFood() {
                     name="regularPrice"
                     onChange={handleChange}
                     value={formData?.regularPrice}
+                />
+
+            </div>
+            
+            {/* instock */}
+            <div className="flex flex-col gap-y-2">
+
+                <label className="block text-sm/6 font-semibold text-gray-900">instock</label>
+
+                <input 
+                    type="number" 
+                    className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-[#FF9900] sm:text-sm/6" 
+                    placeholder="instock"
+                    name="instock"
+                    onChange={handleChange}
+                    value={formData?.instock}
                 />
 
             </div>
@@ -396,14 +415,14 @@ export default function AddFood() {
 
             )}
 
-            {/* sauces */}
+            {/* sizes */}
             <div className="flex flex-col gap-y-2">
 
-                <label className="block text-sm/6 font-semibold text-gray-900">Sauces</label>
+                <label className="block text-sm/6 font-semibold text-gray-900">Sizes</label>
 
                 <Listbox
-                    value={selectedSauces}
-                    onChange={(el) => handleChangeSelectedSauce(el)}
+                    value={selectedSizes}
+                    onChange={(el) => handleChangeSelectedSize(el)}
                     multiple
                 >
                     <div className="relative mt-1">
@@ -411,7 +430,7 @@ export default function AddFood() {
                         <ListboxButton className="relative w-full cursor-default rounded pl-1 pr-3 text-left px-3 py-4 2xl:py-6 border border-gray-600">
 
                             <span className="">
-                                {selectedSauces?.map((sauce) => sauce?.name).join(",")}
+                                {selectedSizes?.map((size) => size?.name).join(",")}
                             </span>
 
                             <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
@@ -429,7 +448,7 @@ export default function AddFood() {
 
                             <ListboxOptions>
                                 
-                                {sauces?.map((sauce,index) => (
+                                {sizes?.map((size,index) => (
 
                                     <ListboxOption
                                         key={index}
@@ -437,7 +456,7 @@ export default function AddFood() {
                                             `relative cursor-default select-none py-2 pl-10 pr-4 
                                           ${active ? "bg-orange-100" :"text-black"}`
                                         }
-                                        value={sauce}
+                                        value={size}
                                     >
                                         {({selected}) => (
 
@@ -448,7 +467,7 @@ export default function AddFood() {
                                                          selected ? "font-medium": "font-normal" )}
                                                 >
 
-                                                    <span className="">{sauce.name}</span>
+                                                    <span className="">{size.name}</span>
 
                                                 </div>
 
@@ -479,14 +498,14 @@ export default function AddFood() {
 
             </div>
             
-            {/* spices */}
+            {/* colors */}
             <div className="flex flex-col gap-y-2">
 
-                <label className="block text-sm/6 font-semibold text-gray-900">Spices</label>
+                <label className="block text-sm/6 font-semibold text-gray-900">Colors</label>
 
                 <Listbox
-                    value={selectedSpices}
-                    onChange={(el) => handleChangeSelectedSpice(el)}
+                    value={selectedColors}
+                    onChange={(el) => handleChangeSelectedColor(el)}
                     multiple
                 >
                     <div className="relative mt-1">
@@ -494,7 +513,7 @@ export default function AddFood() {
                         <ListboxButton className="relative w-full cursor-default rounded pl-1 pr-3 text-left px-3 py-4 2xl:py-6 border border-gray-600">
 
                             <span className="">
-                                {selectedSpices?.map((spice) => spice.name).join(",")}
+                                {selectedColors?.map((color) => color.name).join(",")}
                             </span>
 
                             <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
@@ -512,7 +531,7 @@ export default function AddFood() {
 
                             <ListboxOptions>
                                 
-                                {spices?.map((spice,index) => (
+                                {colors?.map((color,index) => (
 
                                     <ListboxOption
                                         key={index}
@@ -520,7 +539,7 @@ export default function AddFood() {
                                             `relative cursor-default select-none py-2 pl-10 pr-4 
                                           ${active ? "bg-orange-100" :"text-black"}`
                                         }
-                                        value={spice}
+                                        value={color}
                                     >
                                         {({selected}) => (
 
@@ -531,7 +550,7 @@ export default function AddFood() {
                                                          selected ? "font-medium": "font-normal" )}
                                                 >
 
-                                                    <span className="">{spice.name}</span>
+                                                    <span className="">{color.name}</span>
 
                                                 </div>
 
@@ -658,7 +677,7 @@ export default function AddFood() {
                 {loading ? 
                 ("Adding . . . . . ") 
                 : 
-                ("Add Food")}
+                ("Add Merchendise")}
             </button>
 
             {error && (

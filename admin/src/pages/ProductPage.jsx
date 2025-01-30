@@ -7,7 +7,16 @@ import { StoreContext } from '../context/store'
 import Loader from '../components/loader'
 import Error from '../components/Error'
 import Rating from "react-rating"
-import { MdStar } from 'react-icons/md'
+import { MdChevronLeft, MdChevronRight, MdStar } from 'react-icons/md'
+// swiper components
+import {Swiper, SwiperSlide} from "swiper/react"
+// Swiper styles
+import "swiper/css"
+import {Autoplay,Navigation} from "swiper/modules"
+import ProductCard from '../components/ProductCard'
+
+
+
 
 export default function ProductPage() {
 
@@ -66,6 +75,8 @@ export default function ProductPage() {
 
     fetchProduct()
 
+    window.scrollTo(0,0)
+
   },[productId])
 
   return (
@@ -75,7 +86,7 @@ export default function ProductPage() {
       {!productError && !productLoading && (
 
        
-        <section className="w-full p-6 ">
+        <section className="w-full p-6 space-y-10">
 
             {/* upper section */}
             <div className="w-full flex flex-col md:flex-row gap-x-10 gap-y-14">
@@ -185,9 +196,9 @@ export default function ProductPage() {
                           {/* sauces */}
                           <div className="space-y-2">
 
-                              <h3 className="text-base font-semibold">select sauces </h3>
+                              <h3 className="text-xs font-bold">select sauces </h3>
 
-                              {product.sauces.length === 1 && product.sauces.some(sauce => sauce.name === "none") ? 
+                              {product?.sauces?.length === 1 && product?.sauces?.some(sauce => sauce.name === "none") ? 
                                 (null) 
                                 : 
                                 (
@@ -196,8 +207,8 @@ export default function ProductPage() {
                                     
                                     {product?.sauces?.map((sauce,index) => (
 
-                                      <span className="border px-3 py-0.5 rounded-md text-sm font-semibold">
-                                        {sauce.name}
+                                      <span className="border px-3 py-0.5 rounded-md text-sm font-medium text-gray-600 cursor-pointer">
+                                        {sauce?.name}
                                       </span>
 
                                     ))}
@@ -211,9 +222,9 @@ export default function ProductPage() {
                           {/* spices */}
                           <div className="space-y-2">
 
-                              <h3 className="text-base font-semibold">select spices</h3>
+                              <h3 className="text-xs font-bold">select spices</h3>
 
-                              {product.spices.length === 1 && product.spices.some(spice => spice.name === "none") ? 
+                              {product?.spices?.length === 1 && product?.spices.some(spice => spice?.name === "none") ? 
                                 (null) 
                                 : 
                                 (
@@ -222,8 +233,8 @@ export default function ProductPage() {
                                     
                                     {product?.spices?.map((spice,index) => (
 
-                                      <span className="border px-3 py-0.5 rounded-md text-sm font-semibold">
-                                        {spice.name}
+                                      <span className="border px-3 py-0.5 rounded-md text-sm font-medium text-gray-600 cursor-pointer">
+                                        {spice?.name}
                                       </span>
 
                                     ))}
@@ -259,7 +270,78 @@ export default function ProductPage() {
             </div>
 
             {/* lower section */}
-            <div className=""></div>
+            <div className="">
+
+              {/* reveiws */}
+              <div className=""></div>
+
+              {/* Related Product */}
+              <div className="space-y-7">
+                
+                <h2 className="text-2xl/9 lg:text-3xl/9 font-bold tracking-tight text-gray-900">You may also like</h2>
+
+                {/* swiper */}
+                <div className="w-full relative">
+
+                    <Swiper
+                        className="mySwiper  relative"
+                        spaceBetween={10}
+                        slidesPerView={4}
+                        // loop={true}
+                        autoPlay={
+                        {
+                            delay:2000,
+                            disableOnInteraction:false
+                        }
+                        }
+                        modules={[Autoplay,Navigation]}
+                        breakpoints={{
+                            0: {
+                            slidesPerView: 2,
+                            spaceBetween:20
+                            },
+                            640: {
+                            slidesPerView:3 ,
+                            spaceBetween: 30,
+                            },
+                            768: {
+                            slidesPerView: 4,
+                            spaceBetween: 40,
+                            },
+                            1024: {
+                            slidesPerView: 4,
+                            spaceBetween: 40,
+                            },
+                        }} 
+                        navigation={{
+                        prevEl:'.prev',
+                        nextEl:'.next'
+                            }}
+                    >
+                            {products?.map((product,index) => (
+
+                                <SwiperSlide key={index}>
+
+                                  <ProductCard product={product}/>
+
+                                </SwiperSlide>
+
+                            ))}
+                    </Swiper>
+
+                    <div className="prev absolute top-1/3 -left-4 z-40 h-6 w-6 bg-orange-100 text-[#FF9900]  rounded-full flex justify-center items-center cursor-pointer">
+                        <MdChevronLeft size={32} className=""/>
+                    </div>
+
+                    <div className="next absolute top-1/3 -right-4 z-40 h-6 w-6 bg-orange-100 text-[#FF9900] rounded-full flex justify-center items-center cursor-pointer">
+                        <MdChevronRight size={32} className=""/>
+                    </div>
+
+                </div>
+
+              </div>
+
+            </div>
             
         </section>
 

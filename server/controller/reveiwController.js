@@ -70,9 +70,11 @@ export const getReveiw = async (req,res,next) => {
 
 export const getReveiws = async (req,res,next) => {
 
+    const {productId} = req.params
+
     try
     {
-        const reveiws = await Reveiw.find({}).sort({_id:-1})
+        const reveiws = await Reveiw.find({productId}).sort({_id:-1})
 
         res.status(200).json({success:true , reveiws})
 

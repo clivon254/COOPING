@@ -14,7 +14,7 @@ import {
 const variantRouter = express.Router()
 
 
-// TYPE-
+// TYPE
 
 variantRouter.post('/type/create-type' ,verifyToken , createType)
 

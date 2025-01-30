@@ -20,6 +20,8 @@ import Event from './pages/Event'
 import AddFood from './pages/AddFood'
 import UpdateFood from './pages/UpdateFood'
 import ProductPage from './pages/ProductPage'
+import AddMerchendise from './pages/AddMerchendise'
+import UpdateMerchendise from './pages/UpdateMerchendise'
 
 
 
@@ -91,6 +93,10 @@ export default function App() {
               <Route path="/drink" element={<Drink/>}/>
 
               <Route path="/merchendise" element={<Merchendise/>}/>
+
+              <Route path="/add-merchendise" element={<AddMerchendise/>}/>
+
+              <Route path="/update-merchendise" element={<UpdateMerchendise/>}/>
 
               <Route path="/liquor" element={<Liqour/>}/>
 

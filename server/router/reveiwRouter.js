@@ -13,7 +13,7 @@ reveiwRouter.post('/add-reveiw', verifyToken, addReveiw)
 reveiwRouter.get('/get-reveiw/:reveiwId', getReveiw)
 
 
-reveiwRouter.get('/get-reveiws', getReveiws)
+reveiwRouter.get('/get-reveiws/:productId', getReveiws)
 
 
 reveiwRouter.put("/update-reveiw/:reveiwId",verifyToken, updateReveiw)
