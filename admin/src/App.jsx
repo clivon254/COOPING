@@ -26,6 +26,7 @@ import UpdateDrink from './pages/UpdateDrink'
 import AddDrink from './pages/AddDrink'
 import AddLiqour from './pages/AddLiquor'
 import UpdateLiquor from './pages/UpdateLiquor'
+import Cart from './pages/Cart'
 
 
 
@@ -113,6 +114,8 @@ export default function App() {
               <Route path="/update-liqour/:liqourId" element={<UpdateLiquor/>}/>
 
               <Route path="/event" element={<Event/>}/>
+
+              <Route path="/cart" element={<Cart/>}/>
 
 
           </Route>

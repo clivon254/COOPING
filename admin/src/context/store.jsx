@@ -17,6 +17,16 @@ export default function StoreContextProvider(props)
 
     const [openDelete , setOpenDelete] = useState(false)
 
+    const [cartItems , setCartItems] = useState([])
+
+    const [ cartNumber , setCartNumber] = useState(null)
+
+    const [ cartTotal , setCartTotal] = useState(null)
+
+    const [cartLoading , setCartLoading] = useState(false)
+
+    const [cartError , setCartError] = useState(false)
+
     const [products ,setProducts] = useState([])
 
     const [productLoading , setProductLoading] = useState(false)
@@ -64,6 +74,8 @@ export default function StoreContextProvider(props)
     const [roleLoading ,setRoleLoading] = useState(false)
 
     const [roleError , setRoleError ] = useState(false)
+
+    console.log(cartItems)
 
 
     // fetchProduct
@@ -289,8 +301,42 @@ export default function StoreContextProvider(props)
         }
 
     }
- 
 
+
+    // fetchCart
+    const fetchCart = async () => {
+
+        try
+        {
+            setCartLoading(true)
+
+            setCartError(false)
+
+            const res = await axios.get(url + "/api/cart/get-cart",{headers:{token}})
+
+            if(res.data.success)
+            {
+
+                setCartLoading(false)
+
+                setCartItems(res.data.cart.items)
+
+                setCartNumber(res.data.cart.totalProducts)
+
+                setCartTotal(res.data.cart.totalPrice)
+
+            }
+
+        }
+        catch(error)
+        {
+            console.log(error.message)
+
+            setCartError(true)
+        }
+
+    }
+ 
 
     useEffect(() => {
 
@@ -312,8 +358,13 @@ export default function StoreContextProvider(props)
 
     },[])
 
-    
+    useEffect(() => {
 
+        fetchCart()
+
+    },[token])
+
+    
     const contextValue = {
         url,
         token,setToken,
@@ -350,7 +401,13 @@ export default function StoreContextProvider(props)
         roles , setRoles,
         roleLoading , setRoleLoading,
         roleError , setRoleError,
-        fetchRoles
+        fetchRoles,
+        cartItems , setCartItems,
+        cartNumber , setCartNumber,
+        cartTotal , setCartTotal,
+        cartLoading , setCartLoading ,
+        cartError , setCartError,
+        fetchCart
     }
 
     return (

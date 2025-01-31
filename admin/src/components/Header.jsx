@@ -17,7 +17,7 @@ import DashSidebar from './DashSidebar'
 
 export default function Header() {
 
-    const {open,setOpen} = useContext(StoreContext)
+    const {open,setOpen,cartNumber} = useContext(StoreContext)
 
     const {currentUser} = useSelector(state => state.user)
 
@@ -103,8 +103,8 @@ export default function Header() {
                             onClick={() => navigate('/cart')}
                         />
 
-                        <span className="absolute -right-3 -top-2 flex items-center justify-center h-6 w-6 text-white bg-[#003399] rounded-full text-xs font-semibold">
-                            1
+                        <span className="absolute -right-3 -top-2 flex items-center justify-center h-6 w-6 text-white bg-[#FF9900] rounded-full text-xs font-semibold">
+                            {cartNumber || 0}
                         </span>
 
                     </div>

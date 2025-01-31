@@ -19,12 +19,12 @@ export default function ProductCard({product}) {
     >
 
         {/* image */}
-        <div className="h-[222px] w-full">
+        <div className="h-[222px] w-full ">
 
             <img 
               src={product.images[0]}
               alt="" 
-              className="w-full h-full" 
+              className="w-full h-full shadow-sm" 
             />
 
         </div>

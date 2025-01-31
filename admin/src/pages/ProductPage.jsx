@@ -2,7 +2,7 @@
 
 import axios from 'axios'
 import React, { useContext, useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { StoreContext } from '../context/store'
 import Loader from '../components/loader'
 import Error from '../components/Error'
@@ -14,13 +14,18 @@ import {Swiper, SwiperSlide} from "swiper/react"
 import "swiper/css"
 import {Autoplay,Navigation} from "swiper/modules"
 import ProductCard from '../components/ProductCard'
+import { useSelector } from 'react-redux'
+import { toast } from 'sonner'
+import { Alert } from 'flowbite-react'
 
 
 
 
 export default function ProductPage() {
 
-  const {url,token,products} = useContext(StoreContext)
+  const {url,token,products,fetchCart} = useContext(StoreContext)
+
+  const {currentUser} = useSelector(state => state.user)
 
   const {productId} = useParams()
 
@@ -33,6 +38,23 @@ export default function ProductPage() {
   const [image, setImage] = useState(null)
 
   const ProductType = products.filter((item) => item.type === product.type)
+
+  const [alert , setAlert] = useState(null)
+
+  const [size , setSize] = useState(null)
+
+  const [color , setColor] = useState(null)
+
+  const [sauces , setSauces] = useState([])
+
+  const [spices , setSpices] = useState([])
+
+  const [addCartLoading , setAddCartLoading] = useState(false)
+
+  const [addCartError , setAddCartError] = useState(false)
+
+
+  const navigate = useNavigate()
 
 
   // fetchProduct
@@ -69,6 +91,227 @@ export default function ProductPage() {
 
   }
 
+  // addtocart
+  const addToCart = async () => {
+    
+    setAlert(null)
+
+    if(!currentUser)
+    {
+        return navigate('/sign-in')
+    }
+
+    let data ;
+
+    if(product?.type === "Food")  
+    {
+
+      if(product?.sauces?.length === 1 && product?.sauces?.some(sauce => sauce.name === "none"))
+      {
+        
+        if(spices.length === 0)
+        {
+          return setAlert("please select spice")
+        }
+
+          data = {
+            itemId:productId,
+            spices:spices
+          }
+      }
+      else if(product?.spices?.length === 1 && product?.spices?.some(spice => spice.name === "none"))
+      {
+        
+          if(sauces.length === 0)
+          {
+            return setAlert("please select sauce")
+          }
+
+          data = {
+            itemId:productId,
+            sauces:sauces
+          }
+
+      }
+      else if(product?.spices?.length === 1 && product?.spices?.some(spice => spice.name === "none") && product?.sauces?.length === 1 && product?.sauces?.some(sauce => sauce.name === "none"))
+      {
+          data={
+            itemId:productId,
+          }
+      }
+      else
+      {
+
+        if(sauces.length === 0 || spices.length === 0)
+        {
+          return setAlert('please sauces and spices')
+        }
+  
+        data={
+          itemId:productId,
+          size:size,
+          color:color
+        }
+
+      }
+
+    }
+    else if(product?.type === "Merchendise")
+    {
+
+      if(product?.sizes?.length === 1 && product?.sizes?.some(size => size.name === "none"))
+      {
+          if(color === null)
+          {
+            return setAlert('select color')
+          }
+
+          data={
+            itemId:productId,
+            color:color
+          }
+
+      }
+      else if(product?.colors?.length === 1 && product?.colors?.some(color => color.name === "none"))
+      {
+          if(size === null)
+          {
+            return setAlert('select size')
+          }
+
+          data={
+            itemId:productId,
+            size:size
+          }
+      }
+      else if(product?.sizes?.length === 1 && product?.sizes?.some(size => size.name === "none") && product?.colors?.length === 1 && product?.colors?.some(color => color.name === "none"))
+      {
+
+        data={
+          itemId:productId,
+        }
+
+      }
+      else
+      {
+
+        if(size === null || color === null)
+        {
+          return setAlert('please select size and color')
+        }
+
+        data={
+          itemId:productId,
+          size:size,
+          color:color
+        }
+
+      }
+
+      
+    }
+    else
+    {
+      
+        data = {
+          itemId:productId
+        }
+
+    }
+
+    try
+    {
+        setAddCartError(false)
+
+        setAddCartLoading(true)
+
+        const res = await axios.post(url + "/api/cart/add-cart",data,{headers:{token}})
+
+        if(res.data.success)
+        {
+
+          toast.success(res.data.message)
+
+          setAddCartLoading(false)
+
+          fetchCart()
+
+          setSize(null)
+
+          setColor(null)
+
+          setSauces([])
+
+          setSpices([])
+
+        }
+
+    }
+    catch(error)
+    {
+
+      setAddCartLoading(false)
+
+      setAddCartError(true)
+
+      if(error.response)
+      {
+        const errorMessage = error.response.data.message 
+
+        setAlert(errorMessage)
+
+        console.log(errorMessage)
+      }
+      else
+      {
+        setAlert(error.message)
+
+        console.log(error.message)
+      }
+
+    }
+
+  }
+
+  // addspice
+  const Addspice = (spiceItem) => {
+
+    setSpices((prevSpices) => {
+
+      if(prevSpices.includes(spiceItem))
+      {
+        return prevSpices.filter(s => s !== spiceItem)
+      }
+      else
+      {
+        return [...prevSpices, spiceItem]
+      }
+
+    })
+
+    // console.log("okay")
+
+  }
+
+  // addsauce
+  const Addsauce = (sauceItem) => {
+
+    setSauces((prevSauces) => {
+
+      if(prevSauces.includes(sauceItem))
+      {
+        return prevSauces.filter(s => s !== sauceItem)
+      }
+      else
+      {
+        return [...prevSauces, sauceItem]
+      }
+
+    })
+
+  }
+
+
   console.log(product)
 
   useEffect(() => {
@@ -86,7 +329,7 @@ export default function ProductPage() {
       {!productError && !productLoading && (
 
        
-        <section className="w-full p-6 space-y-10">
+        <section className="w-full p-5 space-y-20">
 
             {/* upper section */}
             <div className="w-full flex flex-col md:flex-row gap-x-10 gap-y-14">
@@ -95,12 +338,12 @@ export default function ProductPage() {
                 <div className="w-full  md:w-3/5 lg:w-1/2  space-y-3">
 
                     {/* main */}
-                    <div className="max-h-[60vh] min-h-[60vh] h-[60vh] w-full border border-zinc-400">
+                    <div className="max-h-[60vh] min-h-[60vh] h-[60vh] w-full border border-zinc-200 rounded-md shadow-md">
 
                       <img 
                         src={image}
                         alt="" 
-                        className="h-full w-full object-fill" 
+                        className="h-full w-full object-fill rounded-md" 
                       />
 
                     </div>
@@ -116,7 +359,7 @@ export default function ProductPage() {
                               onClick={() => setImage(url)}
                               src={url}
                               alt="" 
-                              className={`h-full w-full object-fill border-2 cursor-pointer ${image === url ? "opacity-100 border-4 border-[#FF9900] ease-linear" :"opacity-70 border-zinc-400" }` }
+                              className={`h-full w-full object-fill border cursor-pointer rounded-md shadow-md ${image === url ? "opacity-100 border-4 border-[#FF9900] ease-linear" :"opacity-80 border-zinc-200" }` }
                             />
                             
                           </div>
@@ -196,7 +439,7 @@ export default function ProductPage() {
                           {/* sauces */}
                           <div className="space-y-2">
 
-                              <h3 className="text-xs font-bold">select sauces </h3>
+                              <h3 className="text-xs font-bold uppercase">select sauces </h3>
 
                               {product?.sauces?.length === 1 && product?.sauces?.some(sauce => sauce.name === "none") ? 
                                 (null) 
@@ -207,7 +450,11 @@ export default function ProductPage() {
                                     
                                     {product?.sauces?.map((sauce,index) => (
 
-                                      <span className="border px-3 py-0.5 rounded-md text-sm font-medium text-gray-600 cursor-pointer">
+                                      <span 
+                                        key={index}
+                                        className={`h-10 w-24 flex justify-center items-center border px-3 py-0.5 rounded-md text-sm font-semibold text-gray-600 cursor-pointer ${sauces?.includes(sauce.name) ? "border-[#FF9900] border-2 shadow-md" : ""}`}
+                                        onClick={() => Addsauce(sauce.name)}
+                                      >
                                         {sauce?.name}
                                       </span>
 
@@ -222,7 +469,7 @@ export default function ProductPage() {
                           {/* spices */}
                           <div className="space-y-2">
 
-                              <h3 className="text-xs font-bold">select spices</h3>
+                              <h3 className="text-xs font-bold uppercase">select spices</h3>
 
                               {product?.spices?.length === 1 && product?.spices.some(spice => spice?.name === "none") ? 
                                 (null) 
@@ -233,7 +480,11 @@ export default function ProductPage() {
                                     
                                     {product?.spices?.map((spice,index) => (
 
-                                      <span className="border px-3 py-0.5 rounded-md text-sm font-medium text-gray-600 cursor-pointer">
+                                      <span 
+                                        key={index}
+                                        className={`h-10 w-24 flex justify-center items-center border px-3 py-0.5 rounded-md text-sm font-semibold text-gray-600 cursor-pointer ${spices?.includes(spice.name) ? "border-[#FF9900] border-2 shadow-md" : ""}`}
+                                        onClick={() => Addspice(spice.name)}
+                                      >
                                         {spice?.name}
                                       </span>
 
@@ -259,14 +510,18 @@ export default function ProductPage() {
                           {/* sizes */}
                           <div className="space-y-2">
 
-                            <h2 className="text-xs font-bold">select size</h2>
+                            <h2 className="text-xs font-bold uppercase">select size</h2>
                             
                             <div className="flex items-center gap-x-3 gap-y-1">
 
-                              {product?.sizes?.map((size,index) => (
+                              {product?.sizes?.map((item,index) => (
 
-                                <span key={index} className={`block border px-3 py-0.5 rounded-md text-sm font-medium text-gray-600 cursor-pointer`}>
-                                  {size.name}
+                                <span 
+                                    key={index} 
+                                    className={`h-10 w-24 flex justify-center items-center  border ${item.name === size ? "border-[#FF9900] border-2 shadow-md" : ""} px-3 py-0.5 rounded-md text-base font-bold text-gray-800 cursor-pointer`}
+                                    onClick={() => setSize(item.name)}
+                                >
+                                  {item.name}
                                 </span>
 
                               ))}
@@ -278,14 +533,18 @@ export default function ProductPage() {
                           {/* color */}
                           <div className="space-y-2">
 
-                            <h2 className="text-xs font-bold">select a color</h2>
+                            <h2 className="text-xs font-bold uppercase">select a color</h2>
                             
                             <div className="flex items-center gap-x-3 gap-y-1">
 
-                              {product?.colors?.map((color,index) => (
+                              {product?.colors?.map((item,index) => (
 
-                                <span key={index} className={`block border px-3 py-0.5 rounded-md text-sm font-medium text-gray-600 cursor-pointer`}>
-                                  {color.name}
+                                <span 
+                                  key={index} 
+                                  className={`h-10 w-24 flex justify-center items-center border ${item.name === color ? "border-[#FF9900] border-2 shadow-md" : ""} px-3 py-0.5 rounded-md text-sm font-medium text-gray-600 cursor-pointer`}
+                                  onClick={() => setColor(item.name)}
+                                >
+                                  {item.name}
                                 </span>
 
                               ))}
@@ -297,17 +556,34 @@ export default function ProductPage() {
                       </>
 
                     )}
- 
-                    {/* buttons */}
-                    <div className="flex flex-col gap-y-3">
 
-                      <button 
-                        className="bg-[#FF9900] rounded-md text-white h-14 uppercase font-semibold cursor-pointer"
+                    {alert && (
+
+                      <Alert color="failure">{alert}</Alert>
+
+                    )}
+
+                    {/* buttons */}
+                    <div className="flex flex-col lg:flex-row lg:justify-between gap-y-3 gap-x-5">
+
+                      <button
+                        onClick={() => addToCart()} 
+                        className="w-full bg-[#FF9900] rounded-md text-white h-14 uppercase font-semibold cursor-pointer shadow-xl"
                       >
-                        ADD TO CART
+                        {addCartLoading ? 
+                          (
+                            <div className="flex justify-center items-center gap-x-3">
+
+                              <span className="animate-spin h-7 w-7  rounded-full border border-white border-r-black block"/> Adding . . . .
+
+                            </div>
+                          ) 
+                          : 
+                          ("ADD TO CART")
+                        }
                       </button>
 
-                      <button className="bg-black rounded-md text-white h-14 uppercase font-semibold cursor-pointer">
+                      <button className="w-full bg-black rounded-md text-white h-14 uppercase font-semibold cursor-pointer shadow-xl">
                         BUY IT NOW
                       </button>
 
