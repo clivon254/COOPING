@@ -254,6 +254,7 @@ export const addToCart = async (req, res, next) => {
 };
 
 
+
 export const removeToCart = async (req, res, next) => {
 
     const { itemId, size, color, sauces, spices } = req.body;
@@ -460,11 +461,12 @@ export const getCart = async (req, res, next) => {
                 if (!product) return null;
 
                 const itemDetails = {
-                    productId: itemId,
+                    _id: itemId,
                     name: product.name,
+                    type:product.type,
                     regularPrice: product.regularPrice,
                     discountPrice: product.discountPrice,
-                    image: product.images,
+                    images: product.images,
                     variants: []
                 };
 

@@ -5,15 +5,176 @@ import { StoreContext } from '../context/store'
 import Error from '../components/Error'
 import { FaArrowRightLong } from "react-icons/fa6";
 import { useNavigate } from 'react-router-dom';
-
+import { IoMdAdd } from "react-icons/io"
+import { FaMinus } from "react-icons/fa";
+import { RiAddLargeFill } from "react-icons/ri";
+import axios from 'axios';
+import { toast } from 'sonner';
 
 
 export default function Cart() {
 
-  const {url,token,cartItems,cartTotal,cartNumber,cartLoading,cartError} = useContext(StoreContext)
+  const {url,token,cartItems,cartTotal,cartNumber,cartLoading,cartError,products} = useContext(StoreContext)
 
   const navigate = useNavigate()
 
+  // addtocart
+  const addToCart = async (product) => {
+    
+  
+    let data ;
+
+    if(product?.type === "Food")  
+    {
+
+      if(product?.sauces?.length === 1 && product?.sauces?.some(sauce => sauce.name === "none"))
+      {
+        
+        
+
+          data = {
+            itemId:product._id,
+            spices:spices
+          }
+      }
+      else if(product?.spices?.length === 1 && product?.spices?.some(spice => spice.name === "none"))
+      {
+        
+          if(sauces.length === 0)
+          {
+            return setAlert("please select sauce")
+          }
+
+          data = {
+            itemId:productId,
+            sauces:sauces
+          }
+
+      }
+      else if(product?.spices?.length === 1 && product?.spices?.some(spice => spice.name === "none") && product?.sauces?.length === 1 && product?.sauces?.some(sauce => sauce.name === "none"))
+      {
+          data={
+            itemId:productId,
+          }
+      }
+      else
+      {
+
+        if(sauces.length === 0 || spices.length === 0)
+        {
+          return setAlert('please sauces and spices')
+        }
+  
+        data={
+          itemId:productId,
+          size:size,
+          color:color
+        }
+
+      }
+
+    }
+    else if(product?.type === "Merchendise")
+    {
+
+      if(product?.sizes?.length === 1 && product?.sizes?.some(size => size.name === "none"))
+      {
+          if(color === null)
+          {
+            return setAlert('select color')
+          }
+
+          data={
+            itemId:productId,
+            color:color
+          }
+
+      }
+      else if(product?.colors?.length === 1 && product?.colors?.some(color => color.name === "none"))
+      {
+          if(size === null)
+          {
+            return setAlert('select size')
+          }
+
+          data={
+            itemId:productId,
+            size:size
+          }
+      }
+      else if(product?.sizes?.length === 1 && product?.sizes?.some(size => size.name === "none") && product?.colors?.length === 1 && product?.colors?.some(color => color.name === "none"))
+      {
+
+        data={
+          itemId:productId,
+        }
+
+      }
+      else
+      {
+
+        if(size === null || color === null)
+        {
+          return setAlert('please select size and color')
+        }
+
+        data={
+          itemId:productId,
+          size:size,
+          color:color
+        }
+
+      }
+
+      
+    }
+    else
+    {
+      
+        data = {
+          itemId:productId
+        }
+
+    }
+
+    try
+    {
+       
+
+        const res = await axios.post(url + "/api/cart/add-cart",data,{headers:{token}})
+
+        if(res.data.success)
+        {
+
+          toast.success(res.data.message)
+
+          fetchCart()
+
+        }
+
+    }
+    catch(error)
+    {
+
+      if(error.response)
+      {
+
+        const errorMessage = error.response.data.message 
+
+        console.log(errorMessage)
+
+      }
+      else
+      {
+
+        console.log(error.message)
+
+      }
+
+    }
+
+  }
+  
   console.log(cartNumber)
 
   console.log(cartItems)
@@ -45,38 +206,209 @@ export default function Cart() {
                   <div className="w-full ">
 
                     {/* table */}
-                    <div className="w-full flex flex-col ">
+                    <div className="w-full flex flex-col gap-y-5">
 
-                      {cartItems?.map((product) => (
+                      {cartItems?.map((product) => {
 
-                        <div className="w-full">
+                        const Item = products.find(item => item._id === product._id)
+
+                        return  (
+
+                        <div className="w-full flex items-start gap-x-5">
 
                           {/* image */}
-                          <div className="min-h-20 min-w-20 max-w-20 max-h-20">
+                          <div className="min-h-20 min-w-20 max-h-20 max-w-20">
 
                             <img 
-                              src={product?.image[0]} 
+                              src={product?.images[0]} 
                               alt="" 
                               className="h-full w-full rounded-md shadow-2xl" 
                             />
 
                           </div>
 
-                          {/* Details */}
-                          <div className="">
+                          <div className="grid grid-cols-2 md:grid-cols-3 gap-x-5 gap-y-2">
 
-                            <span className="">{product?.name}</span>
+                            {/* Details */}
+                            <div className="flex flex-col gap-y-3">
 
-                            {product?.variants?.map((variant) => (
+                              <span className="text-base font-semibold capitalize">{product?.name}</span>
 
-                              <span className=""></span>
+                              {product?.variants?.map((variant,index) => {
 
-                            ))}
+                                const Item = products.find(item => item._id === product._id)
+
+                                if(product?.type === 'Food')
+                                  {
+                                      
+                                    if(Item?.spices?.length === 1 && Item?.spices?.some(spice => spice.name === "none"))
+                                    {
+
+                                      return (
+
+                                        <>
+
+                                          <span className="">sauces:{variant?.sauces?.map((vant) => (vant)).join(",")} </span>
+
+                                        </>
+
+                                      )
+
+                                    }
+                                    else if(Item?.sauces?.length === 1 && Item?.sauces?.some(sauce => sauce.name === "none"))
+                                    {
+
+                                      return (
+
+                                        <>
+
+                                          <span className="">spices:{variant?.spices?.map((vant) => (vant)).join(",")} </span>
+
+                                        </>
+
+                                      )
+
+                                    }
+                                    else if(Item?.sauces?.length === 1 && Item?.sauces?.some(sauce => sauce.name === "none") && Item?.spices?.length === 1 && Item?.spices?.some(spice => spice.name === "none"))
+                                    {
+
+                                      return(
+
+                                        <></>
+
+                                      )
+
+                                    }
+                                    else
+                                    {
+
+                                      return(
+
+                                        <>
+
+                                          <span className="text-sm text-gray-700">
+
+                                            <span>sauces</span>:{variant?.sauces?.map((vant) => (vant)).join(",")}
+
+                                          </span>
+
+                                          <span className="text-sm text-gray-700">
+
+                                             <span>spices</span>:{variant?.spices?.map((vant) => (vant)).join(",")} 
+
+                                          </span>
+
+                                        </>
+
+                                      )
+
+                                    }
+
+                                  }
+
+                                if(product?.type === 'Merchendise')
+                                    {
+                                        
+                                      if(Item?.colors?.length === 1 && Item?.colors?.some(color => color.name === "none"))
+                                      {
+      
+                                        return (
+      
+                                          <>
+      
+                                            <span className="text-xs">size:{variant?.sizes} </span>
+      
+                                          </>
+      
+                                        )
+      
+                                      }
+                                      else if(Item?.sizes?.length === 1 && Item?.sizes?.some(size => size.name === "none"))
+                                      {
+      
+                                        return (
+      
+                                          <>
+      
+                                            <span className="text-sm">color:{variant?.colors} </span>
+      
+                                          </>
+      
+                                        )
+      
+                                      }
+                                      else if(Item?.sauces?.length === 1 && Item?.sauces?.some(sauce => sauce.name === "none") && Item?.spices?.length === 1 && Item?.spices?.some(spice => spice.name === "none"))
+                                      {
+      
+                                        return(
+      
+                                          <></>
+      
+                                        )
+      
+                                      }
+                                      else
+                                      {
+      
+                                        return(
+      
+                                          <>
+
+                                            <span className="text-sm">size:{variant?.size} </span>
+      
+                                            <span className="text-sm">color:{variant?.color} </span>
+
+                                          </>
+      
+                                        )
+      
+                                      }
+      
+                                  }
+
+                              })}
+
+                            </div>
+                            
+                            {/* price */}
+                            <div className="">
+
+                              {product?.discountPrice > 0 
+                                ?
+                                product?.discountPrice.toLocaleString('en-Kenya',{style:'currency', currency:'KES'}) 
+                                : 
+                                product?.regularPrice.toLocaleString('en-Kenya',{style:'currency', currency:'KES'})
+                              }
+
+                            </div>
+
+                            {/* quantity */}
+                            <div className="flex items-center justify-between  shadow-2xl border border-gray-100 ">
+
+                              <span 
+                                  className="bg-[#FF9900] p-2 rounded-full text-white cursor-pointer" 
+                                  onClick={() => addToCart(Item)}
+                              >
+                                <RiAddLargeFill />
+                              </span>
+
+                              <span className="text-xl">{product?.variants?.map((variant) => (variant.quantity))}</span>
+
+                              <span 
+                                className="bg-[#FF9900] p-2 rounded-full text-white cursor-pointer"
+                              >
+                                <FaMinus />
+                              </span>
+
+                            </div>
+
                           </div>
 
                         </div>
 
-                      ))}
+                        )
+
+                      })}
 
                     </div>
 
