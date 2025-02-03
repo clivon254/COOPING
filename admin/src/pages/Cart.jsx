@@ -14,12 +14,12 @@ import { toast } from 'sonner';
 
 export default function Cart() {
 
-  const {url,token,cartItems,cartTotal,cartNumber,cartLoading,cartError,products} = useContext(StoreContext)
+  const {url,token,cartItems,cartTotal,cartNumber,cartLoading,cartError,products,fetchCart} = useContext(StoreContext)
 
   const navigate = useNavigate()
 
   // addtocart
-  const addToCart = async (product) => {
+  const addToCart = async (product,Item) => {
     
   
     let data ;
@@ -29,46 +29,36 @@ export default function Cart() {
 
       if(product?.sauces?.length === 1 && product?.sauces?.some(sauce => sauce.name === "none"))
       {
-        
-        
 
           data = {
-            itemId:product._id,
-            spices:spices
+            itemId:product?._id,
+            spices:product?.variants?.map((vant) => (vant?.spices))
           }
+
       }
       else if(product?.spices?.length === 1 && product?.spices?.some(spice => spice.name === "none"))
       {
         
-          if(sauces.length === 0)
-          {
-            return setAlert("please select sauce")
-          }
 
           data = {
-            itemId:productId,
-            sauces:sauces
+            itemId:product?._id,
+            sauces:product?.variants?.map((vant) => (vant?.sauces))
           }
 
       }
       else if(product?.spices?.length === 1 && product?.spices?.some(spice => spice.name === "none") && product?.sauces?.length === 1 && product?.sauces?.some(sauce => sauce.name === "none"))
       {
           data={
-            itemId:productId,
+            itemId:product?._id,
           }
       }
       else
       {
 
-        if(sauces.length === 0 || spices.length === 0)
-        {
-          return setAlert('please sauces and spices')
-        }
-  
         data={
-          itemId:productId,
-          size:size,
-          color:color
+          itemId:product._id,
+          spices:product?.variants?.map((vant) => (vant?.spices)),
+          sauces:product?.variants?.map((vant) => (vant?.sauces))
         }
 
       }
@@ -79,78 +69,201 @@ export default function Cart() {
 
       if(product?.sizes?.length === 1 && product?.sizes?.some(size => size.name === "none"))
       {
-          if(color === null)
-          {
-            return setAlert('select color')
-          }
-
+        
           data={
-            itemId:productId,
-            color:color
+            itemId:product._id,
+            color:product?.variants?.map((vant) => (vant?.color))
           }
 
       }
       else if(product?.colors?.length === 1 && product?.colors?.some(color => color.name === "none"))
       {
-          if(size === null)
-          {
-            return setAlert('select size')
-          }
 
           data={
-            itemId:productId,
-            size:size
+            itemId:product._id,
+            size:product?.variants?.map((vant) => (vant?.size))
           }
       }
       else if(product?.sizes?.length === 1 && product?.sizes?.some(size => size.name === "none") && product?.colors?.length === 1 && product?.colors?.some(color => color.name === "none"))
       {
 
         data={
-          itemId:productId,
+          itemId:product._id,
         }
 
       }
       else
       {
 
-        if(size === null || color === null)
-        {
-          return setAlert('please select size and color')
-        }
-
         data={
-          itemId:productId,
-          size:size,
-          color:color
+          itemId:product._id,
+          size:product?.variants?.map((vant) => (vant?.size)),
+          color:product?.variants?.map((vant) => (vant?.color))
         }
 
       }
 
-      
     }
     else
     {
       
         data = {
-          itemId:productId
+          itemId:product?._id
         }
 
     }
 
+    console.log(data)
+
+
     try
     {
        
+      const res = await axios.post(url + "/api/cart/add-cart",data,{headers:{token}})
 
-        const res = await axios.post(url + "/api/cart/add-cart",data,{headers:{token}})
+      if(res.data.success)
+      {
 
-        if(res.data.success)
-        {
+        toast.success(res.data.message)
 
-          toast.success(res.data.message)
+        fetchCart()
 
-          fetchCart()
+      }
 
+    }
+    catch(error)
+    {
+
+      if(error.response)
+      {
+
+        const errorMessage = error.response.data.message 
+
+        console.log(errorMessage)
+
+      }
+      else
+      {
+
+        console.log(error.message)
+
+      }
+
+    }
+
+  }
+
+  // removeFromcart
+  const removeFromCart = async (product,Item) => {
+    
+  
+    let data ;
+
+    if(product?.type === "Food")  
+    {
+
+      if(product?.sauces?.length === 1 && product?.sauces?.some(sauce => sauce.name === "none"))
+      {
+
+          data = {
+            itemId:product?._id,
+            spices:product?.variants?.map((vant) => (vant?.spices))
+          }
+
+      }
+      else if(product?.spices?.length === 1 && product?.spices?.some(spice => spice.name === "none"))
+      {
+        
+
+          data = {
+            itemId:product?._id,
+            sauces:product?.variants?.map((vant) => (vant?.sauces))
+          }
+
+      }
+      else if(product?.spices?.length === 1 && product?.spices?.some(spice => spice.name === "none") && product?.sauces?.length === 1 && product?.sauces?.some(sauce => sauce.name === "none"))
+      {
+          data={
+            itemId:product?._id,
+          }
+      }
+      else
+      {
+
+        data={
+          itemId:product._id,
+          spices:product?.variants?.map((vant) => (vant?.spices)),
+          sauces:product?.variants?.map((vant) => (vant?.sauces))
         }
+
+      }
+
+    }
+    else if(product?.type === "Merchendise")
+    {
+
+      if(product?.sizes?.length === 1 && product?.sizes?.some(size => size.name === "none"))
+      {
+        
+          data={
+            itemId:product._id,
+            color:product?.variants?.map((vant) => (vant?.color))
+          }
+
+      }
+      else if(product?.colors?.length === 1 && product?.colors?.some(color => color.name === "none"))
+      {
+
+          data={
+            itemId:product._id,
+            size:product?.variants?.map((vant) => (vant?.size))
+          }
+      }
+      else if(product?.sizes?.length === 1 && product?.sizes?.some(size => size.name === "none") && product?.colors?.length === 1 && product?.colors?.some(color => color.name === "none"))
+      {
+
+        data={
+          itemId:product._id,
+        }
+
+      }
+      else
+      {
+
+        data={
+          itemId:product._id,
+          size:product?.variants?.map((vant) => (vant?.size)),
+          color:product?.variants?.map((vant) => (vant?.color))
+        }
+
+      }
+
+    }
+    else
+    {
+      
+        data = {
+          itemId:product?._id
+        }
+
+    }
+
+    console.log(data)
+
+
+    try
+    {
+       
+      const res = await axios.post(url + "/api/cart/remove-cart",data,{headers:{token}})
+
+      if(res.data.success)
+      {
+
+        toast.success(res.data.message)
+
+        fetchCart()
+
+      }
 
     }
     catch(error)
@@ -178,6 +291,8 @@ export default function Cart() {
   console.log(cartNumber)
 
   console.log(cartItems)
+
+  // console.log(cartItems.mp)
  
   return (
     
@@ -227,7 +342,7 @@ export default function Cart() {
 
                           </div>
 
-                          <div className="grid grid-cols-2 md:grid-cols-3 gap-x-5 gap-y-2">
+                          <div className="flex gap-x-5 gap-y-2">
 
                             {/* Details */}
                             <div className="flex flex-col gap-y-3">
@@ -383,11 +498,11 @@ export default function Cart() {
                             </div>
 
                             {/* quantity */}
-                            <div className="flex items-center justify-between  shadow-2xl border border-gray-100 ">
+                            <span className="flex items-center justify-between  shadow-2xl border border-gray-100 ">
 
                               <span 
-                                  className="bg-[#FF9900] p-2 rounded-full text-white cursor-pointer" 
-                                  onClick={() => addToCart(Item)}
+                                  className="bg-[#FF9900] p-1 rounded-full text-white cursor-pointer" 
+                                  onClick={() => addToCart(product)}
                               >
                                 <RiAddLargeFill />
                               </span>
@@ -395,12 +510,13 @@ export default function Cart() {
                               <span className="text-xl">{product?.variants?.map((variant) => (variant.quantity))}</span>
 
                               <span 
-                                className="bg-[#FF9900] p-2 rounded-full text-white cursor-pointer"
+                                className="bg-[#FF9900] p-1 rounded-full text-white cursor-pointer"
+                                onClick={() => removeFromCart(product)}
                               >
                                 <FaMinus />
                               </span>
 
-                            </div>
+                            </span>
 
                           </div>
 
@@ -455,7 +571,7 @@ export default function Cart() {
 
         {cartError && (
 
-          <Error/>
+          <Error retry={fetchCart}/>
 
         )}
 

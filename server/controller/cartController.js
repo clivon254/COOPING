@@ -5,6 +5,7 @@ import User from "../model/userModel.js";
 import { errorHandler } from "../Utils/error.js";
 
 
+
 export const addToCart = async (req, res, next) => {
 
     const { itemId, size, color, sauces, spices } = req.body;
@@ -254,8 +255,235 @@ export const addToCart = async (req, res, next) => {
 };
 
 
-
 export const removeToCart = async (req, res, next) => {
+
+    const { itemId, size, color, sauces, spices } = req.body;
+
+    const userId = req.user.id;
+
+    // Input validation
+    if (!itemId) 
+    {
+        return next(errorHandler(400, "Item ID is required"));
+    }
+
+    try 
+    {
+        const product = await Product.findById(itemId);
+
+        if (!product) 
+        {
+            return next(errorHandler(404, "Product not found"));
+        }
+
+        const userData = await User.findById(userId);
+
+        if (!userData) 
+        {
+            return next(errorHandler(404, "User not found"));
+        }
+
+        let cartData = userData.cartData || {};
+
+        // Check if the item exists in cart
+        if (!cartData[itemId]) 
+        {
+            return next(errorHandler(404, "Item not found in cart"));
+        }
+
+        // Helper function to decrease item quantity based on variants
+        const decreaseItemQuantity = (cartData, itemId) => {
+
+            if (size && color) 
+            {
+
+                if (cartData[itemId]?.[size]?.[color]) 
+                {
+
+                    if (cartData[itemId][size][color] > 1) 
+                    {
+                        cartData[itemId][size][color]--;
+                    } 
+                    else 
+                    {
+                        delete cartData[itemId][size][color];
+
+                        // Clean up empty objects
+                        if (Object.keys(cartData[itemId][size]).length === 0) 
+                        {
+                            delete cartData[itemId][size];
+                        }
+
+                    }
+
+                }
+
+            } 
+            else if (sauces && spices) 
+            {
+                const sauceKey = Array.isArray(sauces) ? sauces.sort().join(',') : sauces;
+
+                const spiceKey = Array.isArray(spices) ? spices.sort().join(',') : spices;
+
+                if (cartData[itemId]?.['variants']?.[sauceKey]?.[spiceKey]) 
+                {
+
+                    if (cartData[itemId]['variants'][sauceKey][spiceKey] > 1) 
+                    {
+                        cartData[itemId]['variants'][sauceKey][spiceKey]--;
+                    } 
+                    else 
+                    {
+                        delete cartData[itemId]['variants'][sauceKey][spiceKey];
+
+                        // Clean up empty objects
+                        if (Object.keys(cartData[itemId]['variants'][sauceKey]).length === 0)
+                        {
+                            delete cartData[itemId]['variants'][sauceKey];
+                        }
+                        if (Object.keys(cartData[itemId]['variants']).length === 0) 
+                        {
+                            delete cartData[itemId]['variants'];
+                        }
+
+                    }
+
+                }
+
+            } 
+            else if (size) 
+            {
+
+                if (cartData[itemId]?.[size]) 
+                {
+                    if (cartData[itemId][size] > 1) 
+                    {
+                        cartData[itemId][size]--;
+                    } 
+                    else 
+                    {
+                        delete cartData[itemId][size];
+                    }
+                }
+
+            } 
+            else if (color) 
+            {
+
+                if (cartData[itemId]?.[color]) {
+
+                    if (cartData[itemId][color] > 1) 
+                    {
+                        cartData[itemId][color]--;
+                    } 
+                    else 
+                    {
+                        delete cartData[itemId][color];
+                    }
+
+                }
+
+            } 
+            else if (sauces) 
+            {
+
+                const sauceKey = Array.isArray(sauces) ? sauces.sort().join(',') : sauces;
+
+                if (cartData[itemId]?.['sauces']?.[sauceKey]) 
+                {
+
+                    if (cartData[itemId]['sauces'][sauceKey] > 1) 
+                    {
+                        cartData[itemId]['sauces'][sauceKey]--;
+                    } 
+                    else 
+                    {
+                        delete cartData[itemId]['sauces'][sauceKey];
+
+                        if (Object.keys(cartData[itemId]['sauces']).length === 0) 
+                        {
+                            delete cartData[itemId]['sauces'];
+                        }
+                    }
+
+                }
+
+            } 
+            else if (spices) 
+            {
+                const spiceKey = Array.isArray(spices) ? spices.sort().join(',') : spices;
+
+                if (cartData[itemId]?.['spices']?.[spiceKey]) 
+                {
+
+                    if (cartData[itemId]['spices'][spiceKey] > 1) 
+                    {
+                        cartData[itemId]['spices'][spiceKey]--;
+                    } 
+                    else 
+                    {
+                        delete cartData[itemId]['spices'][spiceKey];
+
+                        if (Object.keys(cartData[itemId]['spices']).length === 0) 
+                        {
+                            delete cartData[itemId]['spices'];
+                        }
+
+                    }
+
+                }
+            } 
+            else 
+            {
+
+                // Decrease base product quantity
+                if (cartData[itemId]?.quantity) 
+                {
+
+                    if (cartData[itemId].quantity > 1) 
+                    {
+                        cartData[itemId].quantity--;
+                    } 
+                    else 
+                    {
+                        delete cartData[itemId].quantity;
+                    }
+
+                }
+
+            }
+
+            // Remove item completely if no variants remain
+            if (Object.keys(cartData[itemId]).length === 0) 
+            {
+                delete cartData[itemId];
+            }
+
+            return cartData;
+
+        };
+
+        // Decrease the item quantity
+        cartData = decreaseItemQuantity(cartData, itemId);
+
+        // Update user's cart in database
+        await User.findByIdAndUpdate(userId, { cartData }, { new: true });
+
+        res.status(200).json({success: true, message: `Quantity decreased for ${product.name}`});
+
+    } 
+    catch (error) 
+    {
+        console.error('Remove from cart error:', error);
+
+        next(error);
+
+    }
+
+};
+
+
+export const DeleteFromCart = async (req, res, next) => {
 
     const { itemId, size, color, sauces, spices } = req.body;
 

@@ -144,13 +144,23 @@ export default function ProductPage() {
 
         if(sauces.length === 0 || spices.length === 0)
         {
-          return setAlert('please sauces and spices')
+          return setAlert('please select sauces and spices')
         }
-  
+
+        if(sauces.length === 0 )
+        {
+          return setAlert('please select sauces ')
+        }
+
+        if(spices.length === 0)
+        {
+          return setAlert('please select spices')
+        }
+
         data={
           itemId:productId,
-          size:size,
-          color:color
+          sauces:sauces,
+          spices:spices
         }
 
       }

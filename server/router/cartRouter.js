@@ -1,7 +1,7 @@
 
 
 import express from "express"
-import { addToCart, getCart, removeToCart } from "../controller/cartController.js"
+import { addToCart, DeleteFromCart, getCart, removeToCart } from "../controller/cartController.js"
 import { verifyToken } from "../Utils/verify.js"
 
 
@@ -9,6 +9,9 @@ const cartRouter = express.Router()
 
 
 cartRouter.post('/add-cart' ,verifyToken, addToCart)
+
+
+cartRouter.post('/delete-cart' ,verifyToken , DeleteFromCart)
 
 
 cartRouter.post('/remove-cart' ,verifyToken , removeToCart)
