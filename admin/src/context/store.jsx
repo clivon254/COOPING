@@ -75,7 +75,12 @@ export default function StoreContextProvider(props)
 
     const [roleError , setRoleError ] = useState(false)
 
-    console.log(cartItems)
+    const [deliveries ,setDeliveries] = useState([])
+
+    const [deliveryLoading , setDeliveryLoading] = useState(false)
+
+    const [deliveryError , setDeliveryError] = useState(false)
+
 
 
     // fetchProduct
@@ -302,6 +307,36 @@ export default function StoreContextProvider(props)
 
     }
 
+    // fetchDelivery
+    const fetchDelivery = async () => {
+
+        try
+        {
+            setDeliveryError(false)
+
+            setDeliveryLoading(true)
+
+            const res = await axios.get(url + "/api/delivery/get-deliveries")
+
+            if(res.data.success)
+            {
+                setDeliveryLoading(false)
+
+                setDeliveries(res.data.deliveries)
+            }
+
+        }
+        catch(error)
+        {
+            setDeliveryLoading(false)
+
+            setDeliveryError(false)
+
+            console.log(error.message)
+        }
+
+    }
+
 
     // fetchCart
     const fetchCart = async () => {
@@ -356,7 +391,10 @@ export default function StoreContextProvider(props)
 
         fetchRoles()
 
+        fetchDelivery()
+
     },[])
+    
 
     useEffect(() => {
 
@@ -407,7 +445,11 @@ export default function StoreContextProvider(props)
         cartTotal , setCartTotal,
         cartLoading , setCartLoading ,
         cartError , setCartError,
-        fetchCart
+        fetchCart,
+        deliveries, setDeliveries,
+        deliveryLoading, setDeliveryLoading,
+        deliveryError , setDeliveryError,
+        fetchDelivery
     }
 
     return (

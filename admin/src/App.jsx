@@ -27,6 +27,7 @@ import AddDrink from './pages/AddDrink'
 import AddLiqour from './pages/AddLiquor'
 import UpdateLiquor from './pages/UpdateLiquor'
 import Cart from './pages/Cart'
+import CheckOut from './pages/CheckOut'
 
 
 
@@ -117,6 +118,8 @@ export default function App() {
 
               <Route path="/cart" element={<Cart/>}/>
 
+              <Route path="/check-out" element={<CheckOut/>}/>
+
 
           </Route>
 
@@ -128,7 +131,6 @@ export default function App() {
 
           <Route path="/sign-in" element={<SignIn/>}/>
 
-           
         </Routes>
 
       </main>
