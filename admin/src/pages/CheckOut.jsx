@@ -6,13 +6,15 @@ import { useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
 import MPESA from "../assets/MPESA.png"
 import COD from "../assets/COD.png"
+import { Alert } from 'flowbite-react'
+import axios from 'axios'
 
 
 
 
 export default function CheckOut() {
 
-  const {url,token,cartItems,cartTotal,deliveries} = useContext(StoreContext)
+  const {url,token,cartItems,cartTotal,deliveries,products} = useContext(StoreContext)
 
   const [data ,setData] = useState({})
 
@@ -40,17 +42,18 @@ export default function CheckOut() {
 
   let TotalAmount = Number(cartTotal) + Number(delivery?.value || 0)
 
-  console.log(deliveries)
 
   // onChangeData
   const onChangeData = (e) => {
 
-    setData({...data , [e.target.name]:e.targrt.value})
+    setData({...data , [e.target.name]:e.target.value})
 
   }
 
   // placeorder
-  const placeOrder = async () => {
+  const placeOrder = async (e) => {
+
+    e.preventDefault()
 
     setError(null)
 
@@ -80,7 +83,7 @@ export default function CheckOut() {
 
           setError(null)
 
-          const res = await axios.post(url + "/api/order/mpesa",orderData,{headers:{token}})
+          const res = await axios.post(url + "/api/order/stk-push",orderData,{headers:{token}})
 
           if(res.data.success)
           {
@@ -195,7 +198,7 @@ export default function CheckOut() {
     
    <section className="w-full p-5">
 
-      <form className="flex flex-col lg:flex-row gap-x-10  gap-y-24">
+      <form onSubmit={placeOrder} className="flex flex-col lg:flex-row gap-x-10  gap-y-24">
 
         {/* BILLING DATA */}
         <div className="w-full lg:w-[55%] space-y-10">
@@ -289,7 +292,6 @@ export default function CheckOut() {
                     name="postcode"
                     value={data.postcode}
                     onChange={onChangeData}
-                    required
                   />
 
 
@@ -310,7 +312,7 @@ export default function CheckOut() {
               {deliveries.map((ship,index) => (
 
                 <div 
-                  className="w-full flex items-center gap-x-5 px-3 py-5 border border-gray-700"
+                  className="w-full flex items-center gap-x-5 px-3 py-5 border border-gray-400"
                   key={index}
                 >
 
@@ -342,7 +344,324 @@ export default function CheckOut() {
         </div>
 
         {/* ORDER SUMMARY */}
-        <div className="w-full lg:w-[35%] space-y-3"></div>
+        <div className="w-full lg:w-[35%] space-y-8">
+
+          <h2 className="text-xl font-semibold tracking-tighter">Order summary</h2>
+
+          {/* products */}
+          <div className="space-y-2">
+
+            {cartItems?.map((item,index) => (
+
+              <div 
+                key={index}
+                className="flex items-start justify-between gap-x-5"
+              >
+
+                <div className="flex items-start gap-x-5">
+                  
+                  {/* images */}
+                  <div className="h-12 w-12 min-h-12 max-h-12 min-w-12 relative shadow">
+
+                    <img 
+                      src={item?.images[0]} 
+                      alt="" 
+                      className="h-full w-full rounded-md shadow-xl"
+                    />
+
+                    <span className="absolute top-0 -right-2 h-6 w-6 bg-[#FF9900] rounded-full grid place-content-center text-white text-xs font-semibold">
+                      {item?.variants?.map((variant) => (variant.quantity))}
+                    </span>
+
+                  </div>
+
+                  {/* details */}
+                  <div className="flex flex-col text-xs font-medium gap-y-1">
+                    
+                      <span className="text-base  font-semibold capitalize">{item?.name}</span>
+
+                      {item?.variants?.map((variant,index) => {
+
+                        const Item = products.find(x => x._id === item._id)
+
+                        if(item?.type === 'Food')
+                        {
+                          
+                          //sauces
+                          if(Item?.spices?.length === 1 && Item?.spices?.some(spice => spice.name === "none"))
+                          {
+
+                            return (
+
+                              <>
+
+                                <span className="">
+
+                                  <span className="text-xs font-bold text-slate-500">sauces:</span>{variant?.sauces?.map((vant) => (vant)).join(",")}
+
+                                </span>
+
+                              </>
+
+                            )
+
+                          } //spices
+                          else if(Item?.sauces?.length === 1 && Item?.sauces?.some(sauce => sauce.name === "none"))
+                          {
+
+                            return (
+
+                              <>
+
+                                <span className="">
+
+                                  <span className="text-xs font-bold text-slate-500" >spices</span>{variant?.spices?.map((vant) => (vant)).join(",")} 
+
+                                </span>
+
+                              </>
+
+                            )
+
+                          } //none
+                          else if(Item?.sauces?.length === 1 && Item?.sauces?.some(sauce => sauce.name === "none") && Item?.spices?.length === 1 && Item?.spices?.some(spice => spice.name === "none"))
+                          {
+
+                            return(
+
+                              <></>
+
+                            )
+
+                          } // spices && sauces
+                          else
+                          {
+
+                            return(
+
+                              <>
+
+                                <span className="text-sm text-gray-700">
+
+                                  <span className="text-xs font-bold text-slate-500">sauces :</span> {variant?.sauces?.map((vant) => (vant)).join(",")}
+
+                                </span>
+
+                                <span className="text-sm text-gray-700">
+
+                                  <span className="text-xs font-bold text-slate-500">spices :</span> {variant?.spices?.map((vant) => (vant)).join(",")} 
+
+                                </span>
+
+                              </>
+
+                            )
+
+                          }
+
+                        }
+
+                        if(item?.type === 'Merchendise')
+                            {
+                                
+                              if(Item?.colors?.length === 1 && Item?.colors?.some(color => color.name === "none"))
+                              {
+
+                                return (
+
+                                  <>
+
+                                    <span className="text-xs">
+
+                                      <span className="text-xs font-bold text-slate-500">size: </span>{variant?.sizes} 
+
+                                    </span>
+
+                                  </>
+
+                                )
+
+                              }
+                              else if(Item?.sizes?.length === 1 && Item?.sizes?.some(size => size.name === "none"))
+                              {
+
+                                return (
+
+                                  <>
+
+                                    <span className="text-sm">
+
+                                      <span className="text-xs font-bold text-slate-500">color: </span>{variant?.colors} 
+
+                                    </span>
+
+                                  </>
+
+                                )
+
+                              }
+                              else if(Item?.sauces?.length === 1 && Item?.sauces?.some(sauce => sauce.name === "none") && Item?.spices?.length === 1 && Item?.spices?.some(spice => spice.name === "none"))
+                              {
+
+                                return(
+
+                                  <></>
+
+                                )
+
+                              }
+                              else
+                              {
+
+                                return(
+
+                                  <>
+
+                                    <span className="text-sm">
+
+                                      <span className="text-xs font-bold text-slate-500">size : </span>{variant?.size} 
+
+                                    </span>
+
+                                    <span className="text-sm">
+                                      
+                                      <span className="text-xs font-bold text-slate-500">color : </span>{variant?.color} 
+
+                                    </span>
+
+                                  </>
+
+                                )
+
+                              }
+
+                          }
+
+                      })}
+
+                  </div>
+
+                </div>
+                
+                {/* price */}
+                <div className="text-sm text-gray-600 font-bold">
+                  {item?.discountPrice > 0 
+                    ?
+                    (item?.discountPrice * item?.variants?.map((variant) => (variant.quantity))).toLocaleString('en-Kenya',{style:'currency', currency:'KES'}) 
+                    : 
+                    (item?.regularPrice * item?.variants?.map((variant) => (variant.quantity))).toLocaleString('en-Kenya',{style:'currency', currency:'KES'})
+                  }
+                </div>
+
+              </div>
+
+            ))}
+
+          </div>
+
+          {/* cart total */}
+          <div className="space-y-4">
+
+            {/* subtotal */}
+            <div className="flex items-center justify-between border-y p-2 border-gray-300">
+
+              <span className="text-base font-semibold tracking-tighter">Cart Total</span>
+
+              <span className="text-sm text-gray-900 font-bold">
+                {cartTotal?.toLocaleString('en-KE',{style:'currency',currency:'KES'})}
+              </span>
+
+            </div>
+
+            {/* delivery */}
+            <div className="flex items-center justify-between border-b pb-2 border-gray-300">
+
+              <span className="text-base font-semibold tracking-tighter">Delivery fee</span>
+
+              <span className="text-sm text-gray-900 font-bold">
+                {(delivery?.value || 0)?.toLocaleString('en-KE',{style:'currency',currency:'KES'})}
+              </span>
+
+            </div>
+
+            {/* total */}
+            <div className="flex items-center justify-between border-b pb-2 border-gray-300">
+
+              <span className="text-base font-semibold tracking-tighter">Total</span>
+
+              <span className="text-sm text-gray-900 font-bold">
+                {TotalAmount?.toLocaleString('en-KE',{style:'currency',currency:'KES'})}
+              </span>
+
+            </div>
+
+          </div>
+
+          {/* payment method */}
+          <div className="space-y-4">
+
+            <h2 className="text-xl font-semibold tracking-tighter">Payment method</h2>
+
+            <div className="space-y-3">
+
+              {payment.map((pay,index) => (
+
+                <div 
+                  key={index}
+                  className="flex items-center gap-x-5"
+                >
+
+                  <input 
+                    type="radio" 
+                    name="paymentmethod" 
+                    value={pay?.value}
+                    onChange={(e) => setPaymentmethod(e.target.value)}
+                  />
+
+                  <div className="h-16 w-32">
+
+                    <img 
+                      src={pay?.img}
+                      alt="" 
+                      className="w-full h-full" 
+                    />
+
+                  </div>
+
+                </div>
+
+              ))}
+
+            </div>
+
+          </div>
+
+          <button 
+            className="w-full bg-[#FF9900] rounded-md text-white h-14 uppercase font-semibold cursor-pointer shadow-xl"
+            disabled={loading}
+            type="submit"
+          >
+            {loading 
+              ? 
+              (
+                <div className="flex items-center justify-center gap-x-5">
+
+                  <span className="block h-7 w-7 rounded-full border-2 border-black  border-r-gray-200"/> placing . . . 
+
+                </div>
+              ) 
+              : 
+              ("PLACE ORDER")
+            }
+          </button>
+
+          {error && (
+
+            <Alert color="failure">{error}</Alert>
+
+          )}
+
+        </div>
 
       </form>
 

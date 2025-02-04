@@ -28,6 +28,9 @@ import AddLiqour from './pages/AddLiquor'
 import UpdateLiquor from './pages/UpdateLiquor'
 import Cart from './pages/Cart'
 import CheckOut from './pages/CheckOut'
+import Orders from './pages/Orders'
+import ConfirmPayment from './pages/ConfirmPayment'
+
 
 
 
@@ -117,6 +120,10 @@ export default function App() {
               <Route path="/event" element={<Event/>}/>
 
               <Route path="/cart" element={<Cart/>}/>
+
+              <Route path="/orders" element={<Orders/>}/>
+
+              <Route path="/confrim-payment/:CheckoutRequestID/:orderId" element={<ConfirmPayment/>}/>
 
               <Route path="/check-out" element={<CheckOut/>}/>
 

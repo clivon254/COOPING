@@ -105,7 +105,7 @@ export const mpesa = async (req,res,next) => {
             "PartyA":`254${phone}`,    
             "PartyB":shortcode,    
             "PhoneNumber":`254${phone}`,    
-            "CallBackURL":`https://ea90-41-209-60-94.ngrok-free.app/api/order/callback?orderId=${order._id}&userId=${userId}`,    
+            "CallBackURL":`https://1b0c-41-209-60-94.ngrok-free.app/api/order/callback?orderId=${order._id}&userId=${userId}`,    
             "AccountReference":"COOPING",    
             "TransactionDesc":"Test"
         }
@@ -282,7 +282,7 @@ export const confirmPayment = async (req,res,next) => {
             }
         )
 
-        if(response.data.ResultCode === 0)
+        if(response.data.ResultCode === "0")
         {
 
             const order = await Order.findById(orderId)
@@ -295,20 +295,36 @@ export const confirmPayment = async (req,res,next) => {
 
                     const productId = item._id
 
-                    const quantity = Number(item.quantity)
+                    const quantity = Number(item?.variants?.map((variant) => (variant.quantity)))
 
                     const product = await Product.findById(productId)
 
-                    if(product)
+                    if(!product)
                     {
-                        product.instock -= quantity
+                        return next(errorHandler(404, "error not found"))
+                    }  
+                    
+                    if(product.instock)
+                    {   
+                        
+                        console.log(Number(product.instock))
+                        
+                        if (typeof product.instock === 'number' && typeof quantity === 'number') { 
+                            
+                                Number(product.instock); 
 
-                        await product.save()
+                                console.log(product.instock)
+
+                                console.log(quantity)
+
+                                Number(product.instock) -= quantity
+
+                                await product.save()
+
+                         } 
+
                     }
-                    else
-                    {
-                        console.log("product not found")
-                    }
+                    
 
                 }
 
@@ -326,7 +342,7 @@ export const confirmPayment = async (req,res,next) => {
                 console.log("order not found")
             }
 
-            res.status(200).json({success:true , data:response.data ,message:'Transaction was succesfull'})
+            res.status(200).json({success:true , data:response.data , message:'Transaction was succesful'})
 
         }
         else
@@ -341,7 +357,7 @@ export const confirmPayment = async (req,res,next) => {
     {
         next(error)
 
-        console.log(error)
+        console.log(error.message)
     }
 
 }
@@ -379,7 +395,7 @@ export const COD = async (req,res,next) => {
 
 }
 
-
+ 
 // USER ORDERS
 export const userOrders = async (req,res,next) => {
 

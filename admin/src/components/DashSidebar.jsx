@@ -9,6 +9,8 @@ import { RiDrinks2Line } from "react-icons/ri";
 import { MdLiquor } from "react-icons/md";
 import { TbCalendarEvent } from "react-icons/tb";
 import { GiClothes } from "react-icons/gi";
+import { TbTruckDelivery } from "react-icons/tb";
+
 
 
 
@@ -34,6 +36,21 @@ export default function DashSidebar() {
                <span className="flex items-center gap-x-5">
 
                     <MdOutlineDashboardCustomize /> Dashboard
+
+               </span>
+
+           </NavLink>
+
+            {/* orders */}
+            <NavLink
+                to = "/orders"
+                onClick={() => setOpen(false)}
+                className={({isActive}) => isActive ? "bg-orange-100 text-orange-500 px-3 py-1 text-base/9 font-semibold rounded-xl" : "font-semibold text-base/9"}
+           >
+
+               <span className="flex items-center gap-x-5">
+
+                    <TbTruckDelivery size={24} /> Orders
 
                </span>
 

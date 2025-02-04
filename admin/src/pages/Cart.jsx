@@ -485,9 +485,9 @@ export default function Cart() {
                           <div className="flex-1 flex gap-x-5 justify-between">
 
                             {/* Details */}
-                            <div className="w-[50%] flex flex-col gap-y-2">
+                            <div className="w-[50%] flex flex-col gap-y-4">
 
-                              <span className="text-base lg:text-xl font-semibold capitalize">{product?.name}</span>
+                              <span className="text-base font-semibold capitalize">{product?.name}</span>
 
                               {product?.variants?.map((variant,index) => {
 
