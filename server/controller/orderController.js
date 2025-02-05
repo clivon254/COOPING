@@ -62,6 +62,11 @@ export const mpesa = async (req,res,next) => {
 
     const phone = address.phone.substring(1)
 
+    if(items.length < 0)
+    {
+        return next(errorHandler(400,"Have atleast a product in your cart"))
+    }
+
 
     try
     {

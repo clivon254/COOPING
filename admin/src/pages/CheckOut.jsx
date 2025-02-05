@@ -1,6 +1,6 @@
 
 
-import React, { useContext,useState } from 'react'
+import React, { useContext,useEffect,useState } from 'react'
 import { StoreContext } from '../context/store'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
@@ -14,7 +14,7 @@ import axios from 'axios'
 
 export default function CheckOut() {
 
-  const {url,token,cartItems,cartTotal,deliveries,products} = useContext(StoreContext)
+  const {url,token,cartItems,cartTotal,cartNumber,deliveries,products} = useContext(StoreContext)
 
   const [data ,setData] = useState({})
 
@@ -54,6 +54,11 @@ export default function CheckOut() {
   const placeOrder = async (e) => {
 
     e.preventDefault()
+
+    if(cartNumber <= 0)
+    {
+      navigate('/cart')
+    }
 
     setError(null)
 
@@ -192,6 +197,15 @@ export default function CheckOut() {
     }
 
   }
+
+  useEffect(() => {
+
+    if(cartNumber <= 0)
+    {
+      navigate('/cart')
+    }
+
+  },[cartNumber])
 
  
   return (
@@ -646,7 +660,7 @@ export default function CheckOut() {
               (
                 <div className="flex items-center justify-center gap-x-5">
 
-                  <span className="block h-7 w-7 rounded-full border-2 border-black  border-r-gray-200"/> placing . . . 
+                  <span className="animate-spin block h-7 w-7 rounded-full border-2 border-black  border-r-gray-200"/> placing  . . . 
 
                 </div>
               ) 
