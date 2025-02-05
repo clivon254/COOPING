@@ -30,6 +30,7 @@ import Cart from './pages/Cart'
 import CheckOut from './pages/CheckOut'
 import Orders from './pages/Orders'
 import ConfirmPayment from './pages/ConfirmPayment'
+import Prompt from './pages/Prompt'
 
 
 
@@ -127,6 +128,7 @@ export default function App() {
 
               <Route path="/check-out" element={<CheckOut/>}/>
 
+              <Route path="/prompt" element={<Prompt/>}/>
 
           </Route>
 

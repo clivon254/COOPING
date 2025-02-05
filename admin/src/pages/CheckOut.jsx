@@ -144,7 +144,7 @@ export default function CheckOut() {
             
             setLoading(false)
 
-            toast.success("/order completed")
+            toast.success("order completed")
 
             navigate('/orders')
 

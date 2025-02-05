@@ -376,7 +376,7 @@ export default function Orders() {
                           {finalOrders.map((order,index) => (
 
                             <div 
-                              className="border border-orange-200 bg-white shadow-xl rounded-md p-2 w-full grid grid-cols-1 sm:grid-cols-[2fr_1fr_1fr] lg:[2fr_1fr_1fr_1fr] text-xs gap-3 "
+                              className="border border-orange-200 bg-white shadow-xl rounded-md p-4 w-full grid grid-cols-1 sm:grid-cols-[2fr_1fr_1fr] lg:[2fr_1fr_1fr_1fr] text-xs gap-3 "
                               key={index}
                             >
 
@@ -605,7 +605,7 @@ export default function Orders() {
                               {/*method ,date,method  */}
                               <div className="space-y-1">
 
-                                <p className="">
+                                <p className="flex  items-center gap-x-2">
 
                                   <span className="font-bold text-slate-700">Items : </span> 
 
@@ -613,7 +613,7 @@ export default function Orders() {
 
                                 </p>
 
-                                <p className="">
+                                <p className="flex  items-center gap-x-2">
 
                                   <span className="font-bold text-slate-700">Method : </span> 
 
@@ -629,19 +629,25 @@ export default function Orders() {
 
                                 </p>
 
-                                <p className="">Date : {new Date(order.createdAt).toLocaleString()}</p>
+                                <p className="flex  items-center gap-x-2">
+
+                                  <span className="font-bold text-slate-900">Date : </span>
+
+                                  <span className="font-bold text-black text-sm">{new Date(order.createdAt).toLocaleString()} </span>
+                                
+                                </p>
 
                               </div>
 
                               {/* amount */}
                               <div className="">
 
-                                <p className="">
-                                  Amount :{(order?.amount).toLocaleString('en-KE',{style:'currency' , currency :'KES'})}
+                                <p className="text-xs font-bold text-gray-600">
+                                  Amount : <span className="text-sm text-black font-semibold">{(order?.amount).toLocaleString('en-KE',{style:'currency' , currency :'KES'})} </span>
                                 </p>
 
-                                <p className="">
-                                    Delivery : {order?.delivery?.place} ,{order?.delivery?.value}
+                                <p className="text-xs font-bold text-gray-600">
+                                    Delivery : <span className="text-sm text-black font-semibold">{order?.delivery?.place} ,{(order?.delivery?.value)?.toLocaleString('en-KE',{style:'currency' , currency :'KES'})}</span>
                                 </p>
 
 

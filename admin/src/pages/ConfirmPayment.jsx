@@ -106,7 +106,7 @@ export default function ConfirmPayment() {
 
             confirmPayment()
 
-        },45000)
+        },30000)
 
         eventSource.onmessage = (event) => {
 
