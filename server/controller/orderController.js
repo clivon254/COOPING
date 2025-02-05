@@ -390,11 +390,34 @@ export const COD = async (req,res,next) => {
     }
     catch(error)
     {
-        console.log(error.message)
+        next(error)
     }
 
 }
 
+// get order
+export const getOrder = async (req,res,next) => {
+
+    try
+    {
+        const {orderId} = req.params
+
+        const order = await Order.findById(orderId)
+
+        if(!order)
+        {
+            return next(errorHandler(404,"Order not found"))
+        }
+
+        res.status(200).json({success:true ,order})
+
+    }
+    catch(error)
+    {
+        next(error)
+    }
+
+}
  
 // USER ORDERS
 export const userOrders = async (req,res,next) => {
@@ -442,7 +465,7 @@ export const adminOrders = async (req,res,next) => {
 
         const orders = await Order.find({
             ...(status && {status:status})
-        })
+        }).sort({_id:-1})
 
         res.status(200).json({success:true ,orders})
     }
@@ -507,7 +530,7 @@ export const deleteOrder = async (req,res,next) => {
 
         await Order.findByIdAndDelete(orderId)
 
-        res.status(200).json({success:true ,message:"status has been deleted successfully"})
+        res.status(200).json({success:true ,message:"order has been deleted successfully"})
 
     }
     catch(error)

@@ -677,7 +677,9 @@ export default function Cart() {
                                     <RiAddLargeFill />
                                   </span>
 
-                                  <span className="text-base font-bold text-gray-600">{product?.variants?.map((variant) => (variant.quantity))}</span>
+                                  <span className="text-base font-bold text-gray-600">
+                                    {product?.variants?.map((variant) => (variant.quantity))}
+                                  </span>
 
                                   <span 
                                     className="bg-[#FF9900] p-1 rounded-full text-white cursor-pointer"

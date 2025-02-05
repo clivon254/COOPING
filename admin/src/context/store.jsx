@@ -81,6 +81,12 @@ export default function StoreContextProvider(props)
 
     const [deliveryError , setDeliveryError] = useState(false)
 
+    const [orders ,setOrders] = useState([])
+
+    const [ordersLoading , setOrdersLoading] = useState(false)
+
+    const [ordersError , setOrdersError] = useState(false)
+
 
 
     // fetchProduct
@@ -371,6 +377,39 @@ export default function StoreContextProvider(props)
         }
 
     }
+
+    // fetchOrders
+    const fetchOrders = async () => {
+
+        try
+        {
+            setOrdersLoading(true)
+
+            setOrdersError(false)
+
+            const res = await axios.get(url + "/api/order/get-adminOrders",{headers:{token}})
+
+            if(res.data.success)
+            {
+
+                setOrdersLoading(false)
+
+                setOrders(res.data.orders)
+
+
+            }
+
+        }
+        catch(error)
+        {
+            console.log(error.message)
+
+            setOrdersLoading(false)
+
+            setOrdersError(true)
+        }
+
+    }
  
 
     useEffect(() => {
@@ -393,8 +432,10 @@ export default function StoreContextProvider(props)
 
         fetchDelivery()
 
+        fetchOrders()
+
     },[])
-    
+
 
     useEffect(() => {
 
@@ -449,7 +490,11 @@ export default function StoreContextProvider(props)
         deliveries, setDeliveries,
         deliveryLoading, setDeliveryLoading,
         deliveryError , setDeliveryError,
-        fetchDelivery
+        fetchDelivery,
+        orders , setOrders,
+        ordersLoading , setOrdersLoading,
+        ordersError , setOrdersError,
+        fetchOrders,
     }
 
     return (
