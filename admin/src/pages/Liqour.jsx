@@ -13,6 +13,8 @@ import { Table } from 'flowbite-react'
 import { MdOutlinePreview } from "react-icons/md";
 import { FaEdit, FaTrashAlt } from "react-icons/fa"
 import Error from '../components/Error'
+import _ from "lodash"
+
 
 
 export default function Liqour() {
@@ -29,11 +31,138 @@ export default function Liqour() {
 
   const [productToDelete , setProductToDelete] = useState("")
 
-
   const Liqours = products.filter(product => product.type === "Liqour")
 
+  const [filteredLiqour , setFilteredLiqour] = useState(Liqours)
+    
+  const [searchLiqour , setSearchLiqour] = useState("")
 
-  console.log(Liqours)
+
+
+  // ***  PAGINATION  START***//
+  
+      const [page ,setPage] = useState(1)
+  
+      const [limit ,setLimit] = useState(8)
+  
+      const [siblings ,setSiblings] = useState(1)
+  
+  
+      // getproducts
+      const getProducts = (page,limit) => {
+  
+          let array = []
+  
+          for(let i = (page -1) * limit ; i < (page * limit) && filteredLiqour[i] ; i++)
+          {
+              array.push(filteredLiqour[i])
+          }
+  
+          return array;
+  
+      }
+  
+      const finalProducts = getProducts(page,limit)
+  
+      const finalLength = filteredLiqour?.length
+  
+      const totalPage = Math.ceil(finalLength / limit)
+  
+  
+      // returnPaginationPage
+      const returnPaginationPage = (totalPage ,page ,limit,siblings) => {
+  
+          let totalPageNoInArrray = 7 + siblings
+  
+          if(totalPageNoInArrray >= totalPage)
+          {
+              return _.range(1 ,totalPage + 1)
+          }
+  
+          let leftSiblingsIndex = Math.max(page - siblings , 1)
+  
+          let rightSiblingsIndex = Math.min(page + siblings, totalPage)
+  
+  
+          let showLeftDots = leftSiblingsIndex > 2 ;
+  
+          let showRightDots = rightSiblingsIndex < totalPage - 2
+  
+          if(!showLeftDots && showRightDots)
+          {
+              let leftItemsCount = 3 + 2 * siblings ;
+  
+              let leftRange = _.range(1 ,leftItemsCount + 1)
+  
+              return [...leftRange ,"...", totalPage]
+          }
+          else if(showLeftDots && !showRightDots)
+          {
+              let rightItemsCount = 3 + 2 * siblings
+  
+              let rightRange = _.range(totalPage - rightItemsCount + 1,totalPage +1)
+  
+              return [1, "...", ...rightRange]
+          }
+          else
+          {
+              let middleRange = _.range(leftSiblingsIndex, rightSiblingsIndex + 1)
+  
+              return[1,"...",...middleRange,"...",totalPage]
+          }
+  
+      }
+  
+      const array = returnPaginationPage(totalPage,page,limit,siblings)
+  
+      // handlePageChange
+      const handlePageChange = (value) => {
+  
+          if(value === "&laquo;")
+          {
+              setPage(1)
+          }
+          else if(value === "&lsquo;")
+          {
+              if(page !== 1)
+              {
+                  setPage(page -1)
+              }
+          }
+          else if(value === "&raquo;" )
+          {
+              if(page !== totalPage)
+              {
+                  setPage(page+1)
+              }
+          }
+          else if(value === "&rsquo;")
+          {
+              setPage(totalPage)
+          }
+          else
+          {
+              setPage(value)
+          }
+  
+      }
+  
+  
+    // ***  PAGINATION  END ***//
+
+
+  // handle Search
+  const handleSearch = (e) => {
+
+    const searchLiqour = e.target.value 
+
+    setSearchLiqour(searchLiqour)
+
+    const filtered = Liqours?.filter((product) => product.name.toLowerCase().includes(searchLiqour.toLowerCase()))
+
+    setFilteredLiqour(filtered)
+
+  }
 
   // fetchProduct
   const fetchProduct = async () => {
@@ -117,7 +246,7 @@ export default function Liqour() {
           </div>
 
           {/* button */}
-          <button className="flex  justify-center rounded-md bg-[#FF9900] px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-[#ff9900] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FF9900] disabled:cursor-not-allowed cursor-pointer disabled:bg-[#FF9900]/80 ">
+          <button className="flex  justify-center rounded-md bg-[#FF9900] px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xl hover:bg-[#ff9900] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FF9900] disabled:cursor-not-allowed cursor-pointer disabled:bg-[#FF9900]/80 ">
 
             <Link to="/add-liqour" className="flex items-center gap-x-3">
 
@@ -134,20 +263,15 @@ export default function Liqour() {
 
           <input 
             type="text" 
-            className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-[#FF9900] sm:text-sm/6"
-            placeholder='enter food'
+            className="block w-full shadow-xl rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-[#FF9900] sm:text-sm/6"
+            placeholder='enter liqour'
+            onChange={handleSearch}
           />
-          
-          {/* category */}
-          <select 
-              className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-[#FF9900] sm:text-sm/6"  
-          >
-
-          </select>
+        
 
           {/* button */}
           <button 
-              className="flex  w-full justify-center rounded-md bg-[#FF9900] px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-[#ff9900] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FF9900] disabled:cursor-not-allowed cursor-pointer disabled:bg-[#FF9900]/80 "
+              className="flex  w-full justify-center rounded-md bg-[#FF9900] px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xl hover:bg-[#ff9900] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FF9900] disabled:cursor-not-allowed cursor-pointer disabled:bg-[#FF9900]/80 "
           >
             search
           </button>
@@ -183,11 +307,11 @@ export default function Liqour() {
 
                 <>
 
-                  {Liqours.length > 0 ? (
+                  {finalProducts.length > 0 ? (
 
                    <>
 
-                      {Liqours.map((food,index) => (
+                      {finalProducts.map((food,index) => (
 
                         <Table.Body>
 
@@ -352,6 +476,56 @@ export default function Liqour() {
 
           </Table>
         </div>
+
+        {/* pagignation */}
+        {finalProducts.length > 0 && (
+
+          <div className="w-full flex justify-center items-center">
+
+            <ul className="flex py-4 ">
+
+                <li className="border border-orange-200 bg-orange-50 text-[#ff9900] flex items-center justify-center h-10 w-10 cursor-pointer hover:bg-slate-200 rounded-l-md">
+                    <span onClick={() => handlePageChange("&laquo;")} className="">&laquo;</span>
+                </li>
+
+                <li className="border border-orange-200 bg-orange-50 text-[#ff9900] flex items-center justify-center h-10 w-10 cursor-pointer hover:bg-slate-200">
+                    <span onClick={() => handlePageChange("&lsquo;")} className="">&lsaquo;</span>
+                </li>
+
+                {array.map(value => {
+
+                    if(value === page)
+                    {
+                        return (
+                            <li className="font-bold border border-orange-200 bg-orange-200 flex items-center justify-center h-10 w-10 cursor-pointer bg-primary text-[#FF9900]">
+                                <span onClick={() => handlePageChange(value)} className="">{value}</span>
+                            </li>
+                        )
+                    }
+                    else
+                    {
+                        return (
+                            <li className="font-bold border border-orange-200 bg-orange-50 flex items-center justify-center h-10 w-10 cursor-pointer text-[#FF9900]">
+                                <span onClick={() => handlePageChange(value)} className="">{value}</span>
+                            </li>
+                        )
+                    }
+
+                })}
+                
+                <li className="border border-orange-200 bg-orange-50 text-[#ff9900] flex items-center justify-center h-10 w-10 cursor-pointer hover:bg-slate-200">
+                    <span onClick={() => handlePageChange("&raquo;")} className="">&rsaquo;</span>
+                </li>
+
+                <li className="border border-orange-200 bg-orange-50 text-[#ff9900] flex items-center justify-center h-10 w-10 cursor-pointer hover:bg-slate-200 rounded-r-md">
+                    <span onClick={() => handlePageChange("&rsquo;")} className="">&raquo;</span>
+                </li>
+
+            </ul>
+
+          </div>
+
+        )}
 
       </section>
 

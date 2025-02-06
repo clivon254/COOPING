@@ -12,6 +12,7 @@ import { GiClothes } from "react-icons/gi";
 import { TbTruckDelivery } from "react-icons/tb";
 import { HiOutlineCash } from "react-icons/hi";
 import { IoCashOutline } from "react-icons/io5";
+import { FaUsers } from 'react-icons/fa';
 
 
 
@@ -134,7 +135,8 @@ export default function DashSidebar() {
 
            </NavLink>
 
-           {/* merchendise */}
+
+           {/* Prompt Client*/}
            <NavLink
                 to = "/prompt"
                 onClick={() => setOpen(false)}
@@ -144,6 +146,21 @@ export default function DashSidebar() {
                <span className="flex items-center gap-x-5">
 
                     <IoCashOutline  size={24} /> Prompt
+
+               </span>
+
+           </NavLink>
+
+           {/* Prompt Client*/}
+           <NavLink
+                to = "/users"
+                onClick={() => setOpen(false)}
+                className={({isActive}) => isActive ? "bg-orange-100 text-orange-500 px-3 py-1 text-base/9 font-semibold rounded-xl" : "font-semibold text-base/9"}
+           >
+
+               <span className="flex items-center gap-x-5">
+
+                    <FaUsers size={24} /> Users
 
                </span>
 

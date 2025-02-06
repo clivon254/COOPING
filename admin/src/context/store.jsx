@@ -96,6 +96,14 @@ export default function StoreContextProvider(props)
     const [numOfDays , setNumOfDays] = useState(7)
 
 
+    // PAGINATION 
+    const [finalProducts ,setFinalProducts] = useState([])
+
+    
+    console.log(finalProducts)
+
+
+
     // fetchProduct
     const fetchProducts = async () => {
 
@@ -427,7 +435,7 @@ export default function StoreContextProvider(props)
 
             setAdminStatsError(false)
 
-            const res = await axios.get(url + "/api/stat/admin-stats",{headers:{token}})
+            const res = await axios.get(url + `/api/stat/admin-stats?query=${numOfDays}`,{headers:{token}})
 
             if(res.data.success)
             {
@@ -451,7 +459,6 @@ export default function StoreContextProvider(props)
     }
 
     
- 
 
     useEffect(() => {
 
@@ -476,6 +483,12 @@ export default function StoreContextProvider(props)
         fetchOrders()
 
     },[])
+
+    useEffect(() => {
+
+        fetchAdminStats()
+
+    },[numOfDays])
 
 
     useEffect(() => {
@@ -542,7 +555,8 @@ export default function StoreContextProvider(props)
         adminStatsLoading , setAdminStatsLoading ,
         adminStatsError , setAdminStatsError,
         fetchAdminStats,
-        numOfDays ,setNumOfDays
+        numOfDays ,setNumOfDays,
+        finalProducts,setFinalProducts
     }
 
     return (

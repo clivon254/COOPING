@@ -9,9 +9,9 @@ import { toast } from 'sonner'
 import axios from 'axios'
 import Loader from '../components/loader'
 import Error from '../components/Error'
-import _ from "lodash"
 import { GiCheckMark } from "react-icons/gi";
 import { RiCloseLargeFill } from "react-icons/ri";
+import _ from "lodash"
 
 
 
@@ -33,6 +33,128 @@ export default function Orders() {
 
   const [status , setStatus] = useState([])
 
+
+
+  // ***  PAGINATION  START***//
+
+    const [page ,setPage] = useState(1)
+
+    const [limit ,setLimit] = useState(8)
+
+    const [siblings ,setSiblings] = useState(1)
+
+
+    // getproducts
+    const getProducts = (page,limit) => {
+
+        let array = []
+
+        for(let i = (page -1) * limit ; i < (page * limit) && filteredOrders[i] ; i++)
+        {
+            array.push(filteredOrders[i])
+        }
+
+        return array;
+
+    }
+
+    const finalProducts = getProducts(page,limit)
+
+    const finalLength = filteredOrders?.length
+
+    const totalPage = Math.ceil(finalLength / limit)
+
+
+    // returnPaginationPage
+    const returnPaginationPage = (totalPage ,page ,limit,siblings) => {
+
+        let totalPageNoInArrray = 7 + siblings
+
+        if(totalPageNoInArrray >= totalPage)
+        {
+            return _.range(1 ,totalPage + 1)
+        }
+
+        let leftSiblingsIndex = Math.max(page - siblings , 1)
+
+        let rightSiblingsIndex = Math.min(page + siblings, totalPage)
+
+
+        let showLeftDots = leftSiblingsIndex > 2 ;
+
+        let showRightDots = rightSiblingsIndex < totalPage - 2
+
+        if(!showLeftDots && showRightDots)
+        {
+            let leftItemsCount = 3 + 2 * siblings ;
+
+            let leftRange = _.range(1 ,leftItemsCount + 1)
+
+            return [...leftRange ,"...", totalPage]
+        }
+        else if(showLeftDots && !showRightDots)
+        {
+            let rightItemsCount = 3 + 2 * siblings
+
+            let rightRange = _.range(totalPage - rightItemsCount + 1,totalPage +1)
+
+            return [1, "...", ...rightRange]
+        }
+        else
+        {
+            let middleRange = _.range(leftSiblingsIndex, rightSiblingsIndex + 1)
+
+            return[1,"...",...middleRange,"...",totalPage]
+        }
+
+    }
+
+    const array = returnPaginationPage(totalPage,page,limit,siblings)
+
+    // handlePageChange
+    const handlePageChange = (value) => {
+
+        if(value === "&laquo;")
+        {
+            setPage(1)
+        }
+        else if(value === "&lsquo;")
+        {
+            if(page !== 1)
+            {
+                setPage(page -1)
+            }
+        }
+        else if(value === "&raquo;" )
+        {
+            if(page !== totalPage)
+            {
+                setPage(page+1)
+            }
+        }
+        else if(value === "&rsquo;")
+        {
+            setPage(totalPage)
+        }
+        else
+        {
+            setPage(value)
+        }
+
+    }
+
+
+  // ***  PAGINATION  END ***//
+  
+
+
+  useEffect(() => {
+
+    window.scrollTo(0, 0);
+
+    setFilteredOrders(products)
+
+  },[products,page])
 
 
   // statusHandler
@@ -58,6 +180,7 @@ export default function Orders() {
     }
 
   }
+
 
   // handleDelete
   const handleDelete = async () => {
@@ -89,6 +212,7 @@ export default function Orders() {
 
   }
 
+
   // fetchOrder
   const fetchOrder = async () => {
 
@@ -119,6 +243,7 @@ export default function Orders() {
 
   }
 
+
   // handleSearch
   const handleSearch = (e) => {
 
@@ -129,6 +254,7 @@ export default function Orders() {
     setFilteredOrders(filtered)
 
   }
+
 
   // toggleStatus
   const toggleStatus = (e) => {
@@ -146,6 +272,7 @@ export default function Orders() {
 
   }
 
+
   // applyfilter
   const applyFilter = () => {
 
@@ -162,113 +289,6 @@ export default function Orders() {
 
   }
 
-  // ***  PAGINATION ***//
-
-  const [page ,setPage] = useState(1)
-
-  const [limit ,setLimit] = useState(5)
-
-  const [siblings ,setSiblings] = useState(1)
-
-
-  // getprofuscts
-  const getOrders = (page,limit) => {
-
-      let array = []
-
-      for(let i = (page -1) * limit ; i < (page * limit) && filteredOrders[i] ; i++)
-      {
-          array.push(filteredOrders[i])
-      }
-
-      return array;
-
-  }
-
-  const finalOrders = getOrders(page,limit)
-
-  const finalLength = filteredOrders?.length
-
-  const totalPage = Math.ceil(finalLength / limit)
-
-
-  // returnPaginationPage
-  const returnPaginationPage = (totalPage ,page ,limit,siblings) => {
-
-      let totalPageNoInArrray = 7 + siblings
-
-      if(totalPageNoInArrray >= totalPage)
-      {
-          return _.range(1 ,totalPage + 1)
-      }
-
-      let leftSiblingsIndex = Math.max(page - siblings , 1)
-
-      let rightSiblingsIndex = Math.min(page + siblings, totalPage)
-
-
-      let showLeftDots = leftSiblingsIndex > 2 ;
-
-      let showRightDots = rightSiblingsIndex < totalPage - 2
-
-      if(!showLeftDots && showRightDots)
-      {
-          let leftItemsCount = 3 + 2 * siblings ;
-
-          let leftRange = _.range(1 ,leftItemsCount + 1)
-
-          return [...leftRange ,"...", totalPage]
-      }
-      else if(showLeftDots && !showRightDots)
-      {
-          let rightItemsCount = 3 + 2 * siblings
-
-          let rightRange = _.range(totalPage - rightItemsCount + 1,totalPage +1)
-
-          return [1, "...", ...rightRange]
-      }
-      else
-      {
-          let middleRange = _.range(leftSiblingsIndex, rightSiblingsIndex + 1)
-
-          return[1,"...",...middleRange,"...",totalPage]
-      }
-
-  }
-
-  const array = returnPaginationPage(totalPage,page,limit,siblings)
-
-  // handlePageChange
-  const handlePageChange = (value) => {
-
-      if(value === "&laquo;")
-      {
-          setPage(1)
-      }
-      else if(value === "&lsquo;")
-      {
-          if(page !== 1)
-          {
-              setPage(page -1)
-          }
-      }
-      else if(value === "&raquo;" )
-      {
-          if(page !== totalPage)
-          {
-              setPage(page+1)
-          }
-      }
-      else if(value === "&rsquo;")
-      {
-          setPage(totalPage)
-      }
-      else
-      {
-          setPage(value)
-      }
-
-  }
 
   useEffect(() => {
 
@@ -276,7 +296,8 @@ export default function Orders() {
 
     setFilteredOrders(orders)
 
-  },[page,orders])
+  },[orders])
+
   
   useEffect(() => {
 
@@ -298,7 +319,7 @@ export default function Orders() {
 
   },[])
 
-  console.log(orders)
+  
 
   return (
 
@@ -366,14 +387,13 @@ export default function Orders() {
                 {/* orders */}
                 <div className="">
 
-                  {finalOrders.length > 0 ? 
+                  {finalProducts.length > 0 ? 
                     (
                       <>
                         
-
                         <div className="space-y-3">
 
-                          {finalOrders.map((order,index) => (
+                          {finalProducts.map((order,index) => (
 
                             <div 
                               className="border border-orange-200 bg-white shadow-xl rounded-md p-4 w-full grid grid-cols-1 sm:grid-cols-[2fr_1fr_1fr] lg:[2fr_1fr_1fr_1fr] text-xs gap-3 "
@@ -388,7 +408,7 @@ export default function Orders() {
 
                                   <span className="bg-orange-100 text-xs font-bold text-[#ff9900] h-7 flex justify-center items-center p-2 rounded-md shadow-md">Order N.O </span> 
 
-                                  <span className="bg-green-100 text-green-700 font-bold tracking-wider text-sm h-7 flex justify-center items-center p-2 rounded-md shadow-md">#{order.orderNumber}</span>
+                                  <span className="bg-green-100 text-green-700 font-bold tracking-wider text-sm h-7 flex justify-center items-center p-2 rounded-md shadow-md">#{order?.orderNumber}</span>
 
                                 </div>
 
@@ -643,7 +663,7 @@ export default function Orders() {
                               <div className="">
 
                                 <p className="text-xs font-bold text-gray-600">
-                                  Amount : <span className="text-sm text-black font-semibold">{(order?.amount).toLocaleString('en-KE',{style:'currency' , currency :'KES'})} </span>
+                                  Amount : <span className="text-sm text-black font-semibold">{(order?.amount)?.toLocaleString('en-KE',{style:'currency' , currency :'KES'})} </span>
                                 </p>
 
                                 <p className="text-xs font-bold text-gray-600">
@@ -704,6 +724,7 @@ export default function Orders() {
                           ))}
 
                         </div>
+
                       </>
                     ) 
                     : 
@@ -721,57 +742,6 @@ export default function Orders() {
                   }
 
                 </div>
-
-                {/* pagination */}
-                {finalOrders.length > 0 && (
-
-                  <div className="w-full flex justify-center items-center">
-
-                    <ul className="flex py-4 ">
-
-                        <li className="border border-orange-200 bg-orange-50 text-[#ff9900] flex items-center justify-center h-10 w-10 cursor-pointer hover:bg-slate-200 rounded-l-md">
-                            <span onClick={() => handlePageChange("&laquo;")} className="">&laquo;</span>
-                        </li>
-
-                        <li className="border border-orange-200 bg-orange-50 text-[#ff9900] flex items-center justify-center h-10 w-10 cursor-pointer hover:bg-slate-200">
-                            <span onClick={() => handlePageChange("&lsquo;")} className="">&lsaquo;</span>
-                        </li>
-
-                        {array.map(value => {
-
-                            if(value === page)
-                            {
-                                return (
-                                    <li className="font-bold border border-orange-200 bg-orange-200 flex items-center justify-center h-10 w-10 cursor-pointer bg-primary text-[#FF9900]">
-                                        <span onClick={() => handlePageChange(value)} className="">{value}</span>
-                                    </li>
-                                )
-                            }
-                            else
-                            {
-                                return (
-                                    <li className="font-bold border border-orange-200 bg-orange-50 flex items-center justify-center h-10 w-10 cursor-pointer text-[#FF9900]">
-                                        <span onClick={() => handlePageChange(value)} className="">{value}</span>
-                                    </li>
-                                )
-                            }
-
-                        })}
-                        
-                        <li className="border border-orange-200 bg-orange-50 text-[#ff9900] flex items-center justify-center h-10 w-10 cursor-pointer hover:bg-slate-200">
-                            <span onClick={() => handlePageChange("&raquo;")} className="">&rsaquo;</span>
-                        </li>
-
-                        <li className="border border-orange-200 bg-orange-50 text-[#ff9900] flex items-center justify-center h-10 w-10 cursor-pointer hover:bg-slate-200 rounded-r-md">
-                            <span onClick={() => handlePageChange("&rsquo;")} className="">&raquo;</span>
-                        </li>
-
-                    </ul>
-
-                  </div>
-
-                 )}
-
             
             </>
 
@@ -790,6 +760,56 @@ export default function Orders() {
           )}
 
         </div>
+
+        {/* pagignation */}
+        {finalProducts.length > 0 && (
+
+          <div className="w-full flex justify-center items-center">
+
+            <ul className="flex py-4 ">
+
+                <li className="border border-orange-200 bg-orange-50 text-[#ff9900] flex items-center justify-center h-10 w-10 cursor-pointer hover:bg-slate-200 rounded-l-md">
+                    <span onClick={() => handlePageChange("&laquo;")} className="">&laquo;</span>
+                </li>
+
+                <li className="border border-orange-200 bg-orange-50 text-[#ff9900] flex items-center justify-center h-10 w-10 cursor-pointer hover:bg-slate-200">
+                    <span onClick={() => handlePageChange("&lsquo;")} className="">&lsaquo;</span>
+                </li>
+
+                {array.map(value => {
+
+                    if(value === page)
+                    {
+                        return (
+                            <li className="font-bold border border-orange-200 bg-orange-200 flex items-center justify-center h-10 w-10 cursor-pointer bg-primary text-[#FF9900]">
+                                <span onClick={() => handlePageChange(value)} className="">{value}</span>
+                            </li>
+                        )
+                    }
+                    else
+                    {
+                        return (
+                            <li className="font-bold border border-orange-200 bg-orange-50 flex items-center justify-center h-10 w-10 cursor-pointer text-[#FF9900]">
+                                <span onClick={() => handlePageChange(value)} className="">{value}</span>
+                            </li>
+                        )
+                    }
+
+                })}
+                
+                <li className="border border-orange-200 bg-orange-50 text-[#ff9900] flex items-center justify-center h-10 w-10 cursor-pointer hover:bg-slate-200">
+                    <span onClick={() => handlePageChange("&raquo;")} className="">&rsaquo;</span>
+                </li>
+
+                <li className="border border-orange-200 bg-orange-50 text-[#ff9900] flex items-center justify-center h-10 w-10 cursor-pointer hover:bg-slate-200 rounded-r-md">
+                    <span onClick={() => handlePageChange("&rsquo;")} className="">&raquo;</span>
+                </li>
+
+            </ul>
+
+          </div>
+
+        )}
 
 
       </section>
