@@ -87,6 +87,13 @@ export default function StoreContextProvider(props)
 
     const [ordersError , setOrdersError] = useState(false)
 
+    const [adminStats ,setAdminStats] = useState({})
+
+    const [adminStatsLoading ,setAdminStatsLoading] = useState(false)
+
+    const [adminStatsError ,setAdminStatsError] = useState(false)
+
+    const [numOfDays , setNumOfDays] = useState(7)
 
 
     // fetchProduct
@@ -410,6 +417,40 @@ export default function StoreContextProvider(props)
         }
 
     }
+
+    // fetchAdminStats
+    const fetchAdminStats = async () => {
+
+        try
+        {
+            setAdminStatsLoading(true)
+
+            setAdminStatsError(false)
+
+            const res = await axios.get(url + "/api/stat/admin-stats",{headers:{token}})
+
+            if(res.data.success)
+            {
+                setAdminStatsLoading(false)
+
+                setAdminStatsError(false)
+
+                setAdminStats(res.data)
+            }
+            
+        }
+        catch(error)
+        {
+            console.log(error.message)
+
+            setAdminStatsLoading(false)
+
+            setAdminStatsError(true)
+        }
+
+    }
+
+    
  
 
     useEffect(() => {
@@ -440,6 +481,8 @@ export default function StoreContextProvider(props)
     useEffect(() => {
 
         fetchCart()
+
+        fetchAdminStats()
 
     },[token])
 
@@ -495,6 +538,11 @@ export default function StoreContextProvider(props)
         ordersLoading , setOrdersLoading,
         ordersError , setOrdersError,
         fetchOrders,
+        adminStats , setAdminStats,
+        adminStatsLoading , setAdminStatsLoading ,
+        adminStatsError , setAdminStatsError,
+        fetchAdminStats,
+        numOfDays ,setNumOfDays
     }
 
     return (

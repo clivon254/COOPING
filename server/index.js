@@ -16,6 +16,7 @@ import faqRouter from "./router/faqRouter.js"
 import eventRouter from "./router/eventRouter.js"
 import ticketRouter from "./router/ticketRouter.js"
 import deliveryRouter from "./router/deliveryRouter.js"
+import statsRouter from "./router/statsRouter.js"
 
 
 const app = express()
@@ -70,6 +71,9 @@ app.use('/api/order', orderRouter)
 
  
 app.use('/api/reveiw', reveiwRouter)
+
+
+app.use('/api/stat', statsRouter)
 
 
 app.use("/api/faq", faqRouter)
