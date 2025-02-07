@@ -6,6 +6,11 @@ import {Toaster} from "sonner"
 import Header from './components/Header'
 import Footer from './components/Footer'
 import Home from './pages/Home'
+import Profile from './pages/Profile'
+import ProductPage from './pages/ProductPage'
+import Cart from './pages/Cart'
+import ConfirmPayment from './pages/ConfirmPayment'
+import CheckOut from './pages/CheckOut'
 
 export default function App() {
 
@@ -24,6 +29,16 @@ export default function App() {
             <Routes>
 
               <Route path="/" element={<Home/>}/>
+
+              <Route path="/profile" element={<Profile/>}/>
+
+              <Route path="/product/:productId" element={<ProductPage/>}/>
+
+              <Route path="/cart" element={<Cart/>}/>
+
+              <Route path="/confrim-payment/:CheckoutRequestID/:orderId" element={<ConfirmPayment/>}/>
+
+              <Route path="/check-out" element={<CheckOut/>}/>
 
             </Routes>
 
