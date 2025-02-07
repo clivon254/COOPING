@@ -1,6 +1,6 @@
 
 @import "tailwindcss";
-@import "flowbite";
+@plugin "flowbite/plugin";
 
 
 
