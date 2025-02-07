@@ -1,13 +1,14 @@
 
+
 import React from 'react'
 
 export default function App() {
 
   return (
 
-    <div>
+    <div className="">
 
-      <p className="text-3xl text-green-700">HELLO COOPING CLIENT</p>
+      <h1 className="text-red-500">HELLO CLIENT COOPING</h1>
 
     </div>
 
