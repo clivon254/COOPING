@@ -1,6 +1,12 @@
 
 import axios from "axios"
 import { createContext,useEffect,useState } from "react"
+import { IoHomeOutline } from "react-icons/io5"
+import { MdLiquor } from "react-icons/md";
+import { RiDrinks2Line } from "react-icons/ri";
+import { GiClothes } from "react-icons/gi";
+import { IoRestaurantSharp } from "react-icons/io5";
+
 
 
 
@@ -14,6 +20,34 @@ export default function StoreContextProvider(props)
     const url = "http://localhost:3500"
 
     const [token, setToken] = useState(localStorage.getItem("token"))
+
+    const [NavLinks ,setNavLinks] = useState([
+        {
+            path:"/",
+            name:"Home",
+            icon:<IoHomeOutline />
+        },
+        {
+            path:"/drink",
+            name:"Drink",
+            icon:<RiDrinks2Line />
+        },
+        {
+            path:"/food",
+            name:"Food",
+            icon:<IoRestaurantSharp />
+        },
+        {
+            path:"/liqour",
+            name:"Liqour",
+            icon:<MdLiquor />
+        },
+        {
+            path:"/merchendise",
+            name:"Merchendise",
+            icon:<GiClothes />
+        },
+    ])
 
     const [open ,setOpen] = useState(false)
 
@@ -505,6 +539,7 @@ export default function StoreContextProvider(props)
     const contextValue = {
         url,
         token,setToken,
+        NavLinks , setNavLinks,
         open , setOpen,
         openDelete , setOpenDelete,
         products , setProducts,
@@ -558,7 +593,7 @@ export default function StoreContextProvider(props)
         adminStatsError , setAdminStatsError,
         fetchAdminStats,
         numOfDays ,setNumOfDays,
-        finalProducts,setFinalProducts
+        finalProducts,setFinalProducts,
     }
 
     return (

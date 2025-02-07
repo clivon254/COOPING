@@ -11,6 +11,10 @@ import ProductPage from './pages/ProductPage'
 import Cart from './pages/Cart'
 import ConfirmPayment from './pages/ConfirmPayment'
 import CheckOut from './pages/CheckOut'
+import Drink from './pages/Drink'
+import Merchendise from './pages/Merchendise'
+import Food from './pages/Food'
+import Liqour from './pages/Liqour'
 
 export default function App() {
 
@@ -39,6 +43,14 @@ export default function App() {
               <Route path="/confrim-payment/:CheckoutRequestID/:orderId" element={<ConfirmPayment/>}/>
 
               <Route path="/check-out" element={<CheckOut/>}/>
+
+              <Route path="/drink" element={<Drink/>}/>
+
+              <Route path="/merchendise" element={<Merchendise/>}/>
+
+              <Route path="/food" element={<Food/>}/>
+
+              <Route path="/liqour" element={<Liqour/>}/>
 
             </Routes>
 
