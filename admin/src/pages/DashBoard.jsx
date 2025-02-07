@@ -137,7 +137,7 @@ export default function DashBoard() {
 
                   <span className="uppercase font-semibold">{stat.title}</span>
 
-                  <span className=" bg-orange-100 p-2 rounded-full h-18 w-18 flex justify-center items-center shadow-md">{stat.icon}</span>
+                  <span className=" bg-orange-100 p-2 rounded-full h-14 w-14 flex justify-center items-center shadow-md">{stat.icon}</span>
 
                 </span>
 

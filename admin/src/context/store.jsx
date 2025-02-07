@@ -100,7 +100,7 @@ export default function StoreContextProvider(props)
     const [finalProducts ,setFinalProducts] = useState([])
 
     
-    console.log(finalProducts)
+    console.log(orders)
 
 
 

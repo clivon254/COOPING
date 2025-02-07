@@ -7,7 +7,18 @@ import Pay from "../model/payModel.js"
 import Product from "../model/productModel.js"
 import { errorHandler } from "../Utils/error.js"
 import { generateRandomOrderNumber } from "../Utils/verify.js"
+import africastalking from 'africastalking';
 
+
+const credentials = {
+    apiKey:process.env.SMS_APIKEY,
+    username:process.env.SMS_USERNAME,
+}
+
+
+const africasTalking = africastalking(credentials);
+
+const sms = africasTalking.SMS_APIKEY
 
 
 let clients = []
@@ -16,36 +27,31 @@ let clients = []
 
 export const events = (req,res) => {
 
-    res.setHeader('Content-Type','text/event-stream')
+    res.setHeader('Content-Type', 'text/event-stream')
 
-    res.setHeader('Cache-Control','no-cache')
+    res.setHeader('Cache-Control', 'no-cache')
 
-    res.setHeader('Connection','keep-alive')
+    res.setHeader('Connection', 'keep-alive')
 
-    
     // Add the client to the list
     clients.push(res)
 
-
-    // Remove the client when connection is closed
-    req.on('close' , () => {
-
-        clients = clients.filter(client => client !== res)
-
+     // Remove the client when the connection is closed
+     req.on('close', () => {
+        clients = clients.filter(client => client !== res);
     })
+
 }
 
 
 
 // send updates to connected clients
-const sendEventToClients = () => {
+const sendEventToClients = (data) => {
 
     clients.forEach(client => {
-
         client.write(`data: ${JSON.stringify(data)}\n\n`)
-
     })
-    
+
 }
 
 
@@ -110,7 +116,7 @@ export const mpesa = async (req,res,next) => {
             "PartyA":`254${phone}`,    
             "PartyB":shortcode,    
             "PhoneNumber":`254${phone}`,    
-            "CallBackURL":`https://1a07-41-209-60-94.ngrok-free.app/api/order/callback?orderId=${order._id}&userId=${userId}`,    
+            "CallBackURL":`https://b738-41-209-60-94.ngrok-free.app/api/order/callback?orderId=${order._id}&userId=${userId}`,    
             "AccountReference":"COOPING",    
             "TransactionDesc":"Test"
         }
@@ -149,32 +155,32 @@ export const mpesa = async (req,res,next) => {
 }
 
 
-// MPESA CALLBACK
-export const callback = async (req,res,next) => {
+// callback
+export const callback  = async (req,res,next) => {
 
-    const {orderId,userId} = req.query
+    const {orderId ,userId} = req.query
 
     try
     {
-        console.log("callback is working")
+
+        console.log("Callback is working")
 
         const callbackData = req.body
-
+            
         if(!callbackData.Body.stkCallback.CallbackMetadata)
         {
             console.log(callbackData.Body)
 
             await Order.findByIdAndDelete(orderId)
 
-            // send notification that the STK PUSH has been attended
-            sendEventToClients({success:true , message:'STK PUSH has been attended to'})
+             // send notification that the STK PUSH has been attended 
+            sendEventToClients({success:true ,message:'STK Ppush has been attend to'})
 
             res.json("ok")
-
         }
         else
         {
-            const body = req.body.StkCallback.CallbackMetadata
+            const body = req.body.Body.stkCallback.CallbackMetadata
 
             console.log(body)
 
@@ -182,50 +188,52 @@ export const callback = async (req,res,next) => {
 
             if(order)
             {
-
+                
                 await Order.findByIdAndUpdate(orderId ,{payment:true})
 
                 console.log("order updated")
 
-                await User.findByIdAndUpdate(userId,{cartData:{}})
+                await User.findByIdAndUpdate(userId ,{cartData:{}})
 
-                console.log("cart cleared callback")
+                console.log("cart cleared")
+
             }
 
-            // Get amount 
-            const amountObj = body.Item.find(Obj => Obj.Name === 'Amount')
+            // Get amount
+            const amountObj = body.Item.find(obj => obj.Name === 'Amount');
 
             const amount = amountObj.Value
 
 
             // Get Mpesa Code
-            const codeObj = body.Item.find(Obj => Obj.Name === 'MpesaReceitNumber')
+            const codeObj = body.Item.find(obj => obj.Name === 'MpesaReceiptNumber');
 
             const trnx_id = codeObj.Value
 
 
             // Get Phone number
-            const phoneNumberObj = body.Item.find(Obj => Obj.Name === 'PhoneNumber')
+            const phoneNumberObj = body.Item.find(obj => obj.Name === 'PhoneNumber');
 
             const phone = phoneNumberObj.Value
 
-
-            // Transaction Data
-            const DateObj = body.Item.find(Obj => Obj.Name === 'Amount')
+            // TransactionDate
+            const DateObj = body.Item.find(obj => obj.Name === 'TransactionDate');
 
             const date = DateObj.Value
 
+            const pay = new Pay({
+                amount,
+                date,
+                trnx_id,
+                phone
+            })
 
-            const pay = new Pay({amount,trnx_id,phone,date})
+            await pay.save()
 
-
-            await Pay.save()
-
-            // send notifications
-            sendEventToClients({success:true , message:"STK Push attended to"})
-
-            res.status(200).json({success:true ,pay})
-
+             // send notification that the STK PUSH has been attended 
+            sendEventToClients({success:true ,message:'STK Ppush has been attend to'})
+            
+            res.status(200).json({success:true , pay})
         }
 
     }
@@ -308,42 +316,57 @@ export const confirmPayment = async (req,res,next) => {
                         return next(errorHandler(404, "error not found"))
                     }  
                     
+                    product.sold = Number(product.sold || 0) + quantity
+
                     if(product.instock)
-                    {   
-                        
-                        console.log(Number(product.instock))
-                        
-                        if (typeof product.instock === 'number' && typeof quantity === 'number') { 
-                            
-                                Number(product.instock); 
-
-                                console.log(product.instock)
-
-                                console.log(quantity)
-
-                                Number(product.instock) -= quantity
-
-                                await product.save()
-
-                         } 
-
+                    {
+                        product.instock = Number(product.instock || 0) - quantity
                     }
+
+
+                    await product.save()
                     
+                    
+                }
+
+                const sendSMS = async () => {
+
+                        const options = {
+                        to: "+254720000111",
+                        message:"Thank your  for your purchase"
+                        }
+
+                        try
+                        {
+                            const response = await sms.send(options)
+
+                            console.log("SMS sent successfully",response)
+
+                        }
+                        catch(error)
+                        {
+                            console.log("Error sending sms", + error.message)
+                        }
 
                 }
 
+                sendSMS();
+
+
                 await Order.findByIdAndUpdate(orderId ,{payment:true})
 
-                console.log("order updated")
+                console.log("order updated confrimation")
 
                 await User.findByIdAndUpdate(userId ,{cartData:{}})
 
-                console.log("cart cleared")
+                console.log("cart cleared confirmaton")
 
             }
             else
             {
                 console.log("order not found")
+
+                // return next(errorHandler(404 ,"order not found"))
             }
 
             res.status(200).json({success:true , data:response.data , message:'Transaction was succesful'})
@@ -423,6 +446,7 @@ export const getOrder = async (req,res,next) => {
 
 }
  
+
 // USER ORDERS
 export const userOrders = async (req,res,next) => {
 

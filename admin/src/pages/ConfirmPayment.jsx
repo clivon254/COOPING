@@ -95,51 +95,58 @@ export default function ConfirmPayment() {
 
     useEffect(() => {
 
-        window.scrollTo(0, 0)
+        window.scrollTo(0, 0);
+
+
+        // front-end listen for Server-sent Events
+        const eventSource = new EventSource(url + "/api/order/event")
 
         setProcessingPayment(true)
 
-        // front-end listen for server
-        const eventSource = new EventSource(url + "/api/order/event")
-
         const timeoutId = setTimeout(() => {
+
+            console.log('No event received , confirming payment ...')
 
             confirmPayment()
 
-        },30000)
+        },30000) //90 seconds until it expires
 
         eventSource.onmessage = (event) => {
 
-            clearTimeout(timeoutId)
+            clearTimeout(timeoutId) //clear timeout if an event is received
 
-            const data = JSON.parse(event.data)
+            const data = JSON.parse(event.data);
 
-            console.log("Payment update received", data)
-
-            if(data.success)
+            console.log('Payment update received:', data);
+            
+            if (data.success) 
             {
+                
                 confirmPayment()
-            }
+
+            } 
             else
             {
                 confirmPayment()
             }
-
-        }
+            
+        };
 
         eventSource.onerror = (error) => {
 
-            console.error("EventSource failed:" ,error)
+            console.error('EventSource failed:', error);
 
-        }
+            console.log("error")
+        };
 
+        // Cleanup function to close the EventSource when the component unmounts
         return () => {
 
+            eventSource.close();
+
             clearTimeout(timeoutId)
-
-            eventSource.close()
-
-        }
+            
+        };
 
     },[CheckoutRequestID,orderId])
 
