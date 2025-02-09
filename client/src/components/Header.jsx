@@ -177,6 +177,7 @@ export default function Header() {
                   :
                   (
                     <button 
+                      onClick={() => navigate('/sign-in')}
                       className="flex w-full items-center justify-center rounded-full bg-[#FF9900] px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xl hover:bg-[#ff9900] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FF9900] disabled:cursor-not-allowed cursor-pointer"
                     >
                       sign in
