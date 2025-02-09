@@ -1,7 +1,7 @@
 
 
 import express from "express"
-import { contactUs, forgotPassword, Login, Register, resetPassword } from "../controller/authController.js"
+import { contactUs, forgotPassword, Google, Login, Register, resetPassword } from "../controller/authController.js"
 
 
 
@@ -13,6 +13,9 @@ authRouter.post('/register', Register)
 
 
 authRouter.post('/login', Login)
+
+
+authRouter.post('/google', Google)
 
 
 authRouter.post('/forgot-password', forgotPassword)

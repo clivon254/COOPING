@@ -118,6 +118,64 @@ export const Login = async (req,res,next) => {
 }
 
 
+export const Google = async (req,res,next) => {
+
+    try
+    {
+
+        const user = await User.findOne({email:req.body.email})
+
+        if(user)
+        {
+
+            const token = jwt.sign(
+                {id:user._id , isAdmin:user.isAdmin , role:user.role},
+                process.env.JWT_SECRETE,
+                {expiresIn : '12h'}
+            )
+
+            const {password:pass , ...rest} = user._doc
+
+            res.status(200).json({success:true ,rest, token})
+        }
+        else
+        {
+
+            const generatedPassword = Math.random().toString(36).slice(-8) +
+                                      Math.random().toString(36).slice(-8)
+            
+            const hashedPassword = bcryptjs.hashSync(generatedPassword ,10)
+
+            const newUser = new User({
+                username:req.body.name.split(' ').join(' ').toLowerCase() + Math.random().toString(36).slice(-8),
+                email:req.body.email,
+                paswoord:hashedPassword,
+                profilePicture:req.body.Photo
+            })
+
+            await newUser.save()
+
+            const token = jwt.sign(
+                {id:newUser._id , isAdmin:newUser.isAdmin , role:newUser.role},
+                process.env.JWT_SECRETE,
+                {expiresIn : '12h'}
+            )
+
+            const {password:pass , ...rest} = newUser._id
+
+            res.status(200).json({success:true , rest , token})
+            
+        }
+
+    }
+    catch(error)
+    {
+        next(error)
+    }
+
+}
+
+
 export const forgotPassword = async (req,res,next) => {
 
     const {email} = req.body

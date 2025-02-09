@@ -15,6 +15,10 @@ import Drink from './pages/Drink'
 import Merchendise from './pages/Merchendise'
 import Food from './pages/Food'
 import Liqour from './pages/Liqour'
+import SignIn from './pages/SignIn'
+import SignUp from './pages/SignUp'
+import ForgotPassword from './pages/ForgotPassword'
+import ResetPassword from './pages/ResetPassword'
 
 export default function App() {
 
@@ -51,6 +55,14 @@ export default function App() {
               <Route path="/food" element={<Food/>}/>
 
               <Route path="/liqour" element={<Liqour/>}/>
+
+              <Route path="/sign-in" element={<SignIn/>}/>
+
+              <Route path="/sign-up" element={<SignUp/>}/>
+
+              <Route path="/forgot-password" element={<ForgotPassword/>}/>
+
+              <Route path="/reset-password/:token" element={<ResetPassword/>}/>
 
             </Routes>
 
