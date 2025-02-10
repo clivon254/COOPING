@@ -132,11 +132,7 @@ export default function StoreContextProvider(props)
     const [numOfDays , setNumOfDays] = useState(7)
 
 
-    // PAGINATION 
-    const [finalProducts ,setFinalProducts] = useState([])
-
     
-    console.log(orders)
 
 
 
@@ -494,7 +490,6 @@ export default function StoreContextProvider(props)
 
     }
 
-    
 
     useEffect(() => {
 
@@ -519,6 +514,7 @@ export default function StoreContextProvider(props)
         fetchOrders()
 
     },[])
+
 
     useEffect(() => {
 
@@ -592,8 +588,7 @@ export default function StoreContextProvider(props)
         adminStatsLoading , setAdminStatsLoading ,
         adminStatsError , setAdminStatsError,
         fetchAdminStats,
-        numOfDays ,setNumOfDays,
-        finalProducts,setFinalProducts,
+        numOfDays ,setNumOfDays
     }
 
     return (

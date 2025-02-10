@@ -19,6 +19,8 @@ import SignIn from './pages/SignIn'
 import SignUp from './pages/SignUp'
 import ForgotPassword from './pages/ForgotPassword'
 import ResetPassword from './pages/ResetPassword'
+import Orders from './pages/Orders'
+import ProductReveiw from './pages/ProductReveiw'
 
 export default function App() {
 
@@ -42,6 +44,8 @@ export default function App() {
 
               <Route path="/product/:productId" element={<ProductPage/>}/>
 
+              <Route path="/product-reveiw/:productId" element={<ProductReveiw/>}/>
+
               <Route path="/cart" element={<Cart/>}/>
 
               <Route path="/confrim-payment/:CheckoutRequestID/:orderId" element={<ConfirmPayment/>}/>
@@ -55,6 +59,8 @@ export default function App() {
               <Route path="/food" element={<Food/>}/>
 
               <Route path="/liqour" element={<Liqour/>}/>
+
+              <Route path="/orders" element={<Orders/>}/>
 
               <Route path="/sign-in" element={<SignIn/>}/>
 

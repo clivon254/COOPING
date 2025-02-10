@@ -39,7 +39,7 @@ export default function Orders() {
 
     const [page ,setPage] = useState(1)
 
-    const [limit ,setLimit] = useState(8)
+    const [limit ,setLimit] = useState(10)
 
     const [siblings ,setSiblings] = useState(1)
 
@@ -290,14 +290,6 @@ export default function Orders() {
   }
 
 
-  useEffect(() => {
-
-    window.scrollTo(0,0)
-
-    setFilteredOrders(orders)
-
-  },[orders])
-
   
   useEffect(() => {
 
@@ -316,6 +308,8 @@ export default function Orders() {
   useEffect(() => {
 
     window.scrollTo(0, 0)
+
+    setFilteredOrders(orders)
 
   },[])
 
