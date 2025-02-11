@@ -7,6 +7,7 @@ import { StoreContext } from '../context/store'
 import Loader from '../components/loader'
 import Error from '../components/Error'
 import Rating from "react-rating"
+import {FaStar} from "react-icons/fa"
 import { MdChevronLeft, MdChevronRight, MdStar } from 'react-icons/md'
 // swiper components
 import {Swiper, SwiperSlide} from "swiper/react"
@@ -17,13 +18,16 @@ import ProductCard from '../components/ProductCard'
 import { useSelector } from 'react-redux'
 import { toast } from 'sonner'
 import { Alert } from 'flowbite-react'
-
+import moment from "moment"
+import Title from '../components/Title'
+import {Link} from "react-router-dom"
+import ProductsLoading from '../components/ProductsLoading'
 
 
 
 export default function ProductPage() {
 
-  const {url,token,products,fetchCart,fetchProducts} = useContext(StoreContext)
+  const {url,token,products,fetchCart,fetchProducts,productLoading,productError} = useContext(StoreContext)
 
   const {currentUser} = useSelector(state => state.user)
 
@@ -31,11 +35,15 @@ export default function ProductPage() {
 
   const [product ,setProduct] = useState({})
 
-  const [productLoading ,setProductLoading] = useState(false)
+  const [fetchProductLoading  ,setFetchProductLoading ] = useState(false)
 
-  const [productError ,setProductError] = useState(false)
+  const [fetchProductError ,setFetchProductError] = useState(false)
 
   const [image, setImage] = useState(null)
+
+  const [imagesLoading ,setImagesLoading] = useState([{},{},{},{},{}])
+  
+  const [reveiwsLoading ,setReveiwsLoading] = useState([{},{},{},{},{}])
 
   const ProductType = products.filter((item) => item.type === product.type)
 
@@ -56,6 +64,13 @@ export default function ProductPage() {
 
   const navigate = useNavigate()
 
+  const [reveiws , setReveiws] = useState([])
+  
+  const [fetchReveiwsLoading ,setFetchReveiwLoading] = useState(false)
+  
+  const [fetchReveiwsError ,setFetchReveiwError] = useState(false)
+
+
 
   // fetchProduct
   const fetchProduct = async () => {
@@ -65,15 +80,15 @@ export default function ProductPage() {
 
       fetchProducts()
 
-      setProductLoading(true)
+      setFetchProductLoading(true)
 
-      setProductError(false)
+      setFetchProductError(false)
 
       const res = await axios.get(url + `/api/product/get-product/${productId}`)
 
       if(res.data.success)
       {
-        setProductLoading(false)
+        setFetchProductLoading (false)
 
         setProduct(res.data.product)
 
@@ -87,9 +102,9 @@ export default function ProductPage() {
     {
       console.log(error.message)
 
-      setProductError(true)
+      setFetchProductError(true)
 
-      setProductLoading(false)
+      setFetchProductLoading (false)
     }
 
   }
@@ -324,8 +339,44 @@ export default function ProductPage() {
 
   }
 
+  // fetchReveiws
+  const fetchReveiws = async () => {
+
+    try
+    {
+
+        setFetchReveiwError(false)
+
+        setFetchReveiwLoading(true)
+
+        const res = await axios.get(url + `/api/reveiw/get-reveiws/${productId}`)
+
+        if(res.data.success)
+        {
+            setFetchReveiwLoading(false)
+
+            setReveiws(res.data.reveiws)
+        }
+
+
+    }
+    catch(error)
+    {
+        console.log(error?.message)
+
+        setFetchReveiwError(true)
+
+        setFetchReveiwLoading(false)
+    }
+
+  }
+
 
   console.log(product)
+
+
+  console.log(reveiws)
+
 
   useEffect(() => {
 
@@ -335,13 +386,20 @@ export default function ProductPage() {
 
   },[productId])
 
+
+  useEffect(() => {
+
+    fetchReveiws()
+
+  },[])
+
+
   return (
     
     <>
 
-      {!productError && !productLoading && (
+      {!fetchProductError && !fetchProductLoading  && (
 
-       
         <section className="w-full p-5 space-y-20">
 
             {/* upper section */}
@@ -396,14 +454,18 @@ export default function ProductPage() {
                     {/* ratings */}
                     <div className="flex items-center gap-x-2">
 
-                      <Rating 
-                        initialRating={product?.rate}
-                        emptySymbol={<MdStar className="text-gray-300"/>}
-                        fullSymbol={<MdStar className="text-amber-300"/>}
-                        readonly
-                      />
-                      
-                      <span className="font-semibold">(12)</span>
+                      <div className="">
+
+                        <Rating 
+                          initialRating={product?.rate}
+                          emptySymbol={<MdStar className="text-gray-300"/>}
+                          fullSymbol={<MdStar className="text-amber-300"/>}
+                          readonly
+                        />
+                        
+                      </div>
+
+                      <span className="font-semibold">({reveiws?.length})</span>
 
                     </div>
 
@@ -607,74 +669,216 @@ export default function ProductPage() {
             </div>
 
             {/* lower section */}
-            <div className="">
+            <div className="space-y-10">
 
-              {/* reveiws */}
-              <div className=""></div>
+              {/* REVEIW*/}
+              <div className="space-y-4 max-w-2xl">
+
+                  <h2 className="text-3xl/9 font-semibold tracking-tighter">Reviews (<span className="text-xl text-[#FF9900]">{reveiws?.length}</span>)</h2>
+                  
+                  {/*reveiws  */}
+                  <div className="">
+                      
+                      {!fetchReveiwsLoading && !fetchReveiwsError && (
+
+                          <>
+
+                              {reveiws.length > 0 ? 
+                                  (
+                                      <>
+                                          {reveiws.map((reveiw,index) => (
+
+                                              <div key={index} className="flex p-4 text-sm border-b border-orange-200">
+
+                                                  {/* image */}
+                                                  <div className="h-12 w-12 flex shrink-0  mr-3">
+
+                                                      <img 
+                                                          src={reveiw?.userId?.profilePicture}
+                                                          alt=""
+                                                          className="w-full h-full rounded-full"
+                                                      />
+
+                                                  </div>
+
+                                                  <div className="flex-1">
+
+                                                      {/* rating */}
+                                                      <div className="">
+
+                                                          <Rating 
+                                                              initialRating={reveiw.rate}
+                                                              emptySymbol={<FaStar className="text-gray-300"/>}
+                                                              fullSymbol={<FaStar className="text-amber-300"/>}
+                                                              readonly
+                                                          />
+
+                                                      </div>
+
+                                                      {/* user details */}
+                                                      <div className="flex items-center mb-1">
+
+                                                          <span className="font-bold mr-1 text-xs truncate">
+                                                              {reveiw?.userId?.username}
+                                                          </span>
+
+                                                          <span className="text-gray-500 text-xs">
+                                                              {moment(reveiw.created).fromNow()}
+                                                          </span>
+
+                                                      </div>
+
+                                                      <p className="text-gray-600 pb-2">{reveiw?.content}</p>
+
+                                                  </div>
+
+                                              </div>
+
+                                          ))}
+                                      </>
+                                  ) 
+                                  : 
+                                  (
+                                      <>
+
+                                          <p className="text-xl font-semibold text-gray-700 ">
+                                              There are no reveiws yet .Purchase the product and be the first one to reveiw
+                                          </p>
+                                      
+                                      </>
+                                  )
+                              }
+
+                          </>
+
+                      )}
+
+                      {fetchReveiwsLoading && fetchReveiwsError && (
+
+                          <>
+                          {reveiwsLoading?.map((reveiw,index) => (
+
+                              <div key={index} className="flex p-4 text-sm border-b border-orange-200">
+
+                                  {/* image */}
+                                  <div className="h-12 w-12 flex shrink-0  mr-3 rounded-full  bg-slate-300  animate-pulse"/>
+
+
+                                  <div className="flex-1">
+
+                                      {/* rating */}
+                                      <div className="">
+
+                                          <Rating 
+                                              initialRating={reveiw.rate}
+                                              emptySymbol={<FaStar className="text-gray-300"/>}
+                                              fullSymbol={<FaStar className="text-amber-300"/>}
+                                              readonly
+                                          />
+
+                                      </div>
+
+                                      {/* user details */}
+                                      <div className="flex items-center mb-1">
+
+                                          <span className="w-12 h-2 rounded-md block bg-slate-300  animate-pulse mr-1"/>
+
+                                          <span className="w-8 h-2 rounded-md block bg-slate-300  animate-pulse"/>
+
+                                      </div>
+
+                                      <span className="w-full h-10 rounded-md block bg-slate-300  animate-pulse"/>
+
+                                  </div>
+
+                              </div>
+
+                          ))}
+                          </>
+
+                      )}
+
+                  </div>
+
+              </div>
 
               {/* Related Product */}
-              <div className="space-y-7">
+              <div className="flex flex-col gap-y-10">
                 
-                <h2 className="text-2xl/9 lg:text-3xl/9 font-bold tracking-tight text-gray-900">You may also like</h2>
+                <Title label={"you may also like"}/>
+                
+                {!productLoading && !productError && (
 
-                {/* swiper */}
-                <div className="w-full relative">
+                  <>
 
-                    <Swiper
-                        className="mySwiper  relative"
-                        spaceBetween={10}
-                        slidesPerView={4}
-                        // loop={true}
-                        autoPlay={
-                        {
-                            delay:2000,
-                            disableOnInteraction:false
-                        }
-                        }
-                        modules={[Autoplay,Navigation]}
-                        breakpoints={{
-                            0: {
-                            slidesPerView: 2,
-                            spaceBetween:20
-                            },
-                            640: {
-                            slidesPerView:3 ,
-                            spaceBetween: 30,
-                            },
-                            768: {
-                            slidesPerView: 4,
-                            spaceBetween: 40,
-                            },
-                            1024: {
-                            slidesPerView: 4,
-                            spaceBetween: 40,
-                            },
-                        }} 
-                        navigation={{
-                        prevEl:'.prev',
-                        nextEl:'.next'
-                            }}
-                    >
-                            {ProductType?.map((product,index) => (
+                    {/* swiper */}
+                    <div className="w-full relative">
 
-                                <SwiperSlide key={index}>
+                        <Swiper
+                            className="mySwiper  relative"
+                            spaceBetween={10}
+                            slidesPerView={4}
+                            // loop={true}
+                            autoPlay={
+                            {
+                                delay:2000,
+                                disableOnInteraction:false
+                            }
+                            }
+                            modules={[Autoplay,Navigation]}
+                            breakpoints={{
+                                0: {
+                                slidesPerView: 2,
+                                spaceBetween:20
+                                },
+                                640: {
+                                slidesPerView:3 ,
+                                spaceBetween: 30,
+                                },
+                                768: {
+                                slidesPerView: 4,
+                                spaceBetween: 40,
+                                },
+                                1024: {
+                                slidesPerView: 4,
+                                spaceBetween: 40,
+                                },
+                            }} 
+                            navigation={{
+                            prevEl:'.prev',
+                            nextEl:'.next'
+                                }}
+                        >
+                                {ProductType?.map((product,index) => (
 
-                                  <ProductCard product={product}/>
+                                    <SwiperSlide key={index}>
 
-                                </SwiperSlide>
+                                      <ProductCard product={product}/>
 
-                            ))}
-                    </Swiper>
+                                    </SwiperSlide>
 
-                    <div className="prev absolute top-1/3 -left-4 z-40 h-6 w-6 bg-orange-100 text-[#FF9900]  rounded-full flex justify-center items-center cursor-pointer">
-                        <MdChevronLeft size={32} className=""/>
+                                ))}
+                        </Swiper>
+
+                        <div className="prev absolute top-1/3 -left-4 z-40 h-6 w-6 bg-orange-100 text-[#FF9900]  rounded-full flex justify-center items-center cursor-pointer">
+                            <MdChevronLeft size={32} className=""/>
+                        </div>
+
+                        <div className="next absolute top-1/3 -right-4 z-40 h-6 w-6 bg-orange-100 text-[#FF9900] rounded-full flex justify-center items-center cursor-pointer">
+                            <MdChevronRight size={32} className=""/>
+                        </div>
+
                     </div>
 
-                    <div className="next absolute top-1/3 -right-4 z-40 h-6 w-6 bg-orange-100 text-[#FF9900] rounded-full flex justify-center items-center cursor-pointer">
-                        <MdChevronRight size={32} className=""/>
-                    </div>
+                </>
 
-                </div>
+                )}
+
+                {productLoading && !productError && (
+
+                  <ProductsLoading />
+                  
+                )}
 
               </div>
 
@@ -684,13 +888,182 @@ export default function ProductPage() {
 
       )}
 
-      {productLoading && !productError && (
+      {fetchProductLoading && !fetchProductError && (
 
-        <Loader/>
+        <section className="w-full p-5 space-y-20">
+
+            {/* upper section */}
+            <div className="w-full flex flex-col md:flex-row gap-x-10 gap-y-14">
+
+                {/* left */}
+                <div className="w-full  md:w-3/5 lg:w-1/2  space-y-3">
+
+                    {/* main */}
+                    <div className="max-h-[60vh] min-h-[60vh] h-[60vh] w-full border border-zinc-200 rounded-md shadow-md animate-pulse bg-slate-300"/>
+                    
+                    {/* thumbnails */}
+                    <div className="w-full flex gap-x-3 overflow-hidden overflow-x-scroll">
+
+                      {imagesLoading.map((url,index) => (
+
+                        <div key={index} className="min-h-20 min-w-20 max-h-20 max-w-20 bg-slate-300 rounded-md animate animate-pulse"/>
+
+                      ))}
+
+                    </div>
+
+                </div>
+
+                {/* right */}
+                <div className="w-full md:w-2/5 lg:w-1/2 space-y-5">
+                      
+                   <span className="w-full h-6 rounded-md block bg-slate-300  animate-pulse"/>
+
+                    {/* ratings */}
+                    <div className="flex items-center gap-x-2">
+
+                      <div className="">
+
+                        <Rating 
+                            initialRating={product?.rate}
+                            emptySymbol={<MdStar className="text-gray-300"/>}
+                            fullSymbol={<MdStar className="text-amber-300"/>}
+                            readonly
+                        />
+
+                      </div>
+
+                    </div>
+
+                    {/* brand & category */}
+                    <div className="flex gap-x-3">
+
+                        <span className="w-24 h-4 rounded-md block bg-slate-300  animate-pulse"/>
+
+                        <span className="w-24 h-4 rounded-md block bg-slate-300  animate-pulse"/>
+
+                    </div>
+                      
+                    {/* price */}
+                    <div className="flex items-center gap-x-3">
+                      
+                        <span className="w-40 h-6 rounded-md block bg-slate-300  animate-pulse"/>
+                      
+                    </div>
+
+                    {/* descrption */}
+                    <span className="w-full h-40 rounded-md block bg-slate-300  animate-pulse"/>
+                          
+                    {/* variants */}
+                    <div className="space-y-2">
+
+                        <h3 className="text-xs font-bold uppercase">select sauces </h3>
+
+                        <div className="flex gap-x-3 gap-y-1 flex-wrap ">
+
+
+                            <span className="w-24 h-10 rounded-md block bg-slate-300  animate-pulse"/>
+
+
+                            <span className="w-24 h-10 rounded-md block bg-slate-300  animate-pulse"/>
+
+                        
+
+                        </div>       
+
+                    </div>
+ 
+
+                    {/* buttons */}
+                    <div className="flex flex-col lg:flex-row lg:justify-between gap-y-3 gap-x-5">
+
+                      <span className="w-full h-14 rounded-md block bg-slate-300  animate-pulse"/>
+
+                      <span className="w-full h-14 rounded-md block bg-slate-300  animate-pulse"/>
+
+                    </div>
+
+
+                </div>
+
+            </div>
+
+            {/* lower section */}
+            <div className="space-y-10">
+               
+                <>
+
+                    {/* REVEIW*/}
+                    <div className="space-y-4 max-w-2xl">
+
+                      <h2 className="text-3xl/9 font-semibold tracking-tighter">Reviews (<span className="text-xl text-[#FF9900]">{reveiws?.length}</span>)</h2>
+
+                      {/*reveiws  */}
+                      <div className="">
+
+                          <>
+                              {reveiwsLoading?.map((reveiw,index) => (
+
+                                  <div key={index} className="flex p-4 text-sm border-b border-orange-200">
+
+                                      {/* image */}
+                                      <div className="h-12 w-12 flex shrink-0  mr-3 rounded-full  bg-slate-300  animate-pulse"/>
+
+
+                                      <div className="flex-1">
+
+                                          {/* rating */}
+                                          <div className="">
+
+                                              <Rating 
+                                                  initialRating={reveiw.rate}
+                                                  emptySymbol={<FaStar className="text-gray-300"/>}
+                                                  fullSymbol={<FaStar className="text-amber-300"/>}
+                                                  readonly
+                                              />
+
+                                          </div>
+
+                                          {/* user details */}
+                                          <div className="flex items-center mb-1">
+
+                                              <span className="w-12 h-2 rounded-md block bg-slate-300  animate-pulse mr-1"/>
+
+                                              <span className="w-8 h-2 rounded-md block bg-slate-300  animate-pulse"/>
+
+                                          </div>
+
+                                          <span className="w-full h-10 rounded-md block bg-slate-300  animate-pulse"/>
+
+                                      </div>
+
+                                  </div>
+
+                              ))}
+                          </>
+                            
+                      </div>
+
+                    </div>
+
+                </>
+
+              {/* Related Product */}
+              <div className="flex flex-col gap-y-10">
+                
+                <Title label={"You may also like"} />
+
+                <ProductsLoading/>
+
+              </div>
+
+            </div>
+            
+        </section>
 
       )}
 
-      {productError && (
+      {fetchProductError && (
 
         <Error retry={fetchProduct}/>
 

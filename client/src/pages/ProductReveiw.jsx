@@ -410,13 +410,13 @@ export default function ProductReveiw() {
 
         setFetchReveiwError(false)
 
-        setFetchProductLoading(true)
+        setFetchReveiwLoading(true)
 
         const res = await axios.get(url + `/api/reveiw/get-reveiws/${productId}`)
 
         if(res.data.success)
         {
-            setFetchProductLoading(false)
+            setFetchReveiwLoading(false)
 
             setReveiws(res.data.reveiws)
         }
@@ -429,7 +429,7 @@ export default function ProductReveiw() {
 
         setFetchReveiwError(true)
 
-        setFetchProductLoading(false)
+        setFetchReveiwLoading(false)
     }
 
   }
