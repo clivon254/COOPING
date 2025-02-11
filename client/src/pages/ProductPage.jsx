@@ -519,52 +519,51 @@ export default function ProductPage() {
 
                       <>
 
+                        {/* sizes */}
+                        <div className="space-y-2">
 
-                          {/* sizes */}
-                          <div className="space-y-2">
-
-                            <h2 className="text-xs font-bold uppercase">select size</h2>
-                            
-                            <div className="flex items-center gap-x-3 gap-y-1">
-
-                              {product?.sizes?.map((item,index) => (
-
-                                <span 
-                                    key={index} 
-                                    className={`h-10 w-24 flex justify-center items-center  border ${item.name === size ? "border-[#FF9900] border-2 shadow-md" : ""} px-3 py-0.5 rounded-md text-base font-bold text-gray-800 cursor-pointer`}
-                                    onClick={() => setSize(item.name)}
-                                >
-                                  {item.name}
-                                </span>
-
-                              ))}
-
-                            </div>
-
-                          </div>
+                          <h2 className="text-xs font-bold uppercase">select size</h2>
                           
-                          {/* color */}
-                          <div className="space-y-2">
+                          <div className="flex items-center gap-x-3 gap-y-1">
 
-                            <h2 className="text-xs font-bold uppercase">select a color</h2>
-                            
-                            <div className="flex items-center gap-x-3 gap-y-1">
+                            {product?.sizes?.map((item,index) => (
 
-                              {product?.colors?.map((item,index) => (
-
-                                <span 
+                              <span 
                                   key={index} 
-                                  className={`h-10 w-24 flex justify-center items-center border ${item.name === color ? "border-[#FF9900] border-2 shadow-md" : ""} px-3 py-0.5 rounded-md text-sm font-medium text-gray-600 cursor-pointer`}
-                                  onClick={() => setColor(item.name)}
-                                >
-                                  {item.name}
-                                </span>
+                                  className={`h-10 w-24 flex justify-center items-center  border ${item.name === size ? "border-[#FF9900] border-2 shadow-md" : ""} px-3 py-0.5 rounded-md text-base font-bold text-gray-800 cursor-pointer`}
+                                  onClick={() => setSize(item.name)}
+                              >
+                                {item.name}
+                              </span>
 
-                              ))}
-
-                            </div>
+                            ))}
 
                           </div>
+
+                        </div>
+                        
+                        {/* color */}
+                        <div className="space-y-2">
+
+                          <h2 className="text-xs font-bold uppercase">select a color</h2>
+                          
+                          <div className="flex items-center gap-x-3 gap-y-1">
+
+                            {product?.colors?.map((item,index) => (
+
+                              <span 
+                                key={index} 
+                                className={`h-10 w-24 flex justify-center items-center border ${item.name === color ? "border-[#FF9900] border-2 shadow-md" : ""} px-3 py-0.5 rounded-md text-sm font-medium text-gray-600 cursor-pointer`}
+                                onClick={() => setColor(item.name)}
+                              >
+                                {item.name}
+                              </span>
+
+                            ))}
+
+                          </div>
+
+                        </div>
 
                       </>
 

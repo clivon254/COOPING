@@ -68,13 +68,13 @@ export default function ProductsLoading() {
                         >
 
                             {/* image */}
-                            <div className="h-[250px] md:h-[300px] xl:h-[280px] w-full animate-spin bg-slate-300 shadow rounded-md"/>
+                            <div className="h-[250px] md:h-[300px] xl:h-[280px] w-full animate-pulse bg-slate-300 shadow rounded-md"/>
 
                             <div className="space-y-1">
 
-                                <span className="block w-[65%] h-6 animate-spin bg-slate-300 rounded-md"/>
+                                <span className="block w-[65%] h-6 animate-pulse bg-slate-300 rounded-md"/>
 
-                                <span className="block w-[45%] h-4 animate-spin bg-slate-300 rounded-md"/>
+                                <span className="block w-[45%] h-4 animate-pulse bg-slate-300 rounded-md"/>
 
                             </div>
 

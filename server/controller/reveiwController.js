@@ -12,18 +12,29 @@ export const addReveiw = async (req,res,next) => {
         return next(errorHandler(401,"you are not allowed to add reveiw"))
     }
 
-    if(!rate)
-    {
-        return next(errorHandler(400,"please rate the food"))
-    }
 
     const {productId,rate,content} = req.body
+
+    const userId = req.user.id
+
+    
+    if(!rate)
+    {
+        return next(errorHandler(400,"please rate the product first"))
+    }
 
     const product = await Product.findById(productId)
 
     if(!product)
     {
         return next(errorHandler(404,"product not found"))
+    }
+
+    const existingRating = await Reveiw.findOne({userId,productId})
+
+    if(existingRating)
+    {
+        return next(errorHandler(400,"You had already reveiwed the product"))
     }
 
     try
@@ -37,6 +48,13 @@ export const addReveiw = async (req,res,next) => {
         })
 
         await reveiw.save()
+
+        // update product avarage rating
+        const ratings = await Reveiw.find({productId})
+
+        const avarageRatings = ratings.reduce((acc ,curr) => acc + curr.rate , 0) / ratings.length
+
+        await Product.findByIdAndUpdate(productId , {rate:avarageRatings})
 
         res.status(200).json({success:true , reveiw})
 
@@ -99,7 +117,9 @@ export const updateReveiw = async (req,res,next) => {
         return next(errorHandler(401 ,"you are not allowed to edit this reveiw"))
     }
 
-    const {reveiwId} = req.params
+   
+
+    const {reveiwId,productId} = req.params
 
     const reveiw = await Reveiw.findById(reveiwId)
 
@@ -122,6 +142,13 @@ export const updateReveiw = async (req,res,next) => {
             }
         )
 
+        // update product avarage rating
+        const ratings = await Reveiw.find({productId})
+
+        const avarageRatings = ratings.reduce((acc ,curr) => acc + curr.rate , 0) / ratings.length
+
+        await Product.findByIdAndUpdate(productId , {rate:avarageRatings})
+
         res.status(200).json({success:true , updatedReveiw})
 
     }
@@ -140,7 +167,7 @@ export const deleteReveiw = async (req,res,next) => {
         return next(errorHandler(401 ,"you are not allowed to edit this reveiw"))
     }
 
-    const {reveiwId} = req.params
+    const {reveiwId,productId} = req.params
 
     const reveiw = await Reveiw.findById(reveiwId)
 
@@ -153,6 +180,14 @@ export const deleteReveiw = async (req,res,next) => {
     {
 
         await Reveiw.findByIdAndDelete(reveiwId)
+
+        // update product average rating
+        const ratings = await Reveiw.find({productId})
+
+        const averageRating = ratings.reduce((acc, curr) => acc + curr.rate, 0) / ratings.length
+ 
+        await Product.findByIdAndUpdate(productId, {averageRating})
+
 
         res.status(200).json({success:true , message:"reveiw deleted successfully"})
 
