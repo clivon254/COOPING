@@ -17,13 +17,15 @@ import ProductCard from '../components/ProductCard'
 import { useSelector } from 'react-redux'
 import { toast } from 'sonner'
 import { Alert } from 'flowbite-react'
-
+import ProductsLoading from '../components/ProductsLoading'
+import moment from "moment"
+import {FaStar} from "react-icons/fa"
 
 
 
 export default function ProductReveiw() {
 
-  const {url,token,products,fetchCart} = useContext(StoreContext)
+  const {url,token,products,fetchCart,fetchProducts,productLoading,productError} = useContext(StoreContext)
 
   const {currentUser} = useSelector(state => state.user)
 
@@ -31,9 +33,9 @@ export default function ProductReveiw() {
 
   const [product ,setProduct] = useState({})
 
-  const [productLoading ,setProductLoading] = useState(false)
+  const [fetchProductLoading ,setFetchProductLoading] = useState(false)
 
-  const [productError ,setProductError] = useState(false)
+  const [fetchProductError ,setFetchProductError] = useState(false)
 
   const [image, setImage] = useState(null)
 
@@ -53,8 +55,21 @@ export default function ProductReveiw() {
 
   const [addCartError , setAddCartError] = useState(false)
 
+  const [formData ,setFormData] = useState({
+    productId,
+  })
 
   const navigate = useNavigate()
+
+  const [reveiws , setReveiws] = useState([])
+
+  const [fetchReveiwsLoading ,setFetchReveiwLoading] = useState(false)
+
+  const [fetchReveiwsError ,setFetchReveiwError] = useState(false)
+
+  const [reveiwLoading ,setReveiwLoading] = useState(false)
+
+  const [reveiwError ,setReveiwError] = useState(null)
 
 
   // fetchProduct
@@ -62,16 +77,18 @@ export default function ProductReveiw() {
 
     try
     {
+    
+      setFetchProductLoading(true)
 
-      setProductLoading(true)
+      setFetchProductError(false)
 
-      setProductError(false)
+      fetchProducts()
 
       const res = await axios.get(url + `/api/product/get-product/${productId}`)
 
       if(res.data.success)
       {
-        setProductLoading(false)
+        setFetchProductLoading(false)
 
         setProduct(res.data.product)
 
@@ -84,9 +101,9 @@ export default function ProductReveiw() {
     {
       console.log(error.message)
 
-      setProductError(true)
+      setFetchProductError(true)
 
-      setProductLoading(false)
+      setFetchProductLoading(false)
     }
 
   }
@@ -321,23 +338,113 @@ export default function ProductReveiw() {
 
   }
 
+  // handleChangeReveiw
+  const handleChangeReveiw = (e) => {
+    
+    setFormData({...formData , [e.target.name]:e.target.value})
+
+  }
+
+  // handleChangeRate
+  const handleChangeRate = (rate) => {
+
+    setFormData({...formData,rate : rate})
+
+  }
+
+  // handleSubmit
+  const handleSubmit = async (e) => {
+
+    e.preventDefault()
+
+    try
+    {
+        if(!formData?.rate)
+        {
+            return setReveiwError("please rate the product first")
+        }
+
+        setReveiwError(null)
+
+        setReveiwLoading(true)
+
+        const res = await axios.post(url + `/api/reveiw/add-reveiw`,formData,{headers:{token}})
+
+        if(res.data.success)
+        {
+            setReveiwLoading(false) 
+
+            fetchReveiws()
+
+            setFormData({})
+        }
+
+    }
+    catch(error)
+    {
+        console.log(error.message)
+
+        setReveiwError(error.message)
+
+        setReveiwLoading(false)
+    }
+
+  }
+
+  // fetchReveiws
+  const fetchReveiws = async () => {
+
+    try
+    {
+
+        setFetchReveiwError(false)
+
+        setFetchProductLoading(true)
+
+        const res = await axios.get(url + `/api/reveiw/get-reveiws/${productId}`)
+
+        if(res.data.success)
+        {
+            setFetchProductLoading(false)
+
+            setReveiws(res.data.reveiws)
+        }
+
+
+    }
+    catch(error)
+    {
+        console.log(error?.message)
+
+        setFetchReveiwError(true)
+
+        setFetchProductLoading(false)
+    }
+
+  }
+
+
 
   console.log(product)
+
 
   useEffect(() => {
 
     fetchProduct()
 
+    fetchReveiws()
+
     window.scrollTo(0,0)
 
   },[productId])
+  
+  console.log(formData)
 
   return (
     
     <>
 
-      {!productError && !productLoading && (
-
+      {!fetchProductError && !fetchProductLoading && (
        
         <section className="w-full p-5 space-y-20">
 
@@ -605,132 +712,272 @@ export default function ProductReveiw() {
             </div>
 
             {/* lower section */}
-            <div className="">
+            <div className="space-y-10">
+            
+              {/*reveiws  */}
+              {!currentUser ? 
+                (
 
-              {/* reveiws */}
-              <div className="space-y-4">
+                    <>
 
-                <h2 className="text-xl">Reviews</h2>
+                        <div className="w-full max-w-2xl">
 
-                <div className="flex items-center gap-x-2">
+                            <span 
+                                className="text-xl border w-full block text-center rounded-full px-2 py-3 font-semibold cursor-pointer hover:text-[#FF9900] shadow"
+                                onClick={() => navigate('/sign-in')}
+                            >
+                                Sign in to review the product
+                            </span>
+                            
+                        </div>
 
-                    <span className="text-sm font-semibold">Signed in as :</span>
+                    </>
 
-                    <div className="flex items-center gap-x-2 text-xs cursor-pointer">
+                ) 
+                : 
+                (
 
-                        <Link to="/profile">
+                    <>
 
-                            <img 
-                                src={currentUser?.profilePicture}
-                                alt="" 
-                                className="h-6 w-6 rounded-full" 
-                            />
+                        {/* REVEIW*/}
+                        <div className="space-y-4 max-w-2xl">
 
-                        </Link>
+                            <h2 className="text-xl sm:text-2xl font-semibold tracking-tighter">Reviews</h2>
 
-                        <span className="font-bold tracking-tighter text-blue-700 hover:underline">@{currentUser?.username}</span>
+                            <div className="flex items-center gap-x-2">
 
-                    </div>
+                                <span className="text-sm font-semibold">Signed in as :</span>
 
-                </div>
-                
-                <form className="border border-gray-400 w-full max-w-2xl p-3 rounded-md flex flex-col gap-y-4">
+                                <div className="flex items-center gap-x-2 text-xs cursor-pointer">
 
-                    {/* rarting */}
-                    <div className="flex  items-center gap-x-3">
+                                    <Link to="/profile">
 
-                        <span className="text-red-700 text-xs font-bold">Rate * </span>
+                                        <img 
+                                            src={currentUser?.profilePicture}
+                                            alt="" 
+                                            className="h-6 w-6 rounded-full" 
+                                        />
 
-                        <Rating 
-                            initialRating={product?.rate}
-                            emptySymbol={<MdStar className="text-gray-300"/>}
-                            fullSymbol={<MdStar className="text-amber-300"/>}
-                        />
+                                    </Link>
 
-                    </div>
+                                    <span className="font-bold tracking-tighter text-blue-700 hover:underline">@{currentUser?.username}</span>
 
-                    <textarea 
-                        name="" 
-                        className="block w-full rounded-md bg-white border border-gray-400 px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-[#FF9900] sm:text-sm/6"
-                        placeholder='type here . . . . '
-                    />
+                                </div>
 
-                    {/*  */}
-                    <div className="flex justify-end">
+                            </div>
+                            
+                            <form onSubmit={handleSubmit} className="border border-gray-400 w-full  p-3 rounded-md flex flex-col gap-y-4">
 
-                        <button className="bg-blue-700 text-white px-5 py-2 rounded-md shadow-md cursor-pointer">
-                            Submit
-                        </button>
+                                {/* rating */}
+                                <div className="flex  items-center gap-x-3">
 
-                    </div>
+                                    <span className="text-red-700 text-xs font-bold">Rate * </span>
 
-                </form>
+                                    <Rating 
+                                        initialRating={formData?.rate}
+                                        emptySymbol={<MdStar className="text-gray-300"/>}
+                                        fullSymbol={<MdStar className="text-amber-300"/>}
+                                        onChange={handleChangeRate}
+                                    />
 
-              </div>
+                                </div>
+
+                                <textarea 
+                                    name="content" 
+                                    className="block w-full rounded-md bg-white border border-gray-400 px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-[#FF9900] sm:text-sm/6"
+                                    placeholder='type here . . . . '
+                                    onChange={handleChangeReveiw}
+                                    value={formData?.Reveiw}
+                                />
+
+                                {reveiwError && (
+
+                                    <div className="bg-red-100 w-full p-2 rounded-md">
+
+                                        <p className="text-red-600">{reveiwError}</p>
+
+                                    </div>
+
+                                )}
+
+                                {/*button  */}
+                                <div className="flex justify-end">
+
+                                    <button 
+                                        className="bg-blue-700 text-white px-5 py-2 rounded-md shadow-md cursor-pointer"
+                                        type="submit"
+                                    >
+                                        {reveiwLoading ? 
+                                        (
+                                            <div className="flex justify-center items-center">
+
+                                                <span className="h-5 w-5 rounded-full animate-spin border border-r-black"/>
+
+                                            </div>
+                                        ) 
+                                        :
+                                        ("submit")
+                                    }
+                                    </button>
+
+                                </div>
+
+                            </form>
+
+                            {/*reveiws  */}
+                            <div className="">
+
+                                {reveiws.length > 0 ? 
+                                    (
+                                        <>
+                                            {reveiws.map((reveiw,index) => (
+
+                                                <div key={index} className="flex p-4 text-sm border-b border-gray-400">
+
+                                                    {/* image */}
+                                                    <div className="h-12 w-12 flex shrink-0  mr-3">
+
+                                                        <img 
+                                                            src={reveiw?.userId?.profilePicture}
+                                                            alt=""
+                                                            className="w-full h-full rounded-full"
+                                                        />
+
+                                                    </div>
+
+                                                    <div className="flex-1">
+
+                                                        {/* rating */}
+                                                        <div className="">
+
+                                                            <Rating 
+                                                                initialRating={reveiw.rating}
+                                                                emptySymbol={<FaStar className="text-gray-300"/>}
+                                                                fullSymbol={<FaStar className="text-amber-300"/>}
+                                                                readonly
+                                                            />
+
+                                                        </div>
+
+                                                        {/* user details */}
+                                                        <div className="flex items-center mb-1">
+
+                                                            <span className="font-bold mr-1 text-xs truncate">
+                                                                {reveiw?.userId?.username}
+                                                            </span>
+
+                                                            <span className="text-gray-500 text-xs">
+                                                                {moment(reveiw.created).fromNow()}
+                                                            </span>
+
+                                                        </div>
+
+                                                        <p className="text-gray-600 pb-2">{reveiw?.content}</p>
+
+                                                    </div>
+
+                                                </div>
+
+                                            ))}
+                                        </>
+                                    ) 
+                                    : 
+                                    (
+                                        <>
+
+                                            <p className="text-xl font-semibold text-gray-700 text-center">
+                                                There are no reveiws yet .Be the first one to reveiw
+                                            </p>
+                                        
+                                        </>
+                                    )
+                                }
+
+                            </div>
+
+                        </div>
+
+                   </>
+
+              )}
 
               {/* Related Product */}
               <div className="space-y-7">
                 
                 <h2 className="text-2xl/9 lg:text-3xl/9 font-bold tracking-tight text-gray-900">You may also like</h2>
 
-                {/* swiper */}
-                <div className="w-full relative">
+                {!productLoading && !productError && (
 
-                    <Swiper
-                        className="mySwiper  relative"
-                        spaceBetween={10}
-                        slidesPerView={4}
-                        // loop={true}
-                        autoPlay={
-                        {
-                            delay:2000,
-                            disableOnInteraction:false
-                        }
-                        }
-                        modules={[Autoplay,Navigation]}
-                        breakpoints={{
-                            0: {
-                            slidesPerView: 2,
-                            spaceBetween:20
-                            },
-                            640: {
-                            slidesPerView:3 ,
-                            spaceBetween: 30,
-                            },
-                            768: {
-                            slidesPerView: 4,
-                            spaceBetween: 40,
-                            },
-                            1024: {
-                            slidesPerView: 4,
-                            spaceBetween: 40,
-                            },
-                        }} 
-                        navigation={{
-                        prevEl:'.prev',
-                        nextEl:'.next'
-                            }}
-                    >
-                            {ProductType?.map((product,index) => (
+                    <>
 
-                                <SwiperSlide key={index}>
+                        {/* swiper */}
+                        <div className="w-full relative">
 
-                                  <ProductCard product={product}/>
+                            <Swiper
+                                className="mySwiper  relative"
+                                spaceBetween={10}
+                                slidesPerView={4}
+                                // loop={true}
+                                autoPlay={
+                                {
+                                    delay:2000,
+                                    disableOnInteraction:false
+                                }
+                                }
+                                modules={[Autoplay,Navigation]}
+                                breakpoints={{
+                                    0: {
+                                    slidesPerView: 2,
+                                    spaceBetween:20
+                                    },
+                                    640: {
+                                    slidesPerView:3 ,
+                                    spaceBetween: 30,
+                                    },
+                                    768: {
+                                    slidesPerView: 4,
+                                    spaceBetween: 40,
+                                    },
+                                    1024: {
+                                    slidesPerView: 4,
+                                    spaceBetween: 40,
+                                    },
+                                }} 
+                                navigation={{
+                                prevEl:'.prev',
+                                nextEl:'.next'
+                                    }}
+                            >
+                                    {ProductType?.map((product,index) => (
 
-                                </SwiperSlide>
+                                        <SwiperSlide key={index}>
 
-                            ))}
-                    </Swiper>
+                                        <ProductCard product={product}/>
 
-                    <div className="prev absolute top-1/3 -left-4 z-40 h-6 w-6 bg-orange-100 text-[#FF9900]  rounded-full flex justify-center items-center cursor-pointer">
-                        <MdChevronLeft size={32} className=""/>
-                    </div>
+                                        </SwiperSlide>
 
-                    <div className="next absolute top-1/3 -right-4 z-40 h-6 w-6 bg-orange-100 text-[#FF9900] rounded-full flex justify-center items-center cursor-pointer">
-                        <MdChevronRight size={32} className=""/>
-                    </div>
+                                    ))}
+                            </Swiper>
 
-                </div>
+                            <div className="prev absolute top-1/3 -left-4 z-40 h-6 w-6 bg-orange-100 text-[#FF9900]  rounded-full flex justify-center items-center cursor-pointer">
+                                <MdChevronLeft size={32} className=""/>
+                            </div>
+
+                            <div className="next absolute top-1/3 -right-4 z-40 h-6 w-6 bg-orange-100 text-[#FF9900] rounded-full flex justify-center items-center cursor-pointer">
+                                <MdChevronRight size={32} className=""/>
+                            </div>
+
+                        </div>
+
+                    </>
+
+                )}
+
+                {productLoading && !productError && (
+
+                   <ProductsLoading/>
+
+                )}
 
               </div>
 
@@ -740,13 +987,13 @@ export default function ProductReveiw() {
 
       )}
 
-      {productLoading && !productError && (
+      {fetchProductLoading && !fetchProductError && (
 
         <Loader/>
 
       )}
 
-      {productError && (
+      {fetchProductError && (
 
         <Error retry={fetchProduct}/>
 

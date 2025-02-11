@@ -12,6 +12,11 @@ export const addReveiw = async (req,res,next) => {
         return next(errorHandler(401,"you are not allowed to add reveiw"))
     }
 
+    if(!rate)
+    {
+        return next(errorHandler(400,"please rate the food"))
+    }
+
     const {productId,rate,content} = req.body
 
     const product = await Product.findById(productId)
@@ -74,7 +79,7 @@ export const getReveiws = async (req,res,next) => {
 
     try
     {
-        const reveiws = await Reveiw.find({productId}).sort({_id:-1})
+        const reveiws = await Reveiw.find({productId}).sort({_id:-1}).populate({path:"userId" })
 
         res.status(200).json({success:true , reveiws})
 

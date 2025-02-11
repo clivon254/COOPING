@@ -23,7 +23,7 @@ import { Alert } from 'flowbite-react'
 
 export default function ProductPage() {
 
-  const {url,token,products,fetchCart} = useContext(StoreContext)
+  const {url,token,products,fetchCart,fetchProducts} = useContext(StoreContext)
 
   const {currentUser} = useSelector(state => state.user)
 
@@ -63,6 +63,8 @@ export default function ProductPage() {
     try
     {
 
+      fetchProducts()
+
       setProductLoading(true)
 
       setProductError(false)
@@ -77,6 +79,7 @@ export default function ProductPage() {
 
         setImage(res.data.product.images[0])
 
+        
       }
 
     }
