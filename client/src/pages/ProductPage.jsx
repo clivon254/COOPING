@@ -16,7 +16,7 @@ import Title from '../components/Title'
 import {Link} from "react-router-dom"
 import ProductsLoading from '../components/ProductsLoading'
 import SlidingProducts from '../components/SlidingProducts'
-
+import {MdStar} from "react-icons/md"
 
 
 export default function ProductPage() {

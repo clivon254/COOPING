@@ -6,6 +6,10 @@ import Title from '../components/Title'
 import SlidingProducts from '../components/SlidingProducts'
 import ProductsLoading from '../components/ProductsLoading'
 import FoodBanner from '../components/FoodBanner'
+import FoodOfferBanner from '../components/FoodOfferBanner'
+
+
+
 
 export default function Food() {
 
@@ -20,33 +24,75 @@ export default function Food() {
       <FoodBanner />
 
       {/* featured */}
-      <div className="px-5 flex flex-col gap-y-5 py-7">
+      <div className="p-5 flex flex-col gap-y-5 border-b-8 border-[#ff9900]">
 
-        <Title label={"featured food"}/>
+        <Title label={"featured food ITEMS"}/>
         
         {!productLoading && !productError && (
 
-            <SlidingProducts products={Food} next={"nextFoodOffer"} prev={"prevFoodOffer"}  />
+            <SlidingProducts products={Food} next={"nextOffer"} prev={"prevOffer"}  />
 
         )}
 
         {productLoading && !productError && (
 
-            <ProductsLoading products={Food} next={"nextFoodfeatured"} prev={"prevFoodfeatured"}  />
+            <ProductsLoading products={Food} next={"nextfeatured"} prev={"prevfeatured"}  />
 
         )}
         
 
       </div>
 
+      <FoodOfferBanner/>
+
       {/* offer */}
-      <div className="px-5 flex flex-col gap-y-5 py-10">
+      <div className="p-5 flex flex-col gap-y-5 py-10 border-b-8 border-[#ff9900]">
 
         <Title label={"Food on offer"}/>
         
         {!productLoading && !productError && (
 
-            <SlidingProducts products={Food} next={"nextFoodOffer"} prev={"prevFoodOffer"}  />
+            <SlidingProducts products={Food} next={"nextFoodOffer"} prev={"prevFoodOffer"}/>
+
+        )}
+
+        {productLoading && !productError && (
+
+            <ProductsLoading products={Food} next={"nextFoodOffer"} prev={"prevFoodOffer"}  />
+
+        )}
+        
+
+      </div>
+
+      {/* Snacks */}
+      <div className="p-5 flex flex-col gap-y-5 py-10 border-b-8 border-[#ff9900]">
+
+        <Title label={"SNACKS"}/>
+        
+        {!productLoading && !productError && (
+
+            <SlidingProducts products={Food} next={"nextSnacks"} prev={"prevSnacks"}/>
+
+        )}
+
+        {productLoading && !productError && (
+
+            <ProductsLoading products={Food} next={"nextFoodOffer"} prev={"prevFoodOffer"}  />
+
+        )}
+        
+
+      </div>
+
+      {/* STREET FOOD */}
+      <div className="p-5 flex flex-col gap-y-5 py-10 border-b-8 border-[#ff9900]">
+
+        <Title label={"STREET FOOD"}/>
+        
+        {!productLoading && !productError && (
+
+            <SlidingProducts products={Food} next={"nextSnacks"} prev={"prevSnacks"}/>
 
         )}
 
