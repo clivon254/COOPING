@@ -65,6 +65,14 @@ export default function StoreContextProvider(props)
 
     const [products ,setProducts] = useState([])
 
+    const Food = products.filter(product => product.type === 'Food')
+
+    const Merchendise = products.filter(product => product.type === 'Merchendise')
+
+    const Liqour = products.filter(product => product.type === 'Liqour')
+
+    const Drink = products.filter(product => product.type === 'Drink')
+
     const [productLoading , setProductLoading] = useState(false)
 
     const [productError , setProductError] = useState(false)
@@ -130,9 +138,6 @@ export default function StoreContextProvider(props)
     const [adminStatsError ,setAdminStatsError] = useState(false)
 
     const [numOfDays , setNumOfDays] = useState(7)
-
-
-    
 
 
 
@@ -539,6 +544,8 @@ export default function StoreContextProvider(props)
         open , setOpen,
         openDelete , setOpenDelete,
         products , setProducts,
+        Food , Merchendise,
+        Liqour , Drink ,
         productLoading , setProductLoading,
         productError , setProductError,
         fetchProducts,
