@@ -5,8 +5,6 @@ import { StoreContext } from '../context/store'
 import Title from '../components/Title'
 import SlidingProducts from '../components/SlidingProducts'
 import ProductsLoading from '../components/ProductsLoading'
-import FoodBanner from '../components/FoodBanner'
-import FoodOfferBanner from '../components/FoodOfferBanner'
 import DrinkBanner from '../components/DrinkBanner'
 import DrinkOfferBanner from '../components/DrinkOfferBanner'
 

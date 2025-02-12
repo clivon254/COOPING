@@ -1,10 +1,10 @@
 
 
 import React from 'react'
-import Banner from "../assets/DrinkBanner1.jpeg"
+import Banner from "../assets/LiqourBanner1.jpeg"
 
 
-export default function DrinkOfferBanner() {
+export default function LiqourOfferBanner() {
 
   return (
 

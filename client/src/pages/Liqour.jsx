@@ -5,104 +5,164 @@ import { StoreContext } from '../context/store'
 import Title from '../components/Title'
 import SlidingProducts from '../components/SlidingProducts'
 import ProductsLoading from '../components/ProductsLoading'
-import FoodBanner from '../components/FoodBanner'
-import FoodOfferBanner from '../components/FoodOfferBanner'
+import LiqourBanner from '../components/LiqourBanner'
+import LiqourOfferBanner from '../components/LiqourOfferBanner'
 
 
 
 
-export default function Food() {
 
-  const {Food,productLoading,productError} = useContext(StoreContext)
+export default function Liqour() {
 
-  console.log(Food)
+  const {Liqour,productLoading,productError} = useContext(StoreContext)
+
+  console.log(Liqour)
 
   return (
 
     <section className="">
 
-      <FoodBanner />
+      <LiqourBanner/>
 
       {/* featured */}
       <div className="p-5 flex flex-col gap-y-5 border-b-8 border-[#ff9900]">
 
-        <Title label={"featured food ITEMS"}/>
+        <Title label={"featured Liqour ITEMS"}/>
         
         {!productLoading && !productError && (
 
-            <SlidingProducts products={Food} next={"nextOffer"} prev={"prevOffer"}  />
+            <SlidingProducts products={Liqour} next={"nextOffer"} prev={"prevOffer"}  />
 
         )}
 
         {productLoading && !productError && (
 
-            <ProductsLoading products={Food} next={"nextfeatured"} prev={"prevfeatured"}  />
+            <ProductsLoading products={Liqour} next={"nextfeatured"} prev={"prevfeatured"}  />
 
         )}
         
 
       </div>
 
-      <FoodOfferBanner/>
+      <LiqourOfferBanner/>
 
       {/* offer */}
       <div className="p-5 flex flex-col gap-y-5 py-10 border-b-8 border-[#ff9900]">
 
-        <Title label={"Food on offer"}/>
+        <Title label={"Liqour on offer"}/>
         
         {!productLoading && !productError && (
 
-            <SlidingProducts products={Food} next={"nextFoodOffer"} prev={"prevFoodOffer"}/>
+            <SlidingProducts products={Liqour} next={"nextLiqourOffer"} prev={"prevLiqourOffer"}/>
 
         )}
 
         {productLoading && !productError && (
 
-            <ProductsLoading products={Food} next={"nextFoodOffer"} prev={"prevFoodOffer"}  />
+            <ProductsLoading products={Liqour} next={"nextLiqourOffer"} prev={"prevLiqourOffer"}  />
 
         )}
         
 
       </div>
 
-      {/* Snacks */}
+      {/* GIN */}
       <div className="p-5 flex flex-col gap-y-5 py-10 border-b-8 border-[#ff9900]">
 
-        <Title label={"SNACKS"}/>
+        <Title label={"GIN"}/>
         
         {!productLoading && !productError && (
 
-            <SlidingProducts products={Food} next={"nextSnacks"} prev={"prevSnacks"}/>
+            <SlidingProducts products={Liqour} next={"nextSnacks"} prev={"prevSnacks"}/>
 
         )}
 
         {productLoading && !productError && (
 
-            <ProductsLoading products={Food} next={"nextFoodOffer"} prev={"prevFoodOffer"}  />
+            <ProductsLoading products={Liqour} next={"nextLiqourOffer"} prev={"prevLiqourOffer"}  />
 
         )}
         
 
       </div>
 
-      {/* STREET FOOD */}
+      {/* VODKA*/}
       <div className="p-5 flex flex-col gap-y-5 py-10 border-b-8 border-[#ff9900]">
 
-        <Title label={"STREET FOOD"}/>
+        <Title label={"VODKA"}/>
         
         {!productLoading && !productError && (
 
-            <SlidingProducts products={Food} next={"nextSnacks"} prev={"prevSnacks"}/>
+            <SlidingProducts products={Liqour} next={"nextSnacks"} prev={"prevSnacks"}/>
 
         )}
 
         {productLoading && !productError && (
 
-            <ProductsLoading products={Food} next={"nextFoodOffer"} prev={"prevFoodOffer"}  />
+            <ProductsLoading products={Liqour} next={"nextLiqourOffer"} prev={"prevLiqourOffer"}  />
 
         )}
         
 
+      </div>
+
+      {/* WHISKEY */}
+      <div className="p-5 flex flex-col gap-y-5 py-10 border-b-8 border-[#ff9900]">
+
+        <Title label={"VODKA"}/>
+        
+        {!productLoading && !productError && (
+
+            <SlidingProducts products={Liqour} next={"nextSnacks"} prev={"prevSnacks"}/>
+
+        )}
+
+        {productLoading && !productError && (
+
+            <ProductsLoading products={Liqour} next={"nextLiqourOffer"} prev={"prevLiqourOffer"}  />
+
+        )}
+        
+
+      </div>
+
+      {/* WINES */}
+      <div className="p-5 flex flex-col gap-y-5 py-10 border-b-8 border-[#ff9900]">
+
+        <Title label={"WINES"}/>
+        
+        {!productLoading && !productError && (
+
+            <SlidingProducts products={Liqour} next={"nextSnacks"} prev={"prevSnacks"}/>
+
+        )}
+
+        {productLoading && !productError && (
+
+            <ProductsLoading products={Liqour} next={"nextLiqourOffer"} prev={"prevLiqourOffer"}  />
+
+        )}
+        
+
+      </div>
+
+      {/* CHAMPAIGNE */}
+      <div className="p-5 flex flex-col gap-y-5 py-10 border-b-8 border-[#ff9900]">
+
+        <Title label={"CHAMPAIGNE"}/>
+        
+        {!productLoading && !productError && (
+
+            <SlidingProducts products={Liqour} next={"nextSnacks"} prev={"prevSnacks"}/>
+
+        )}
+
+        {productLoading && !productError && (
+
+            <ProductsLoading products={Liqour} next={"nextLiqourOffer"} prev={"prevLiqourOffer"}  />
+
+        )}
+        
       </div>
 
 
