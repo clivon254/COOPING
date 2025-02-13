@@ -23,6 +23,7 @@ import Orders from './pages/Orders'
 import ProductReveiw from './pages/ProductReveiw'
 import About from './pages/About'
 import Contact from './pages/Contact'
+import Faq from './pages/Faq'
 
 export default function App() {
 
@@ -63,6 +64,8 @@ export default function App() {
               <Route path="/merchendise" element={<Merchendise/>}/>
 
               <Route path="/food" element={<Food/>}/>
+
+              <Route path="/faq" element={<Faq/>}/>
 
               <Route path="/liqour" element={<Liqour/>}/>
 

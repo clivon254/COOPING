@@ -139,6 +139,12 @@ export default function StoreContextProvider(props)
 
     const [numOfDays , setNumOfDays] = useState(7)
 
+    const [faqs , setFaqs] = useState([])
+
+    const [fetchFAQLoading , setFetchFAQLoading ] = useState(false)
+
+    const [fetchFAQError , setFetchFAQError ] = useState(false)
+
 
 
     // fetchProduct
@@ -495,6 +501,37 @@ export default function StoreContextProvider(props)
 
     }
 
+    // fetchFAQS
+    const fetchFAQS = async () => {
+
+        try
+        {
+            setFetchFAQError(false)
+
+            setFetchFAQLoading(true)
+
+            const res = await axios.get(url + "/api/faq/get-faqs")
+
+            if(res.data.success)
+            {
+                setFetchFAQLoading(false)
+                
+                setFaqs(res.data.faqs)
+            }
+
+        }
+
+        catch(error)
+        {
+            console.log(error.message)
+
+            setFetchFAQError(true)
+
+            setFetchFAQLoading(false)
+        }
+
+    }
+
 
     useEffect(() => {
 
@@ -517,6 +554,8 @@ export default function StoreContextProvider(props)
         fetchDelivery()
 
         fetchOrders()
+
+        fetchFAQS()
 
     },[])
 
@@ -595,7 +634,11 @@ export default function StoreContextProvider(props)
         adminStatsLoading , setAdminStatsLoading ,
         adminStatsError , setAdminStatsError,
         fetchAdminStats,
-        numOfDays ,setNumOfDays
+        numOfDays ,setNumOfDays,
+        faqs , setFaqs,
+        fetchFAQError , setFetchFAQError,
+        fetchFAQLoading , setFetchFAQLoading,
+        fetchFAQS
     }
 
     return (

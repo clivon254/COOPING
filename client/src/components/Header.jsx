@@ -1,33 +1,59 @@
 
 
 
-import React, { useContext } from 'react'
+import React, { useContext , useState} from 'react'
 import { Link, NavLink, useNavigate } from 'react-router-dom'
 import LOGO from "../assets/LOGOO.png"
 import { StoreContext } from '../context/store'
 import { MdClose, MdLogout, MdMenu,MdPermDeviceInformation } from 'react-icons/md'
 import { useDispatch, useSelector } from 'react-redux'
 import { Avatar, Dropdown } from 'flowbite-react'
-import { IoCartOutline } from "react-icons/io5";
+import { IoCartOutline, IoSearch } from "react-icons/io5";
 import { signOutSuccess } from '../redux/user/userSlice'
 import { toast } from 'sonner'
 import DashSidebar from './DashSidebar'
 import { FaInstagram } from "react-icons/fa";
 import { FaFacebookF,FaWhatsapp,FaTiktok } from "react-icons/fa";
-import { FaInfo } from "react-icons/fa";
+import { FaInfo , FaQuestion } from "react-icons/fa";
+import { IoHomeOutline } from "react-icons/io5"
+import { MdLiquor } from "react-icons/md";
+import { RiDrinks2Line } from "react-icons/ri";
+import { GiClothes } from "react-icons/gi";
+import { IoRestaurantSharp } from "react-icons/io5";
+
 
 
 
 export default function Header() {
 
 
-  const {open,setOpen,token,cartNumber,NavLinks} = useContext(StoreContext)
+  const {open,setOpen,token,cartNumber,NavLinks,products} = useContext(StoreContext)
 
   const {currentUser} = useSelector(state => state.user)
 
   const navigate = useNavigate()
 
   const dispatch = useDispatch()
+
+  const [searchOpen , setSearchOpen] = useState(false)
+
+  const [searchInput , setSearchInput] = useState("")
+
+  const [filteredProducts , setFilteredProducts] = useState([])
+
+  // handleSearch
+  const handleSearch = (e) => {
+
+    const searchTerm = e.target.value 
+
+    setSearchInput(searchTerm)
+
+    const filtered = products.filter((product) => product.name.toLowerCase().includes(searchTerm.toLowerCase()))
+
+    setFilteredProducts(filtered)
+
+  }
+
 
   // handle sign out 
   const handleSignOut = () => {
@@ -50,10 +76,10 @@ export default function Header() {
         <header className={` shadow-md`}>
 
           {/* upper */}
-          <div className="bg-blue-100 p-2 flex justify-between items-center">
+          <div className="bg-gray-100  flex justify-between items-center p-2 lg:p-0"> 
               
-              {/* about && contact */}
-              <div className="lg:flex hidden gap-x-10 text-[#ff9900] font-semibold">
+              {/* about && contact  && FAQ*/}
+              <div className="lg:flex hidden gap-x-6  text-[#ff9900] text-sm p-1">
 
                 <Link to="/about">
                 
@@ -75,39 +101,147 @@ export default function Header() {
 
                 </Link>
 
+                <Link to="/faq">
+                
+                  <span className="flex items-center">
+
+                    <FaQuestion/> FAQ
+                    
+                  </span>
+
+                </Link>
+
+              </div>
+
+              {/* search */}
+              <div className="border border-zinc-300 w-[500px] relative hidden lg:block">
+
+                <input 
+                  type="text" 
+                  className="w-full border-none focus:none" 
+                  placeholder='search . . . '
+                  onChange={handleSearch}
+                />
+                
+                <button className="absolute inset-y-0 right-0 bg-gray-400 flex justify-center items-center px-3 py-1">
+                  <IoSearch size={22} className="text-white"/>
+                </button>
+
+                {searchInput && (
+
+                  <div className="absolute w-full max-h-[60vh] z-50 bg-slate-200 overflow-hidden overflow-y-scroll p-3">
+
+                    {filteredProducts.length > 0 ? 
+                      (
+                        <>
+
+                          <div className="space-y-3">
+
+                            {filteredProducts.map((product,index) => (
+
+                              <div 
+                                key={index}
+                                className="flex items-center gap-x-5 border-b border-orange-200 pb-3 cursor-pointer "
+                                onClick={() => setSearchInput("") }
+                              >
+
+                                <Link to={`/product/${product._id}`}>
+
+                                  <img 
+                                    src={product?.images[0]}
+                                    alt="" 
+                                    className="h-12 w-12 rounded-md shadow-sm" 
+                                  />
+
+                                </Link>
+
+                                <div className="flex flex-col gap-y-1">
+
+                                  <span className="">{product?.name}</span>
+
+                                  {product.discountPrice > 0 ? 
+                                    (
+
+                                    <div className="flex items-center gap-x-2 text-sm font-medium">
+
+                                      <span className="text-xs line-through text-gray-500">
+                                        {(product?.regularPrice)?.toLocaleString('en-KE', { style: 'currency', currency: 'KES' })}
+                                      </span>
+
+                                      <span className="">
+                                        {(product?.discountPrice)?.toLocaleString('en-KE', { style: 'currency', currency: 'KES' })}
+                                      </span>
+
+                                    </div>
+
+                                    ) 
+                                    : 
+                                    (
+                                      <span className="text-sm font-medium">
+                                        {(product?.regularPrice)?.toLocaleString('en-KE', { style: 'currency', currency: 'KES' })}
+                                      </span>
+                                    )
+                                  }
+
+                                </div>
+
+                              </div>
+
+                            ))}
+
+                          </div>
+
+                        </>
+                      ) 
+                      : 
+                      (
+                        
+                        <p className="">
+
+                          Sorry <span className="">"{searchInput}"</span> not found ! ! ! !
+
+                        </p>
+
+                      )
+                    }
+
+                  </div>
+
+                )}
+
               </div>
 
               {/* socials */}
-              <div className="lg:flex hidden gap-x-1">
+              <div className="lg:flex hidden gap-x-2 text-[#ff9900] p-1">
 
                 <span className="">
 
-                  <FaFacebookF/>
+                  <FaFacebookF size={20} />
 
                 </span>
 
                 <span className="">
 
-                  <FaInstagram/>
+                  <FaInstagram size={20}/>
                   
                 </span>
 
                 <span className="">
 
-                  <FaWhatsapp/>
+                  <FaWhatsapp size={20}/>
                   
                 </span>
 
                 <span className="">
 
-                  <FaTiktok/>
+                  <FaTiktok size={20}/>
                   
                 </span>
 
               </div>
 
               {/* toggle */}
-              <div className="lg:hidden flex justify-end w-full">
+              <div className="lg:hidden  text-[#FF9900]">
                 {
                   open ? 
                   <MdClose
@@ -117,143 +251,404 @@ export default function Header() {
                   />
                   :
                   <MdMenu
-                    size={30}
+                    size={40}
                     onClick={() => setOpen(true)}
                     className="cursor-pointer"
                   />
                 }
               </div>
 
+              {/* actions */}
+              <div className="flex items-center gap-x-3 lg:gap-x-5 lg:hidden">
+
+                {/* cart */}
+                {token && currentUser && (
+
+                  <div className="relative cursor-pointer">
+
+                    <Link to="/cart">
+
+                      <IoCartOutline size={30} className=""/>
+
+                      <span className="absolute -right-2 -top-4 h-6 w-6 rounded-full flex justify-center items-center bg-[#FF9900] text-white text-sm font-semibold shadow-md">
+                        {cartNumber || 0}
+                      </span>
+
+                    </Link>
+
+                  </div>
+
+                )}
+
+                {/* dropdown */}
+                <div className="">
+                  {currentUser ?
+                    (
+                    <Dropdown
+                      inline
+                      arrowIcon={false}
+                      label={
+                        <Avatar
+                          img={currentUser.profilePicture}
+                          rounded
+                          className=''
+                        />
+                      }
+                    >
+
+                      <Dropdown.Header>
+
+                        <span className="block text-xs tracking-tight truncate font-semibold">{currentUser?.username}</span>
+
+                        <span className="block text-xs tracking-tight truncate mt-1 font-semibold">{currentUser?.email}</span>
+
+                      </Dropdown.Header>
+
+                      <Link to="/profile">
+
+                        <Dropdown.Item>Profile</Dropdown.Item>
+
+                      </Link>
+
+                      <Link to="/orders">
+
+                        <Dropdown.Item>Orders</Dropdown.Item>
+                        
+                      </Link>
+
+                      <Dropdown.Item 
+                        className="flex items-center gap-x-2"
+                        onClick={handleSignOut}
+                      >
+
+                        <MdLogout size={24}/>sign out
+
+                      </Dropdown.Item>
+
+                    </Dropdown>
+                    )
+                    :
+                    (
+                      <button 
+                        onClick={() => navigate('/sign-in')}
+                        className="flex w-full items-center justify-center rounded-full bg-[#FF9900] px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xl hover:bg-[#ff9900] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FF9900] disabled:cursor-not-allowed cursor-pointer"
+                      >
+                        sign in
+                      </button>
+                    )
+                  }
+                </div>
+
+              </div>
+
+
           </div>
           
           {/* lower */}
-          <div className="flex items-center justify-between p-3">
+          <div className="p-2 lg:flex justify-center items-center">
 
+              <div className="flex items-center justify-between gap-x-10">
+                
+                <div className="hidden lg:flex gap-x-7 ">
 
-            {/* logo */}
-            <Link to="/">
+                  {/* home */}
+                  <NavLink
+                    to={`/`}
+                    className={({isActive}) => isActive ? "flex items-center gap-x-2 text-base font-semibold " : "flex items-center gap-x-2 text-base font-semibold hover:underline hover:text-[#FF9900]"}
+                  >
 
-                <div className="flex items-center">
+                      <span className="">
+                        <IoHomeOutline size={20}/>
+                      </span> 
 
-                  {/* word */}
-                  <div className="h-12 w-36 lg:h-20 lg:w-60">
+                      <span className="text-[#FF9900]">Home </span>
+
+                  </NavLink>
+
+                  {/* food  */}
+                  <NavLink
+                    to={`/food`}
+                    className={({isActive}) => isActive ? "flex items-center gap-x-2 text-base font-semibold " : "flex items-center gap-x-2 text-base font-semibold"}
+                  >
+
+                      <span className="">
+
+                        <IoRestaurantSharp size={20}/>
+
+                      </span>
                       
-                      <img 
-                        src={LOGO} 
-                        alt="" 
-                        className="h-full w-full" 
-                      />
+                      <span className="text-[#FF9900]">Food </span>
+
+                  </NavLink>
+                  
+                  {/* drinks */}
+                  <NavLink
+                    to={`/drink`}
+                    className={({isActive}) => isActive ? "flex items-center gap-x-2 text-base font-semibold underline " : "flex items-center gap-x-2 text-base font-semibold"}
+                  >
+
+                      <span className="">
+                        <RiDrinks2Line size={20}/>
+                      </span>
+
+                      <span className="text-[#FF9900]"> Drink</span>
+
+                  </NavLink>
+
+                </div>
+
+                {/* logo */}
+                <Link to="/" className=''>
+
+                    <div className="flex items-center">
+
+                      {/* word */}
+                      <div className="h-10 w-30 lg:h-16 lg:w-48">
+                          
+                          <img 
+                            src={LOGO} 
+                            alt="" 
+                            className="h-full w-full" 
+                          />
+
+                      </div>
+
+                    </div>
+
+                </Link>
+                
+                <div className="hidden lg:flex gap-x-7">
+
+                  {/* liqour */}
+                  <NavLink
+                    to={`/liqour`}
+                    className={({isActive}) => isActive ? "flex items-center gap-x-2 text-base font-semibold " : "flex items-center gap-x-2 text-base font-semibold"}
+                  >
+
+                      <span className="">
+                        <MdLiquor size={20} />
+                      </span>
+                      
+                      <span className="text-[#FF9900]">Liqour</span>
+
+                  </NavLink>
+
+                  {/* merchendise  */}
+                  <NavLink
+                    to={`/merchendise`}
+                    className={({isActive}) => isActive ? "flex items-center gap-x-2 text-base font-semibold " : "flex items-center gap-x-2 text-base font-semibold"}
+                  >
+
+                      <span className="">
+                        <GiClothes size={20}/>
+                      </span>
+                      
+                      <span className="text-[#FF9900]"> Merchendise </span>
+                      
+                  </NavLink>
+
+                  {/*discover more  */}
+                  <Link
+                    to={``}
+                    className={"flex items-center gap-x-1 text-base font-semibold"}
+                  >
+
+                      <span className=""><FaQuestion size={18}/></span>
+                      
+                      <span className="text-[#FF9900] font-semibold">Discover more </span>
+
+                  </Link>
+
+                  {/* actions */}
+                  <div className="hidden lg:flex items-center gap-x-3 lg:gap-x-5">
+
+                    {/* cart */}
+                    {token && currentUser && (
+
+                      <div className="relative cursor-pointer">
+
+                        <Link to="/cart">
+
+                          <IoCartOutline size={30} className=""/>
+
+                          <span className="absolute -right-2 -top-4 h-6 w-6 rounded-full flex justify-center items-center bg-[#FF9900] text-white text-sm font-semibold shadow-md">
+                            {cartNumber || 0}
+                          </span>
+
+                        </Link>
+
+                      </div>
+
+                    )}
+
+                    {/* dropdown */}
+                    <div className="">
+                      {currentUser ?
+                        (
+                        <Dropdown
+                          inline
+                          arrowIcon={false}
+                          label={
+                            <Avatar
+                              img={currentUser.profilePicture}
+                              rounded
+                              className=''
+                            />
+                          }
+                        >
+
+                          <Dropdown.Header>
+
+                            <span className="block text-xs tracking-tight truncate font-semibold">{currentUser?.username}</span>
+
+                            <span className="block text-xs tracking-tight truncate mt-1 font-semibold">{currentUser?.email}</span>
+
+                          </Dropdown.Header>
+
+                          <Link to="/profile">
+
+                            <Dropdown.Item>Profile</Dropdown.Item>
+
+                          </Link>
+
+                          <Link to="/orders">
+
+                            <Dropdown.Item>Orders</Dropdown.Item>
+                            
+                          </Link>
+
+                          <Dropdown.Item 
+                            className="flex items-center gap-x-2"
+                            onClick={handleSignOut}
+                          >
+
+                            <MdLogout size={24}/>sign out
+
+                          </Dropdown.Item>
+
+                        </Dropdown>
+                        )
+                        :
+                        (
+                          <button 
+                            onClick={() => navigate('/sign-in')}
+                            className="flex w-full items-center justify-center rounded-full bg-[#FF9900] px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xl hover:bg-[#ff9900] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FF9900] disabled:cursor-not-allowed cursor-pointer"
+                          >
+                            sign in
+                          </button>
+                        )
+                      }
+                    </div>
 
                   </div>
 
                 </div>
 
-            </Link>
+                {/* search */}
+                <div className="border border-zinc-300 w-[500px] relative  lg:hidden">
 
-            {/* NavLinks */}
-            <div className="hidden lg:flex items-center gap-x-6 justify-center">
+                  <input 
+                    type="text" 
+                    className="w-full border-none focus:none" 
+                    placeholder='search . . . '
+                    onChange={handleSearch}
+                  />
 
-              {NavLinks?.map((nav,index) => (
+                  {searchInput && (
 
-                <NavLink
-                  key={index}
-                  to={`${nav.path}`}
-                  className={({isActive}) => isActive ? "flex items-center gap-x-1 text-sm font-semibold text-orange-600" : "flex items-center gap-x-1 text-sm font-semibold"}
-                >
+                    <div className="absolute w-full max-h-[60vh] z-50 bg-slate-200 overflow-hidden overflow-y-scroll p-3">
 
-                  <span className="">{nav?.icon}</span>{nav?.name}
+                      {filteredProducts.length > 0 ? 
+                        (
+                          <>
 
-                </NavLink>
+                            <div className="space-y-3">
 
-              ))}
+                              {filteredProducts.map((product,index) => (
 
-            </div>
+                                <div 
+                                  key={index}
+                                  className="flex items-center gap-x-5 border-b border-orange-200 pb-3 cursor-pointer "
+                                  onClick={() => setSearchInput("") }
+                                >
 
-            {/* actions */}
-            <div className="flex items-center gap-x-3 lg:gap-x-5">
+                                  <Link to={`/product/${product._id}`}>
 
-              {/* cart */}
-              {token && currentUser && (
+                                    <div className="h-12 w-12 min-w-12 max-w-12">
 
-                <div className="relative cursor-pointer">
+                                      <img 
+                                        src={product?.images[0]}
+                                        alt="" 
+                                        className="h-full w-full rounded-md shadow-sm" 
+                                      />
 
-                  <Link to="/cart">
+                                    </div>
 
-                    <IoCartOutline size={30} className=""/>
+                                  </Link>
 
-                    <span className="absolute -right-2 -top-4 h-6 w-6 rounded-full flex justify-center items-center bg-[#FF9900] text-white text-sm font-semibold shadow-md">
-                      {cartNumber || 0}
-                    </span>
+                                  <div className="flex flex-col gap-y-1">
 
-                  </Link>
+                                    <span className="">{product?.name}</span>
+
+                                    {product.discountPrice > 0 ? 
+                                      (
+
+                                      <div className="flex items-center gap-x-2 text-sm font-medium">
+
+                                        <span className="text-xs line-through text-gray-500">
+                                          {(product?.regularPrice)?.toLocaleString('en-KE', { style: 'currency', currency: 'KES' })}
+                                        </span>
+
+                                        <span className="">
+                                          {(product?.discountPrice)?.toLocaleString('en-KE', { style: 'currency', currency: 'KES' })}
+                                        </span>
+
+                                      </div>
+
+                                      ) 
+                                      : 
+                                      (
+                                        <span className="text-sm font-medium">
+                                          {(product?.regularPrice)?.toLocaleString('en-KE', { style: 'currency', currency: 'KES' })}
+                                        </span>
+                                      )
+                                    }
+
+                                  </div>
+
+                                </div>
+
+                              ))}
+
+                            </div>
+
+                          </>
+                        ) 
+                        : 
+                        (
+                          
+                          <p className="">
+
+                            Sorry <span className="">"{searchInput}"</span> not found ! ! ! !
+
+                          </p>
+
+                        )
+                      }
+
+                    </div>
+
+                  )}
+                  
+                  <button className="absolute inset-y-0 right-0 bg-gray-400 flex justify-center items-center px-3 py-1">
+                    <IoSearch size={22} className="text-white"/>
+                  </button>
 
                 </div>
 
-              )}
-
-              {/* dropdown */}
-              <div className="">
-                {currentUser ?
-                  (
-                   <Dropdown
-                    inline
-                    arrowIcon={false}
-                    label={
-                      <Avatar
-                        img={currentUser.profilePicture}
-                        rounded
-                        className='shadow-md'
-                      />
-                    }
-                   >
-
-                    <Dropdown.Header>
-
-                      <span className="block text-xs tracking-tight truncate font-semibold">{currentUser?.username}</span>
-
-                      <span className="block text-xs tracking-tight truncate mt-1 font-semibold">{currentUser?.email}</span>
-
-                    </Dropdown.Header>
-
-                    <Link to="/profile">
-
-                      <Dropdown.Item>Profile</Dropdown.Item>
-
-                    </Link>
-
-                    <Link to="/orders">
-
-                      <Dropdown.Item>Orders</Dropdown.Item>
-                      
-                    </Link>
-
-                    <Dropdown.Item 
-                      className="flex items-center gap-x-2"
-                      onClick={handleSignOut}
-                    >
-
-                      <MdLogout size={24}/>sign out
-
-                    </Dropdown.Item>
-
-                   </Dropdown>
-                  )
-                  :
-                  (
-                    <button 
-                      onClick={() => navigate('/sign-in')}
-                      className="flex w-full items-center justify-center rounded-full bg-[#FF9900] px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xl hover:bg-[#ff9900] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FF9900] disabled:cursor-not-allowed cursor-pointer"
-                    >
-                      sign in
-                    </button>
-                  )
-                }
               </div>
 
-            </div>
-
           </div>
-
 
         </header>
 
