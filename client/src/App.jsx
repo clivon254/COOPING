@@ -21,6 +21,8 @@ import ForgotPassword from './pages/ForgotPassword'
 import ResetPassword from './pages/ResetPassword'
 import Orders from './pages/Orders'
 import ProductReveiw from './pages/ProductReveiw'
+import About from './pages/About'
+import Contact from './pages/Contact'
 
 export default function App() {
 
@@ -41,6 +43,10 @@ export default function App() {
               <Route path="/" element={<Home/>}/>
 
               <Route path="/profile" element={<Profile/>}/>
+
+              <Route path="/contact" element={<Contact/>}/>
+
+              <Route path="/about" element={<About/>}/>
 
               <Route path="/product/:productId" element={<ProductPage/>}/>
 
