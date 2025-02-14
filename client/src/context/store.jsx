@@ -445,7 +445,7 @@ export default function StoreContextProvider(props)
 
             setOrdersError(false)
 
-            const res = await axios.get(url + "/api/order/get-adminOrders",{headers:{token}})
+            const res = await axios.get(url + "/api/order/get-userOrders",{headers:{token}})
 
             if(res.data.success)
             {
