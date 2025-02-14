@@ -1,6 +1,6 @@
 
 
-import React from 'react'
+import React, { useEffect } from 'react'
 import LOGO from "../assets/LOGOO.png"
 import { Link, useNavigate } from 'react-router-dom'
 import { useState } from 'react'
@@ -13,6 +13,8 @@ import { Alert } from "flowbite-react"
 import axios from "axios"
 import Divider from '../components/Divider'
 import OAuth from '../components/OAuth'
+import { IoMdEyeOff } from 'react-icons/io'
+import { IoEye } from 'react-icons/io5'
 
  
 export default function SignIn() {
@@ -28,12 +30,23 @@ export default function SignIn() {
 
     const dispatch = useDispatch()
 
+    const [showPassword , setShowPassword] = useState(false)
+
+
+    // togglePasswordVisibility
+    const togglePasswordVisibilty = () => {
+
+        setShowPassword(!showPassword)
+    }
+
+
     // handleChange
     const handleChange = (e) => {
 
         setFormData({...formData, [e.target.name]:e.target.value})
 
     }
+
 
     // handleSubmit
     const handleSubmit = async (e) => {
@@ -48,7 +61,7 @@ export default function SignIn() {
 
             if(res.data.success)
             {
-                navigate("/")
+                navigate(-1)
 
                 toast.success("You have successfully sign")
 
@@ -81,7 +94,16 @@ export default function SignIn() {
 
     }
 
+
     console.log(formData)
+    
+
+    useEffect(() => {
+    
+        window.scrollTo(0,0)
+        
+    },[])
+
 
   return (
 
@@ -129,32 +151,45 @@ export default function SignIn() {
 
                         <label className="block text-sm/6 font-medium text-gray-900">password</label>
 
-                        <input 
-                            type="password" 
-                            className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-[#FF9900] sm:text-sm/6" 
-                            placeholder='************'
-                            name="password"
-                            onChange={handleChange}
-                            value={formData.password}
-                        />
-
-                    </div>
-
-                    {/* remember && forgot-password */}
-                    <div className="flex items-center justify-between">
-
-                        <div className="flex items-center gap-x-2">
-
+                        <div className="w-full relative">
+                            
                             <input 
-                                type="checkbox" 
-                                className="h-4 w-4 rounded-md" 
+                                type={showPassword ? "text" : "password"}
+                                className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-[#FF9900] sm:text-sm/6" 
+                                placeholder='************'
+                                name="password"
+                                onChange={handleChange}
+                                value={formData.password}
                             />
-
-                            <label htmlFor="" className="block text-sm/6 font-medium text-gray-900">Remember me</label>
+                            
+                            <button 
+                                type="button"
+                                onClick={togglePasswordVisibilty}
+                                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 focus:outline-none"
+                            >
+                                {showPassword ? 
+                                    (<IoMdEyeOff size={20} className="text-gray-500"/>) 
+                                    : 
+                                    (<IoEye size={20} className="text-gray-500"/>)
+                                }
+                            </button>
 
                         </div>
 
-                        <span className="block text-sm/6 font-medium text-gray-900">
+                    </div>
+
+                    {/* dont have account  && forgot-password */}
+                    <div className="flex items-center justify-between">
+                        
+                        <span className="block text-xs/6 font-medium text-blue-600">
+
+                            <Link to="/sign-up">
+                                Dont have an account ? <span className="text-[#ff9900] hover:underline"> click here </span>
+                            </Link>
+
+                        </span>
+                        
+                        <span className="block text-xs/6 font-medium text-gray-900">
 
                             <Link to="/forgot-password">
                                 Forgot password ?

@@ -5,7 +5,7 @@ import User from "../model/userModel.js"
 import { errorHandler } from "../Utils/error.js"
 import jwt from "jsonwebtoken"
 import nodemailer from "nodemailer"
-
+import validator from "validator"
 
 
 export const Register = async (req,res,next) => {
@@ -15,6 +15,11 @@ export const Register = async (req,res,next) => {
     if(!email  || !password || !username || email === "" || password === "" === "" || username === "")
     {
         return next(errorHandler(400 ,"Please fill all the fields"))
+    }
+
+    if(!validator.isEmail(email))
+    {
+        return next(errorHandler(400, "Please provide a vaid email address"))
     }
 
     const existingEmail = await User.findOne({email})
@@ -50,9 +55,15 @@ export const Login = async (req,res,next) => {
 
     const {email,password} = req.body
     
+    
     if(!email || !password || email === "" || password === "")
     {
         return next(errorHandler(400, "please fill all the fields"))
+    }
+
+    if(!validator.isEmail(email))
+    {
+        return next(errorHandler(400, "Please provide a vaid email address"))
     }
 
     try
@@ -183,6 +194,11 @@ export const forgotPassword = async (req,res,next) => {
     if(!email || email === "")
     {
         return next(errorHandler(400 ,"please provide your email"))
+    }
+
+    if(!validator.isEmail(email))
+    {
+        return next(errorHandler(400, "Please provide a vaid email address"))
     }
 
     try
