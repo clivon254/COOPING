@@ -5,9 +5,9 @@ export default function PromoFood() {
 
     return (
 
-    <div className="w-full px-5 py-10 ">
+    <div className="w-full p-5  border-y-8 border-[#FF9900]">
 
-      <div className="relative overflow-hidden border border-orange-100 b-gradient-to-br from-[#FF9900]/30  rounded-md shadow-md">
+      <div className="relative overflow-hidden bordr border-orange-100 b-gradient-to-br from-[#FF9900]/30  ">
         
         <div className="pt-16 pb-80 sm:pt-24 sm:pb-40 lg:pt-40 lg:pb-48">
           

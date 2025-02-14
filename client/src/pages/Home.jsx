@@ -4,6 +4,7 @@ import React from 'react'
 import { MdStar } from 'react-icons/md'
 import Advert from '../components/Advert'
 import PromoFood from '../components/promoFood'
+import Subscribe from '../components/Subscribe'
 
 export default function Home() {
 
@@ -14,6 +15,8 @@ export default function Home() {
       <Advert/>
 
       <PromoFood/>
+
+      <Subscribe/>
 
     </div>
 
