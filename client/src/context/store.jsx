@@ -529,8 +529,7 @@ export default function StoreContextProvider(props)
     useEffect(() => {
 
         fetchCart()
-
-        fetchAdminStats()
+        
 
     },[token])
 
