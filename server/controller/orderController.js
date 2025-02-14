@@ -116,7 +116,7 @@ export const mpesa = async (req,res,next) => {
             "PartyA":`254${phone}`,    
             "PartyB":shortcode,    
             "PhoneNumber":`254${phone}`,    
-            "CallBackURL":`https://b738-41-209-60-94.ngrok-free.app/api/order/callback?orderId=${order._id}&userId=${userId}`,    
+            "CallBackURL":`https://cooping-server.onrender.com/api/order/callback?orderId=${order._id}&userId=${userId}`,    
             "AccountReference":"COOPING",    
             "TransactionDesc":"Test"
         }
