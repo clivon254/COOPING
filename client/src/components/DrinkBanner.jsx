@@ -23,7 +23,7 @@ export default function DrinkBanner() {
             <h2 className="hidden md:block text-white text-xl">Get the best deals on</h2>
 
             <p className="md:text-center font-sembold text-4xl sm:text-4xl lg:text-5xl tracking-wide text-white max-w-4xl capitalize">
-                Wide Variety of food products;Snack,Main course,street foods & More
+                Wide Variety of Drinks; Smoothies, Juices, soft Drinks & More.
             </p>
 
             <h2 className="hidden md:block text-white text-xl">FINE TASTE | QUICK DELIVERY | WIDE PRODUCT RANGE</h2>

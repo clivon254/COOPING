@@ -1,7 +1,7 @@
 
 
 import React from 'react'
-import Banner from "../assets/DrinkBanner1.jpeg"
+import Banner from "../assets/MerchendiseBanner1.jpeg"
 
 
 export default function MerchendiseOfferBanner() {
