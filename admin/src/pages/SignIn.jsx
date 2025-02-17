@@ -11,6 +11,10 @@ import { StoreContext } from '../context/store'
 import { toast } from 'sonner'
 import { Alert } from "flowbite-react"
 import axios from "axios"
+import { IoMdEyeOff } from 'react-icons/io'
+import { IoEye } from 'react-icons/io5'
+
+
 
 export default function SignIn() {
 
@@ -24,6 +28,16 @@ export default function SignIn() {
     const navigate = useNavigate()
 
     const dispatch = useDispatch()
+
+    const [showPassword , setShowPassword] = useState(false)
+
+
+    // togglePasswordVisibility
+    const togglePasswordVisibilty = () => {
+
+        setShowPassword(!showPassword)
+
+    }
 
     // handleChange
     const handleChange = (e) => {
@@ -137,14 +151,30 @@ export default function SignIn() {
 
                             <label className="block text-sm/6 font-medium text-gray-900">password</label>
 
-                            <input 
-                                type="password" 
-                                className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-[#FF9900] sm:text-sm/6" 
-                                placeholder='************'
-                                name="password"
-                                onChange={handleChange}
-                                value={formData.password}
-                            />
+                            <div className="w-full relative">
+                                
+                                <input 
+                                    type={showPassword ? "text" : "password"}
+                                    className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-[#FF9900] sm:text-sm/6" 
+                                    placeholder='************'
+                                    name="password"
+                                    onChange={handleChange}
+                                    value={formData.password}
+                                />
+                                
+                                <button 
+                                    type="button"
+                                    onClick={togglePasswordVisibilty}
+                                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 focus:outline-none"
+                                >
+                                    {showPassword ? 
+                                        (<IoMdEyeOff size={20} className="text-gray-500"/>) 
+                                        : 
+                                        (<IoEye size={20} className="text-gray-500"/>)
+                                    }
+                                </button>
+
+                            </div>
 
                         </div>
 

@@ -5,7 +5,7 @@ import { IoHomeOutline } from "react-icons/io5"
 import { MdLiquor } from "react-icons/md";
 import { RiDrinks2Line } from "react-icons/ri";
 import { GiClothes } from "react-icons/gi";
-import { IoRestaurantSharp } from "react-icons/io5";
+import { IoRestaurantSharp } from "react-icons/io5"; 
 
 
 
@@ -529,7 +529,7 @@ export default function StoreContextProvider(props)
     useEffect(() => {
 
         fetchCart()
-        
+
 
     },[token])
 
