@@ -12,7 +12,15 @@ export default {
     flowbite.content(),
   ],
   theme: {
-    extend: {},
+    extend: {
+
+      fontFamily:{
+
+        main:["Poppins", "serif"]
+        
+      }
+
+    },
   },
   plugins: [
     flowbite.plugin()

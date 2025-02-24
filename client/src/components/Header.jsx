@@ -1,7 +1,7 @@
 
 
 
-import React, { useContext , useState} from 'react'
+import React, { useContext , useEffect, useState} from 'react'
 import { Link, NavLink, useNavigate } from 'react-router-dom'
 import LOGO from "../assets/LOGOO.png"
 import { StoreContext } from '../context/store'
@@ -20,7 +20,7 @@ import { MdLiquor } from "react-icons/md";
 import { RiDrinks2Line } from "react-icons/ri";
 import { GiClothes } from "react-icons/gi";
 import { IoRestaurantSharp } from "react-icons/io5";
-
+import { CiCircleRemove } from "react-icons/ci";
 
 
 
@@ -40,6 +40,10 @@ export default function Header() {
   const [searchInput , setSearchInput] = useState("")
 
   const [filteredProducts , setFilteredProducts] = useState([])
+
+  const [isSticky , setIsSticky] = useState(false)
+
+
 
   // handleSearch
   const handleSearch = (e) => {
@@ -69,17 +73,52 @@ export default function Header() {
   }
 
 
+  useEffect(() => {
+
+    let prevScrollPosition = 0 ;
+
+    const handleScroll = () => {
+
+      const scrollPosition = window.scrollY
+
+      const scrollDirection = scrollPosition - prevScrollPosition
+
+      prevScrollPosition = scrollPosition
+
+      if(scrollDirection < 0 && scrollPosition > 0)
+      {
+        setIsSticky(true)
+      }
+      else
+      {
+        setIsSticky(false)
+      }
+
+
+    }
+
+    window.addEventListener('scroll', handleScroll)
+
+    return () => {
+
+      window.removeEventListener('scroll', handleScroll)
+
+    }
+
+  },[])
+
+
   return (
     
     <>
 
-        <header className={` shadow-md`}>
+        <header className={`w-full  ${isSticky ? "sticky top-0" : ""} z-50 border-b-2 border-gray-100 shadow-md`}>
 
           {/* upper */}
           <div className="bg-gray-100  flex justify-between items-center p-2 lg:p-0"> 
               
               {/* about && contact  && FAQ*/}
-              <div className="lg:flex hidden gap-x-6  text-[#ff9900] text-sm p-1">
+              <div className="lg:flex hidden gap-x-6  text-[#ff9900] text-xs font-semibold p-1">
 
                 <Link to="/about">
                 
@@ -122,7 +161,17 @@ export default function Header() {
                   placeholder='search . . . '
                   onChange={handleSearch}
                 />
-                
+
+                {searchInput && (
+
+                  <span className="absolute inset-y-3 right-12 cursor-pointer">
+
+                    <CiCircleRemove className="text-black font-bold" onClick={() => setSearchInput("")}/>
+
+                  </span>
+
+                )}
+
                 <button className="absolute inset-y-0 right-0 bg-gray-400 flex justify-center items-center px-3 py-1">
                   <IoSearch size={22} className="text-white"/>
                 </button>
@@ -212,27 +261,27 @@ export default function Header() {
               </div>
 
               {/* socials */}
-              <div className="lg:flex hidden gap-x-2 text-[#ff9900] p-1">
+              <div className="lg:flex hidden gap-x-3 text-[#ff9900] p-1">
 
-                <span className="">
+                <span className="hover:scale-110 hover:cursor-pointer">
 
                   <FaFacebookF size={20} />
 
                 </span>
 
-                <span className="">
+                <span className="hover:scale-110 hover:cursor-pointer">
 
                   <FaInstagram size={20}/>
                   
                 </span>
 
-                <span className="">
+                <span className="hover:scale-110 hover:cursor-pointer">
 
                   <FaWhatsapp size={20}/>
                   
                 </span>
 
-                <span className="">
+                <span className="hover:scale-110 hover:cursor-pointer">
 
                   <FaTiktok size={20}/>
                   
@@ -270,7 +319,7 @@ export default function Header() {
 
                       <IoCartOutline size={30} className=""/>
 
-                      <span className="absolute -right-2 -top-4 h-6 w-6 rounded-full flex justify-center items-center bg-[#FF9900] text-white text-sm font-semibold shadow-md">
+                      <span className="absolute -right-2 -top-3 h-6 w-6 rounded-full flex justify-center items-center bg-[#FF9900] text-white text-sm font-semibold shadow-md">
                         {cartNumber || 0}
                       </span>
 
@@ -345,10 +394,11 @@ export default function Header() {
           </div>
           
           {/* lower */}
-          <div className="p-2 lg:flex justify-center items-center">
+          <div className="bg-white p-2 lg:flex justify-center items-center">
 
               <div className="flex items-center justify-between gap-x-10">
                 
+                {/* left navs */}
                 <div className="hidden lg:flex gap-x-7 ">
 
                   {/* home */}
@@ -417,6 +467,7 @@ export default function Header() {
 
                 </Link>
                 
+                {/* right navs */}
                 <div className="hidden lg:flex gap-x-7">
 
                   {/* liqour */}
@@ -556,6 +607,20 @@ export default function Header() {
 
                   {searchInput && (
 
+                  <span className="absolute inset-y-3 right-12 cursor-pointer">
+
+                    <CiCircleRemove className="text-black font-bold" onClick={() => setSearchInput("")}/>
+
+                  </span>
+
+                  )}
+
+                  <button className="absolute inset-y-0 right-0 bg-gray-400 flex justify-center items-center px-3 py-1">
+                    <IoSearch size={22} className="text-white"/>
+                  </button>
+
+                  {searchInput && (
+
                     <div className="absolute w-full max-h-[60vh] z-50 bg-slate-200 overflow-hidden overflow-y-scroll p-3">
 
                       {filteredProducts.length > 0 ? 
@@ -639,10 +704,6 @@ export default function Header() {
                     </div>
 
                   )}
-                  
-                  <button className="absolute inset-y-0 right-0 bg-gray-400 flex justify-center items-center px-3 py-1">
-                    <IoSearch size={22} className="text-white"/>
-                  </button>
 
                 </div>
 
