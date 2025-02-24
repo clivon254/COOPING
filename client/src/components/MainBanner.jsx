@@ -111,8 +111,8 @@ export default function(){
       
       <div className="container mx-auto px-4">
         
-        {/* Main banner content */}
-        <div className="flex flex-col md:flex-row items-center">
+          {/* Main banner content */}
+          <div className="flex flex-col md:flex-row items-center">
          
           {/* Left text content */}
           <div className="w-full md:w-1/2 text-white mb-8 md:mb-0 text-center md:text-left">
@@ -146,7 +146,7 @@ export default function(){
           >
 
             {/* Background circle for visual reference */}
-            <div className="absolute w-64 h-64 rounded-full border-2 border-white bg-white bg-opacity-20" />
+            <div className="absolute w-64 h-64 rounded-full  border-white bg-white bg-opacity-10" />
             
             {/* Central food icon */}
             <div 
