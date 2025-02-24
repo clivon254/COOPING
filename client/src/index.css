@@ -1,3 +1,4 @@
 
-@import "tailwindcss";
-@plugin "flowbite/plugin";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;

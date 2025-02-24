@@ -318,7 +318,10 @@ export default function Orders() {
   return (
 
     <>
+    
+    {!ordersLoading && !ordersError && (
 
+    
       <section className="w-full p-5 space-y-8">
 
         {/* header */}
@@ -808,11 +811,25 @@ export default function Orders() {
 
       </section>
 
-      {openDelete && (
+    )}
 
-        <Delete product={"Order"} item={order?.orderNumber} handleDelete={handleDelete}/>
+    {ordersLoading && !ordersError && (
 
-      )}
+      <Loader/>
+
+    )}
+
+    {ordersError && (
+
+      <Error retry={fetchOrders}/>
+      
+    )}
+
+    {openDelete && (
+
+      <Delete product={"Order"} item={order?.orderNumber} handleDelete={handleDelete}/>
+
+    )}
 
     </>
     

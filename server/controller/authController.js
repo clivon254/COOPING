@@ -330,7 +330,7 @@ export const contactUs = async (req,res,next) => {
             `
         }
 
-        await transporter.sendMail(mailOptions ,(err,info) => {
+        transporter.sendMail(mailOptions ,(err,info) => {
 
             if(err)
             {
