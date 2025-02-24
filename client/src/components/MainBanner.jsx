@@ -177,12 +177,12 @@ export default function(){
 
                 <div 
                   key={index}
-                  className="absolute flex flex-col items-center justify-center bg-white rounded-full shadow-md transition-all duration-100 ease-out cursor-pointer hover:bg-gray-100"
+                  className="absolute flex flex-col items-center justify-center bg-white rounded-full shadow-md transition-all duration-100 ease-out cursor-pointer hover:bg-gray-100 text-xs p-2"
                   style={{ 
                     transform: `translate(${x}px, ${y}px) scale(${scale})`,
                     opacity,
-                    width: "64px",
-                    height: "64px",
+                    width: "70px",
+                    height: "70px",
                     zIndex: isInFront ? 5 : 1
                   }}
                   onClick={() => handleIconClick(icon)}
