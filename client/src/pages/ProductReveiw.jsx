@@ -13,7 +13,9 @@ import { Alert } from 'flowbite-react'
 import ProductsLoading from '../components/ProductsLoading'
 import moment from "moment"
 import {FaStar} from "react-icons/fa"
+import {MdStar} from "react-icons/md"
 import Title from '../components/Title'
+import SlidingProducts from '../components/SlidingProducts'
 
 
 
