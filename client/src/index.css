@@ -5,3 +5,24 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+
+/* active-navs */
+.active-nav-link
+{
+    @apply flex items-center gap-x-1 uppercase text-base relative   transition-all duration-500
+    after:w-full after:h-[2px] after:bg-primary after:absolute after:-top-1 after:right-0 after:origin-right after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-500
+    after:ease-in-out  hover:after:origin-left
+    before:w-full before:h-[2px] before:bg-primary before:absolute before:-bottom-1 before:left-0 before:origin-left  before:transition-transform before:duration-500
+    before:ease-in-out before:scale-x-0 hover:before:scale-x-100 hover:before:origin-right
+}
+
+.active-nav
+{
+    @apply flex items-center gap-x-1 uppercase text-base relative  transition-all duration-500
+    after:w-full after:h-[2px] after:bg-primary after:absolute after:-top-1 after:right-0 after:origin-right after:scale-x-100 after:transition-transform after:duration-500
+    after:ease-in-out  hover:after:origin-left 
+    before:w-full before:h-[2px] before:bg-primary before:absolute before:-bottom-1 before:left-0 before:origin-left  before:transition-transform before:duration-500
+    before:ease-in-out before:scale-x-100 hover:before:origin-right
+}

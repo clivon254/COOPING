@@ -404,7 +404,7 @@ export default function Header() {
                   {/* home */}
                   <NavLink
                     to={`/`}
-                    className={({isActive}) => isActive ? "flex items-center gap-x-2 text-base font-semibold " : "flex items-center gap-x-2 text-base font-semibold hover:underline hover:text-[#FF9900]"}
+                    className={({isActive}) => isActive ? "active-nav" : "active-nav-link"}
                   >
 
                       <span className="">
@@ -418,7 +418,7 @@ export default function Header() {
                   {/* food  */}
                   <NavLink
                     to={`/food`}
-                    className={({isActive}) => isActive ? "flex items-center gap-x-2 text-base font-semibold " : "flex items-center gap-x-2 text-base font-semibold"}
+                    className={({isActive}) => isActive ? "active-nav" : "active-nav-link"}
                   >
 
                       <span className="">
@@ -434,7 +434,7 @@ export default function Header() {
                   {/* drinks */}
                   <NavLink
                     to={`/drink`}
-                    className={({isActive}) => isActive ? "flex items-center gap-x-2 text-base font-semibold underline " : "flex items-center gap-x-2 text-base font-semibold"}
+                    className={({isActive}) => isActive ? "active-nav" : "active-nav-link"}
                   >
 
                       <span className="">
@@ -473,7 +473,7 @@ export default function Header() {
                   {/* liqour */}
                   <NavLink
                     to={`/liqour`}
-                    className={({isActive}) => isActive ? "flex items-center gap-x-2 text-base font-semibold " : "flex items-center gap-x-2 text-base font-semibold"}
+                    className={({isActive}) => isActive ? "active-nav" : "active-nav-link"}
                   >
 
                       <span className="">
@@ -487,7 +487,7 @@ export default function Header() {
                   {/* merchendise  */}
                   <NavLink
                     to={`/merchendise`}
-                    className={({isActive}) => isActive ? "flex items-center gap-x-2 text-base font-semibold " : "flex items-center gap-x-2 text-base font-semibold"}
+                    className={({isActive}) => isActive ? "active-nav" : "active-nav-link"}
                   >
 
                       <span className="">

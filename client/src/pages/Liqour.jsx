@@ -27,7 +27,7 @@ export default function Liqour() {
       {/* featured */}
       <div className="p-5 flex flex-col gap-y-5 border-b-8 border-[#ff9900]">
 
-        <Title label={"featured Liqour ITEMS"}/>
+        <Title label={"featured Liqour"}/>
         
         {!productLoading && !productError && (
 

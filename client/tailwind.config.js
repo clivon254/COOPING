@@ -12,7 +12,14 @@ export default {
     flowbite.content(),
   ],
   theme: {
+
     extend: {
+
+      colors:{
+
+        primary: '#FF9900'
+
+      },
 
       fontFamily:{
 
@@ -21,6 +28,7 @@ export default {
       }
 
     },
+    
   },
   plugins: [
     flowbite.plugin()
