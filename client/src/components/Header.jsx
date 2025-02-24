@@ -394,7 +394,7 @@ export default function Header() {
           </div>
           
           {/* lower */}
-          <div className="bg-white p-2 lg:flex justify-center items-center">
+          <div className="bg-white p-3 lg:flex justify-center items-center">
 
               <div className="flex items-center justify-between gap-x-10">
                 
