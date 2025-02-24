@@ -26,7 +26,7 @@ export default function Food() {
       {/* featured */}
       <div className="p-5 flex flex-col gap-y-5 border-b-8 border-[#ff9900]">
 
-        <Title label={"featured food ITEMS"}/>
+        <Title label={"featured food"}/>
         
         {!productLoading && !productError && (
 

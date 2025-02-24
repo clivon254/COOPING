@@ -18,7 +18,7 @@ export default function Subscribe() {
 
             </div>
 
-            <div className="mt-6 space-y-5">
+            <div className="mt-6 space-y-4">
                 
                 <div className="flex max-w-md gap-x-4">
 
@@ -45,7 +45,7 @@ export default function Subscribe() {
 
                 </div>
 
-                <span className="text-base font-semibold">We care about your data . Read our <span className="text-[#FF9900]">privacy and policy</span></span>
+                <span className="text-base font-semibold block">We care about your data . Read our <span className="text-[#FF9900]">privacy and policy</span></span>
 
             </div>
 
