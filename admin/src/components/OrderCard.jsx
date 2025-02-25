@@ -128,7 +128,7 @@ export default function OrderCard({order}) {
         >
 
             {/* header */}
-            <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-y-5">
+            <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-y-5">
 
                 {/* title */}
                 <div className="flex items-center gap-x-4 text-green-700 ">
