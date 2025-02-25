@@ -17,7 +17,7 @@ import Loader from '../components/Error'
 
 export default function UserProfile() {
 
-    const {token,url} = useContext(StoreContext)
+    const {token,url,roles} = useContext(StoreContext)
 
     const [formData ,setFormData] = useState({})
 
@@ -52,6 +52,10 @@ export default function UserProfile() {
     const [fetchUserError , setFetchUserError] = useState(false)
 
 
+    console.log(roles)
+
+
+    console.log(formData)
 
     // handleImageChange
     const handleImageChange = (e) => {
@@ -331,14 +335,37 @@ export default function UserProfile() {
                         defaultValue={currentUser?.username}
                     />
 
-                    {/* password */}
-                    <input 
-                        type="password" 
+                    {/* role */}
+                    <select 
                         className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-[#FF9900] sm:text-sm/6" 
-                        placeholder='*******'
-                        name="password"
+                        name="role"
                         onChange={handleChange}
-                    />
+                        value={currentUser?.role}
+                    >
+
+                       <option value="" className="">Select Category</option>
+
+                        {roles?.map((collection,index) => (
+
+                            <option key={index} value={collection.name}>{collection.name}</option>
+
+                        ))}
+
+                    </select>
+
+                    {/* isAdmin */}
+                    <div className="flex items-center gap-x-3">
+
+                        <input 
+                            type="checkbox" 
+                            className="block rounded-md bg-white px-3 py-1.5 text-base outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-[#FF9900] sm:text-sm/6" 
+                            onChange={(e) => setFormData({...formData , isAdmin : e.target.checked})}
+                            checked={formData?.isAdmin}
+                        />
+
+                        <label htmlFor="" className="font-semibold">isAdmin</label>
+
+                    </div>
 
                     {/* button */}
                     <button 

@@ -6,20 +6,36 @@ import { useContext } from 'react'
 import { StoreContext } from '../context/store'
 import { useState } from 'react'
 import Error from '../components/Error'
-import Loader from '../components/Error'
+import Delete from '../components/Delete'
+import Loader from '../components/Loader'
 import {FaTrashAlt,FaEdit,FaStreetView} from "react-icons/fa"
 import { useEffect } from 'react'
 import {useNavigate} from "react-router-dom"
+import {toast} from "sonner"
+import axios from "axios"
+
+
 
 export default function Users() {
 
-    const {url,token,users,setUsers,usersLoading,usersError,fetchUsers} = useContext(StoreContext)
+    const {url,token,users,setUsers,usersLoading,usersError,fetchUsers,openDelete,setOpenDelete} = useContext(StoreContext)
 
     const [userloader,setUserLoader] = useState([
         {},{},{},{},{}
     ])
 
     const [filteredUsers , setFilteredUsers] = useState(users)
+
+    const navigate = useNavigate()
+
+    const [currentUser ,setCurrentUser] = useState({})
+
+    const [fetchUserLoading , setFetchUserLoading] = useState(false)
+    
+    const [fetchUserError , setFetchUserError] = useState(false)
+    
+    const [userToDelete ,setUserToDelete] = useState("")
+
 
     // handleSearch
     const handleSearch = (e) => {
@@ -32,7 +48,67 @@ export default function Users() {
 
     }
 
-    const navigate = useNavigate()
+    // fetchUser
+    const fetchUser = async () => {
+
+        try
+        {
+            setFetchUserLoading(true)
+
+            setFetchUserError(false)
+
+            const res = await axios.get(url + `/api/user/get-user/${userToDelete}`)
+
+            if(res.data.success)
+            {
+                setCurrentUser(res.data.rest)
+
+                setFetchUserLoading(false)
+            }
+
+
+        }
+        catch(error)
+        {
+            setFetchUserLoading(false)
+
+            setFetchUserError(true)
+        }
+
+    }
+
+
+    // handleDelete 
+    const handleDelete = async () => {
+
+        try
+        {
+            
+            const res = await axios.delete(url + `/api/user/delete-user/${userToDelete}`,{headers:{token}})
+
+            if(res.data.success)
+            {
+                setUsers(users.filter(user => user.id !== userToDelete))
+
+                setOpenDelete(false)
+
+                toast.error(`${currentUser?.email} is deleted successfully`)
+            }
+
+        }
+        catch(error)
+        {
+            console.log(error.message)
+        }
+
+    }
+
+
+    useEffect(() => {
+
+        fetchUser()
+
+    },[userToDelete])
 
 
   return (
@@ -138,7 +214,16 @@ export default function Users() {
                                                             <FaEdit size={24}/>
                                                         </span>
 
-                                                        <span className="">
+                                                        <span 
+                                                            className=""
+                                                            onClick={() => {
+
+                                                                setOpenDelete(true)
+
+                                                                setUserToDelete(user._id)
+
+                                                            }}
+                                                        >
                                                             <FaTrashAlt size={24}/>
                                                         </span>
 
@@ -256,6 +341,12 @@ export default function Users() {
 
            
         </section>
+
+        {openDelete && (
+
+            <Delete product={"User"} item={currentUser?.email} handleDelete={handleDelete}/>
+
+        )}
     
     </>
 

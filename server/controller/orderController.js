@@ -155,6 +155,117 @@ export const mpesa = async (req,res,next) => {
 }
 
 
+// PROMPT Customer
+export const promptCustomer = async (req,res,next) => {
+
+    if(!req.user.isAdmin)
+    {
+        return next(errorHandler(403,"You are not allowed prompt the customer"))
+    }
+
+    const {orderNumber} = req.body
+
+    if(!orderNumber)
+    {
+        return next(errorHandler(400,"please provide order Number"))
+    }
+
+    const token = req.token 
+
+    try
+    {
+        const order = await Order.findOne({orderNumber})
+
+        if(!order)
+        {
+            return next(errorHandler(404,`order not found`))
+        }
+
+
+        if(order.payment)
+        {
+            return next(errorHandler(400,"The order has already been paid"))
+        }
+
+        if(order.paymentmethod !== "COD")
+        {
+            return next(errorHandler(400,"Request is only for COD"))
+        }
+
+        const phone = order.address.phone.substring(1)
+
+        const date = new Date()
+
+        const timestamp = 
+            date.getFullYear() + 
+            ("0" + (date.getMonth() + 1)).slice(-2) +
+            ("0" + date.getDate()).slice(-2) +
+            ("0" + date.getHours()).slice(-2) +
+            ("0" + date.getMinutes()).slice(-2) +
+            ("0" + date.getSeconds()).slice(-2) 
+
+
+        const shortcode = process.env.PAYBILL
+
+
+        const passkey = process.env.PASS_KEY
+        
+
+        const password = new Buffer.from(shortcode + passkey + timestamp).toString("base64")
+
+
+        const url = "https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest"
+
+
+        const requestBody = {    
+            "BusinessShortCode": shortcode,    
+            "Password": password,    
+            "Timestamp":timestamp,    
+            "TransactionType": "CustomerPayBillOnline",    
+            "Amount": order.amount,    
+            "PartyA":`254${phone}`,    
+            "PartyB":shortcode,    
+            "PhoneNumber":`254${phone}`,    
+            "CallBackURL":`https://cooping-server.onrender.com/api/order/callback?orderId=${order._id}&userId=${order.userId}`,    
+            "AccountReference":"COOPING",    
+            "TransactionDesc":"Test"
+        }
+
+        await axios.post(
+            url,
+            requestBody,
+            {
+                headers:{
+                    "Authorization": `Bearer ${token}`,
+                    "Content-Type":"application/json"
+                }
+            }
+        )
+        .then((response) => {
+
+            let resData = response.data
+
+            res.status(200).json({success:true , order , resData})
+
+        })
+        .catch((err) => {
+
+            console.log("stk push error")
+
+            res.status(400).json({success:false , message:`${err.message}`})
+
+        })
+
+
+    }
+    catch(error)
+    {
+        next(error)
+    }
+
+}
+
+
 // callback
 export const callback  = async (req,res,next) => {
 
@@ -421,6 +532,7 @@ export const COD = async (req,res,next) => {
     }
 
 }
+ 
 
 // get order
 export const getOrder = async (req,res,next) => {

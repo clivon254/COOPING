@@ -2,7 +2,7 @@
 
 import express from "express"
 import { generateAccessToken, verifyToken } from "../Utils/verify.js"
-import { adminOrders, callback, COD, confirmPayment, deleteOrder, events, getOrder, mpesa, updateStatus, userOrders } from "../controller/orderController.js"
+import { adminOrders, callback, COD, confirmPayment, deleteOrder, events, getOrder, mpesa, promptCustomer, updateStatus, userOrders } from "../controller/orderController.js"
 
 
 const orderRouter = express.Router()
@@ -11,7 +11,12 @@ const orderRouter = express.Router()
 orderRouter.post('/stk-push', verifyToken, generateAccessToken, mpesa)
 
 
+orderRouter.post('/prompt-customer', verifyToken, generateAccessToken, promptCustomer)
+
+
+
 orderRouter.post('/callback', callback)
+
 
 
 orderRouter.post('/confirm/:CheckoutRequestID/:orderId' , verifyToken, generateAccessToken, confirmPayment)

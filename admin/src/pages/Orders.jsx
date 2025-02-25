@@ -3,7 +3,7 @@
 
 import React, { useContext ,useEffect,useState} from 'react'
 import { StoreContext } from '../context/store'
-import Loader from '../components/loader'
+import Loader from '../components/Loader'
 import Error from '../components/Error'
 import _ from "lodash"
 import OrderCard from '../components/OrderCard'
@@ -20,7 +20,8 @@ export default function Orders() {
   const [filteredOrders ,setFilteredOrders] = useState(orders)
 
   const [status , setStatus] = useState([])
-
+  
+  console.log(orders)
 
 
   // ***  PAGINATION  START***//
