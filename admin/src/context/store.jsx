@@ -96,12 +96,6 @@ export default function StoreContextProvider(props)
     const [numOfDays , setNumOfDays] = useState(7)
 
 
-    // PAGINATION 
-    const [finalProducts ,setFinalProducts] = useState([])
-
-    
-    console.log(orders)
-
 
 
     // fetchProduct
@@ -406,11 +400,9 @@ export default function StoreContextProvider(props)
 
             if(res.data.success)
             {
-
                 setOrdersLoading(false)
 
                 setOrders(res.data.orders)
-
 
             }
 
@@ -556,7 +548,6 @@ export default function StoreContextProvider(props)
         adminStatsError , setAdminStatsError,
         fetchAdminStats,
         numOfDays ,setNumOfDays,
-        finalProducts,setFinalProducts
     }
 
     return (

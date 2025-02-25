@@ -5,6 +5,7 @@ import { StoreContext } from '../context/store'
 import {RiCloseLargeFill} from "react-icons/ri"
 import {GiCheckMark} from "react-icons/gi"
 import { useNavigate } from 'react-router-dom'
+import OrderSteps from './OrderSteps'
 
 
 export default function OrderCard({order}) {
@@ -16,17 +17,31 @@ export default function OrderCard({order}) {
   return (
 
     <div 
-        className="border border-orange-200 bg-white shadow-xl rounded-md p-4 w-full text-xs gap-3 "
+        className="border border-orange-200 bg-white shadow-xl rounded-md p-4 w-full text-xs gap-3 space-y-5"
     >
-        {/* title */}
-        <div className="mb-3 flex items-center gap-x-4">
 
-            <span className="bg-orange-100 text-xs font-bold text-[#ff9900] h-7 flex justify-center items-center p-2 rounded-md shadow-md">Order N.O </span> 
+        {/* header */}
+        <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-y-5">
 
-            <span className="bg-green-100 text-green-700 font-bold tracking-wider text-sm h-7 flex justify-center items-center p-2 rounded-md shadow-md">#{order?.orderNumber}</span>
+            {/* title */}
+            <div className="flex items-center gap-x-4 text-green-700 ">
+
+                <span className="text-sm font-semibold">Order N.O :</span> 
+
+                <span className="text-base font-bold lg:text-xl">#{order?.orderNumber}</span>
+
+            </div>
+
+            {/* order steps */}
+            <div className="w-full md:w-2/3 lg:w-1/2">
+
+               <OrderSteps orderr={order}/>
+
+            </div>
 
         </div>
-    
+
+        {/* body */}
         <div className="w-full grid grid-cols-1 sm:grid-cols-[2fr_1fr_1fr] lg:[2fr_1fr_1fr_1fr] gap-y-3">   
                             
             {/* items && details  */}
@@ -251,38 +266,42 @@ export default function OrderCard({order}) {
 
             {/*method ,date,method  */}
             <div className="space-y-1">
+                
+                {/* number of items */}
+                <p className="flex  items-center gap-x-2">
 
-            <p className="flex  items-center gap-x-2">
+                    <span className="font-bold text-slate-700">Items : </span> 
 
-                <span className="font-bold text-slate-700">Items : </span> 
+                    <span className="font-bold text-slate-900">{order?.items?.length}</span>
 
-                <span className="font-bold text-slate-900">{order?.items?.length}</span>
-
-            </p>
-
-            <p className="flex  items-center gap-x-2">
-
-                <span className="font-bold text-slate-700">Method : </span> 
-
-                <span className="font-bold text-blue-600">{order?.paymentmethod}</span>
-
-            </p>
-
-            <p className="flex  items-center gap-x-2">
-
-                <span className="font-bold text-slate-700">Payment : </span> 
-
-                <span className="font-bold text-slate-900">{order?.payment ? <GiCheckMark size={20} className="text-green-500 shadow-xl"/> :<RiCloseLargeFill size={20} className="text-red-500 shadow-xl"/>}</span>
-
-            </p>
-
-            <p className="flex  items-center gap-x-2">
-
-                <span className="font-bold text-slate-900">Date : </span>
-
-                <span className="font-bold text-black text-sm">{new Date(order.createdAt).toLocaleString()} </span>
+                </p>
             
-            </p>
+                {/* method of payment */}
+                <p className="flex  items-center gap-x-2">
+
+                    <span className="font-bold text-slate-700">Method : </span> 
+
+                    <span className="font-bold text-primary">{order?.paymentmethod}</span>
+
+                </p>
+                
+                {/* payment */}
+                <p className="flex  items-center gap-x-2">
+
+                    <span className="font-bold text-slate-700">Payment : </span> 
+
+                    <span className="font-bold text-slate-900">{order?.payment ? <GiCheckMark size={20} className="text-green-500 shadow-xl"/> :<RiCloseLargeFill size={20} className="text-red-500 shadow-xl"/>}</span>
+
+                </p>
+                
+                {/* date */}
+                <p className="flex  items-center gap-x-2">
+
+                    <span className="font-bold text-slate-900">Date : </span>
+
+                    <span className="font-bold text-black text-sm">{new Date(order.createdAt).toLocaleString()} </span>
+                
+                </p>
 
             </div>
 
@@ -300,32 +319,6 @@ export default function OrderCard({order}) {
 
             </div>
 
-            {/* actions */}
-            <div className="flex items-center gap-x-3">
-
-                {/* status */}
-                <div className="text-xs">
-                    
-                    <select
-                        id="" 
-                        className="rounded-md border border-gray-600 text-xs font-semibold"
-                        value={order?.status}
-                    >
-
-                    <option value="Order Placed">Order Placed</option>
-
-                    <option value="Processing">Processing</option>
-
-                    <option value="Out for delivery">Out for delivery</option>
-
-                    <option value="Delivered">Delivered</option>
-
-                    </select>
-
-                </div>
-            
-
-            </div>
                 
         </div>   
     

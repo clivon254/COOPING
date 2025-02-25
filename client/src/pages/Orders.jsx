@@ -17,21 +17,9 @@ import OrderCard from '../components/OrderCard'
 
 export default function Orders() {
 
-  const {url,token,orders,ordersLoading,ordersError,products,openDelete,setOpenDelete,fetchOrders,setOrders} = useContext(StoreContext)
-  
-  const [order ,setOrder] = useState(null)
-
-  const [fetchOrderLoading , setFetchOrderLoading] = useState(false)
-
-  const [fetchOrderError , setFetchOrderError] = useState(false)
-
-  const [orderToDelete , setOrderToDelete] = useState("")
-
-  const [orderNumber , setOrderNumber] = useState("")
+  const {url,token,orders,ordersLoading,ordersError,products,fetchOrders} = useContext(StoreContext)
 
   const [filteredOrders ,setFilteredOrders] = useState(orders)
-
-  const [status , setStatus] = useState([])
 
 
 
@@ -158,38 +146,6 @@ export default function Orders() {
 
 
 
-
-  // fetchOrder
-  const fetchOrder = async () => {
-
-    try
-    {
-      setFetchOrderLoading(true)
-
-      setFetchOrderError(false)
-
-      const res = await axios.get(url + `/api/order/get-order/${orderToDelete}`)
-
-      if(res.data.success)
-      {
-        setOrder(res.data.order)
-
-        setFetchOrderLoading(false)
-      }
-
-    }
-    catch(error)
-    {
-      console.log(error.message)
-
-      setFetchOrderLoading(false)
-
-      setFetchOrderError(true)
-    }
-
-  }
-
-
   // handleSearch
   const handleSearch = (e) => {
 
@@ -202,39 +158,6 @@ export default function Orders() {
   }
 
 
-  // toggleStatus
-  const toggleStatus = (e) => {
-
-    if(status.includes(e.target.value))
-    {
-
-      setStatus(prev => prev.filter(item => item !== e.target.value))
-
-    }
-    else
-    {
-      setStatus(prev => [...prev, e.target.value])
-    }
-
-  }
-
-
-  // applyfilter
-  const applyFilter = () => {
-
-    let ordersCopy = orders.slice()
-
-    if(status.length > 0)
-    {
-
-      ordersCopy = ordersCopy.filter(order => status.includes(order.status))
-
-    }
-
-    setFilteredOrders(ordersCopy)
-
-  }
-
 
   useEffect(() => {
 
@@ -244,15 +167,6 @@ export default function Orders() {
 
   },[orders])
 
-  
-  useEffect(() => {
-
-    applyFilter()
-
-  },[status])
-
-
-
 
   useEffect(() => {
 
@@ -260,7 +174,6 @@ export default function Orders() {
 
   },[])
 
-  
 
   return (
 
@@ -269,53 +182,28 @@ export default function Orders() {
       <section className="w-full p-5 space-y-8">
 
         {/* header */}
-        <div className="flex flex-col gap-y-3 sm:flex-row sm:justify-between sm:items-center">
+        <div className=""> 
 
             {/* title */}
-            <div className="space-y-1">
+            <div className="">
 
               <h2 className="text-4xl 2xl:text-5xl font-bold font-title">Orders</h2>
-
-              <h4 className="text-xs md:text-sm 2xl:text-xl text-slate-600">Orders by the client</h4>
 
             </div>
 
         </div>
 
         {/* search */}
-        <div className="flex justify-between items-center gap-x-5">
+        <div className="md:flex justify-start items-center gap-x-5">
 
             <input 
               type="text" 
-              className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-[#FF9900] sm:text-sm/6 shadow-xl"
-              placeholder='enter order Number'
+              className="block  rounded-md w-full max-w-xl bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-[#FF9900] sm:text-sm/6 shadow-xl"
+              placeholder='enter order Number . . . . . '
               onChange={handleSearch}
             />
+
             
-            {/* date */}
-            <input 
-              type="date" 
-              className="lg:block hidden w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-[#FF9900] sm:text-sm/6 shadow-xl" 
-            />
-
-            {/* button */}
-            <select 
-              name="" 
-              value={"Order Placed"}
-              onChange={toggleStatus}
-              className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-[#FF9900] sm:text-sm/6 shadow-xl"
-            >
-
-              <option value="Order Placed">Order Placed</option>
-
-              <option value="Processing">Processing</option>
-
-              <option value="Out for delivery">Out for delivery</option>
-
-              <option value="Delivered">Delivered</option>
-
-            </select>
-
         </div>
 
         {/* orders */}
@@ -402,7 +290,7 @@ export default function Orders() {
                     if(value === page)
                     {
                         return (
-                            <li className="font-bold border border-orange-200 bg-orange-200 flex items-center justify-center h-10 w-10 cursor-pointer bg-primary text-[#FF9900]">
+                            <li className="font-bold border border-orange-200 text-orange-200 flex items-center justify-center h-10 w-10 cursor-pointer bg-primary ">
                                 <span onClick={() => handlePageChange(value)} className="">{value}</span>
                             </li>
                         )
