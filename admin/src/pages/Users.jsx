@@ -7,7 +7,7 @@ import { StoreContext } from '../context/store'
 import { useState } from 'react'
 import Error from '../components/Error'
 import Delete from '../components/Delete'
-import Loader from '../components/Loader'
+import Loader from '../components/loader'
 import {FaTrashAlt,FaEdit,FaStreetView} from "react-icons/fa"
 import { useEffect } from 'react'
 import {useNavigate} from "react-router-dom"

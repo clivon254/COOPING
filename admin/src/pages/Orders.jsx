@@ -3,7 +3,7 @@
 
 import React, { useContext ,useEffect,useState} from 'react'
 import { StoreContext } from '../context/store'
-import Loader from '../components/Loader'
+import Loader from '../components/loader'
 import Error from '../components/Error'
 import _ from "lodash"
 import OrderCard from '../components/OrderCard'
