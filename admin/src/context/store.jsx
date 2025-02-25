@@ -95,8 +95,11 @@ export default function StoreContextProvider(props)
 
     const [numOfDays , setNumOfDays] = useState(7)
 
+    const [users ,setUsers] = useState([])
 
+    const [usersLoading , setUsersLoading] = useState(false)
 
+    const [usersError , setUsersError] = useState(false)
 
     // fetchProduct
     const fetchProducts = async () => {
@@ -450,6 +453,34 @@ export default function StoreContextProvider(props)
 
     }
 
+    const fetchUsers = async () => {
+
+        try
+        {
+            setUsersLoading(true)
+
+            setUsersError(false)
+
+            const res = await axios.get(url + "/api/user/get-users",{headers:{token}})
+
+            if(res.data.success)
+            {
+                setUsersLoading(false)
+
+                setUsers(res.data.usersWithoutPassword)
+            }
+
+        }
+        catch(error)
+        {
+            console.log(error.message)
+
+            setUsersLoading(false)
+
+            setUsersError(true)
+        }
+
+    }
     
 
     useEffect(() => {
@@ -488,6 +519,8 @@ export default function StoreContextProvider(props)
         fetchCart()
 
         fetchAdminStats()
+
+        fetchUsers()
 
     },[token])
 
@@ -548,6 +581,10 @@ export default function StoreContextProvider(props)
         adminStatsError , setAdminStatsError,
         fetchAdminStats,
         numOfDays ,setNumOfDays,
+        users , setUsers ,
+        usersLoading , setUsersLoading ,
+        usersError , setUsersError ,
+        fetchUsers
     }
 
     return (
@@ -557,7 +594,6 @@ export default function StoreContextProvider(props)
             {props.children}
 
         </StoreContext.Provider>
-
 
     )
 }

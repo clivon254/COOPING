@@ -31,6 +31,8 @@ import CheckOut from './pages/CheckOut'
 import Orders from './pages/Orders'
 import ConfirmPayment from './pages/ConfirmPayment'
 import Prompt from './pages/Prompt'
+import Users from './pages/Users'
+import UserProfile from './pages/UserProfile'
 
 
 
@@ -129,6 +131,10 @@ export default function App() {
               <Route path="/check-out" element={<CheckOut/>}/>
 
               <Route path="/prompt" element={<Prompt/>}/>
+
+              <Route path="/users" element={<Users/>}/>
+
+              <Route path="/user-profile/:userId" element={<UserProfile/>}/>
 
           </Route>
 
