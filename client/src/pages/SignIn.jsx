@@ -185,7 +185,7 @@ export default function SignIn() {
                         <span className="block text-xs/6 font-medium text-blue-600">
 
                             <Link to="/sign-up">
-                                Dont have an account ? <span className="text-[#ff9900] hover:underline"> click here </span>
+                                Dont have an account ? 
                             </Link>
 
                         </span>
