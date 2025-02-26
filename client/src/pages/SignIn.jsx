@@ -15,6 +15,7 @@ import Divider from '../components/Divider'
 import OAuth from '../components/OAuth'
 import { IoMdEyeOff } from 'react-icons/io'
 import { IoEye } from 'react-icons/io5'
+import Loading from '../components/Loading'
 
  
 export default function SignIn() {
@@ -208,9 +209,7 @@ export default function SignIn() {
 
                         {loading ?
                         (
-                        <div className="">
-                            Loading . . . . 
-                        </div>
+                            <Loading/>
                         ) 
                         : 
                         ("Sign in ")

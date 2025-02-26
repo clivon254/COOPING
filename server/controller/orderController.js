@@ -282,7 +282,7 @@ export const callback  = async (req,res,next) => {
         {
             console.log(callbackData.Body)
 
-            await Order.findByIdAndDelete(orderId)
+            // await Order.findByIdAndDelete(orderId)
 
              // send notification that the STK PUSH has been attended 
             sendEventToClients({success:true ,message:'STK Ppush has been attend to'})
@@ -487,6 +487,147 @@ export const confirmPayment = async (req,res,next) => {
         {
             await Order.findByIdAndDelete(orderId)
 
+            res.status(200).json({success:true , data:response.data ,message:`${response.data.ResultDesc}`})
+        }
+
+    }
+    catch(error)
+    {
+        next(error)
+
+        console.log(error.message)
+    }
+
+}
+
+// MPESA CONFIRM PAYMENT CUSTOMER PROMPT
+export const confirmPaymentCustomerPrompt = async (req,res,next) => {
+
+    const {orderId} = req.params
+
+    const token = req.token
+
+    try
+    {
+        const auth = "Bearer " + token
+
+        const url = "https://sandbox.safaricom.co.ke/mpesa/stkpushquery/v1/query"
+
+        const date = new Date()
+
+        const timestamp = 
+            date.getFullYear() + 
+            ("0" + (date.getMonth() + 1)).slice(-2) +
+            ("0" + date.getDate()).slice(-2) +
+            ("0" + date.getHours()).slice(-2) +
+            ("0" + date.getMinutes()).slice(-2) +
+            ("0" + date.getSeconds()).slice(-2) 
+        
+        const shortcode = process.env.PAYBILL
+
+        const passkey = process.env.PASS_KEY
+
+        const password = new Buffer.from(shortcode + passkey + timestamp).toString("base64")
+
+        const requestBody = {    
+            "BusinessShortCode":shortcode,    
+            "Password": password,    
+            "Timestamp":timestamp,    
+            "CheckoutRequestID": req.params.CheckoutRequestID 
+        }
+
+        const response = await axios.post(
+            url,
+            requestBody,
+            {
+                headers:{
+                    "Authorization":auth
+                }
+            }
+        )
+
+        if(response.data.ResultCode === "0")
+        { 
+
+            const order = await Order.findById(orderId)
+
+            const userId = order.userId
+
+            if(order)
+            {
+                
+                for(const item of order.items)
+                {
+
+                    const productId = item._id
+
+                    const quantity = Number(item?.variants?.map((variant) => (variant.quantity)))
+
+                    const product = await Product.findById(productId)
+
+                    if(!product)
+                    {
+                        return next(errorHandler(404, "error not found"))
+                    }  
+                    
+                    product.sold = Number(product.sold || 0) + quantity
+
+                    if(product.instock)
+                    {
+                        product.instock = Number(product.instock || 0) - quantity
+                    }
+
+
+                    await product.save()
+                    
+                    
+                }
+
+                const sendSMS = async () => {
+
+                        const options = {
+                        to: "+254720000111",
+                        message:"Thank your  for your purchase"
+                        }
+
+                        try
+                        {
+                            const response = await sms.send(options)
+
+                            console.log("SMS sent successfully",response)
+
+                        }
+                        catch(error)
+                        {
+                            console.log("Error sending sms", + error.message)
+                        }
+
+                }
+
+                sendSMS();
+
+
+                await Order.findByIdAndUpdate(orderId ,{payment:true})
+
+                console.log("order updated confrimation")
+
+                await User.findByIdAndUpdate(userId ,{cartData:{}})
+
+                console.log("cart cleared confirmaton")
+
+            }
+            else
+            {
+                console.log("order not found")
+
+                // return next(errorHandler(404 ,"order not found"))
+            }
+
+            res.status(200).json({success:true , data:response.data , message:'Transaction was succesful'})
+
+        }
+        else
+        {
             res.status(200).json({success:true , data:response.data ,message:`${response.data.ResultDesc}`})
         }
 

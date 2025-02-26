@@ -33,6 +33,7 @@ import ConfirmPayment from './pages/ConfirmPayment'
 import Prompt from './pages/Prompt'
 import Users from './pages/Users'
 import UserProfile from './pages/UserProfile'
+import ConfirmPaymentCustomerPrompt from './pages/confrimPaymentCustormerPrompt'
 
 
 
@@ -131,6 +132,8 @@ export default function App() {
               <Route path="/check-out" element={<CheckOut/>}/>
 
               <Route path="/prompt" element={<Prompt/>}/>
+
+              <Route path="/confrim-paymentPrompt/:CheckoutRequestID/:orderId" element={<ConfirmPaymentCustomerPrompt/>}/>
 
               <Route path="/users" element={<Users/>}/>
 

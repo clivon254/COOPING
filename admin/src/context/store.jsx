@@ -9,7 +9,9 @@ export const StoreContext = createContext(null)
 export default function StoreContextProvider(props)
 {
 
-    const url = "https://cooping-server.onrender.com"
+     // const url = "https://cooping-server.onrender.com"
+
+    const url = "http://localhost:3500"
 
     const [token, setToken] = useState(localStorage.getItem("token"))
 
@@ -100,6 +102,9 @@ export default function StoreContextProvider(props)
     const [usersLoading , setUsersLoading] = useState(false)
 
     const [usersError , setUsersError] = useState(false)
+
+
+
 
     // fetchProduct
     const fetchProducts = async () => {

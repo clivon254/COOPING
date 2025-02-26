@@ -35,10 +35,10 @@ export default function Prompt() {
 
     e.preventDefault()
 
-    // if(!formData?.orderNumber || formData?.orderNumber === "")
-    // {
-    //   return setError("please provide Order Number")
-    // }
+    if(!formData?.orderNumber || formData?.orderNumber === "")
+    {
+      return setError("please provide Order Number")
+    }
     
 
     try
@@ -57,7 +57,7 @@ export default function Prompt() {
 
           const CheckoutRequestId = res.data.resData.CheckoutRequestID 
             
-          navigate(`/confrim-payment/${CheckoutRequestId}/${orderId}`)
+          navigate(`/confrim-paymentPrompt/${CheckoutRequestId}/${orderId}`)
 
           setFormData({})
       }
@@ -82,6 +82,8 @@ export default function Prompt() {
     }
 
   }
+  
+ console.log()
 
   return (
 
