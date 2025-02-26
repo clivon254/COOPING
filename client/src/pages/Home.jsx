@@ -6,6 +6,7 @@ import Advert from '../components/Advert'
 import PromoFood from '../components/promoFood'
 import Subscribe from '../components/Subscribe'
 import MainBanner from '../components/MainBanner'
+import BestSelling from '../components/BestSelling'
 
 export default function Home() {
 
@@ -16,6 +17,8 @@ export default function Home() {
       <MainBanner/>
 
       <Advert/>
+
+      <BestSelling />
 
       <PromoFood/>
 

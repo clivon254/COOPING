@@ -13,7 +13,7 @@ import {Autoplay,Navigation} from "swiper/modules"
 export default function ProductsLoading() {
 
     const [loader ,setLoader] = useState([
-        {},{},{},{},{}
+        {},{},{},{},{},{}
     ])
 
   return (
@@ -49,7 +49,7 @@ export default function ProductsLoading() {
                     spaceBetween: 40,
                     },
                     1024: {
-                    slidesPerView: 4,
+                    slidesPerView: 5,
                     spaceBetween: 40,
                     },
                 }} 
