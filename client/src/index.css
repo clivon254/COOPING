@@ -29,9 +29,9 @@
 
 
 .dots-container {
-    @apply{
-        flex items-center justify-center h-full w-full mb-1
-    }
+    
+    @apply flex items-center justify-center h-full w-full mb-1
+    
 
   }
   
