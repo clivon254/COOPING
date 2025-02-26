@@ -8,6 +8,7 @@ import nodemailer from "nodemailer"
 import validator from "validator"
 
 
+
 export const Register = async (req,res,next) => {
 
     const {email,password,username} = req.body
@@ -230,7 +231,8 @@ export const forgotPassword = async (req,res,next) => {
             from:"COOPING ",
             to:user.email,
             subject:"RESET PASSWORD",
-            text:`Click on this link to reset your password : ${url}/reset-password/${token}`
+            text:`Click on this link to reset your password : ${url}/reset-password/${token}`,
+
         }
 
         transporter.sendMail(mailOptions ,(error,info) => {
