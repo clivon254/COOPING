@@ -19,12 +19,11 @@ export default function LiqourOfferBanner() {
 
         <div className="bg-black/50 w-full h-full flex flex-col gap-y-5 justify-center items-center">
 
-            <h2 className="text-white text-5xl tracking-wider text-center font-semibold">GET UPTO 30% OFF</h2>
+            <h2 className="text-white text-4xl sm:text-5xl tracking-wider text-center font-semibold">GET UPTO 30% OFF</h2>
             
-            <p className="text-center max-w-2xl text-white text-xl font-semibold">
+            <p className="text-center max-w-2xl text-white text-xl sm:font-semibold">
                 With new deals daily and evey week for you.Get your favourite food at the best price with our offers.
             </p>
-
 
         </div>
 

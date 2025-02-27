@@ -22,7 +22,7 @@ export default function LiqourBanner() {
 
             <h2 className="hidden md:block text-white text-xl">Get the best deals on</h2>
 
-            <p className="md:text-center font-sembold text-4xl sm:text-4xl lg:text-5xl tracking-wide text-white max-w-4xl capitalize">
+            <p className="md:text-center font-bold sm:font-sembold text-3xl sm:text-4xl lg:text-5xl tracking-wide text-white max-w-4xl capitalize">
                Wide Variety of Liqour Products; Wines, Whiskeys, Gin & More.
             </p>
 

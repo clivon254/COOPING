@@ -10,7 +10,7 @@ export default function FoodBanner() {
   return (
 
     <div 
-        className="w-full h-[35vh] sm:h-[40vh] md:h-[45vh] lg:h-[50vh] bg-black/50 border-b-8 border-[#ff9900]"
+        className="w-full h-[35vh] sm:h-[40vh] md:h-[45vh] lg:h-[50vh] bg-black/70 border-b-8 border-[#ff9900]"
         style={{
             backgroundImage:`url(${Banner})`,
             backgroundSize:`cover`,
@@ -22,7 +22,7 @@ export default function FoodBanner() {
 
             <h2 className="hidden md:block text-white text-xl">Get the best deals on</h2>
 
-            <p className="md:text-center font-sembold text-4xl sm:text-4xl lg:text-5xl tracking-wide text-white max-w-4xl capitalize">
+            <p className="md:text-center font-bold sm:font-sembold text-3xl sm:text-4xl lg:text-5xl tracking-wide text-white max-w-4xl capitalize">
                 Wide Variety of food products;Snack,Main courses,street foods & More
             </p>
 

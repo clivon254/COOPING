@@ -39,7 +39,7 @@ export default function ProductCard({product}) {
                     (
                         <div className=" flex items-center gap-x-2">
 
-                            <span className="line-through text-sm font-thin text-gray-600">{product?.regularPrice?.toLocaleString('en-Kenya',{style:'currency', currency:'KES'})}</span>
+                            <span className="line-through text-sm font-normal text-gray-400">{product?.regularPrice?.toLocaleString('en-Kenya',{style:'currency', currency:'KES'})}</span>
 
                             <span className="">{product?.discountPrice?.toLocaleString('en-Kenya',{style:'currency', currency:'KES'})}</span>
 
