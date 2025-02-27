@@ -12,6 +12,8 @@ export default function BestSelling() {
   
     const {products,productLoading,productError} = useContext(StoreContext)
 
+    console.log(products)
+    
     return (
         
         <div className="w-full p-5 flex flex-col gap-y-5 py-10 border-b-8 border-[#ff9900]">
@@ -20,7 +22,7 @@ export default function BestSelling() {
 
             {!productLoading && !productError && (
 
-                <SlidingProducts products={products}/>
+                <SlidingProducts products={products} next={"nextBest"} prev={"prevBest"}/>
 
             )}
 
