@@ -67,47 +67,48 @@ export default function OAuth() {
 
     }
 
-
     // handleAppleClick
     const handleAppleClick = async () => {
-
-        try
+        try 
         {
+
             const provider = new OAuthProvider('apple.com')
-
-            provider.setCustomParameters({prompt:'select_account'})
-
+            
+            provider.setCustomParameters({ prompt: 'select_account' })
+            
             const resultsFromApple = await signInWithPopup(auth, provider)
-
+            
             let data = {
-                name:resultsFromApple.user.displayName,
-                email:resultsFromApple.user.email,
-                applePhotoUrl:resultsFromApple.user.photoURL
+                name: resultsFromApple.user.displayName || '',
+                email: resultsFromApple.user.email,
+                Photo: resultsFromApple.user.photoURL // Changed to match backend
             }
-
-            const res = await axios.post(url + "/api/auth/google",data)
-
+            
+            const res = await axios.post(url + "/api/auth/apple", data) // Changed endpoint from google to apple
+            
             if(res.data.success)
             {
-                dispatch(signInSuccess(res.data.rest))
-
+                dispatch(signInSuccess(res.data.rest)) // Changed from res to rest to match backend
+                
                 localStorage.setItem("token", res.data.token)
-
+                
                 setToken(res.data.token)
-
+                
                 navigate("/")
-
+                
                 toast.success("You have Signed in successfully")
-
+                
                 getCart()
             }
 
         }
-        catch(error)
+        catch(error) 
         {
             console.log(error.message)
-        }
 
+            toast.error("Failed to sign in with Apple")
+
+        }
     }
 
 
