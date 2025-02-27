@@ -161,8 +161,8 @@ export const Google = async (req,res,next) => {
             const newUser = new User({
                 username:req.body.name.split(' ').join(' ').toLowerCase() + Math.random().toString(36).slice(-8),
                 email:req.body.email,
-                paswoord:hashedPassword,
-                profilePicture:req.body.Photo
+                password:hashedPassword,
+                profilePicture:req.body.Photo  || req.body.applePhotoUrl
             })
 
             await newUser.save()
@@ -173,7 +173,7 @@ export const Google = async (req,res,next) => {
                 {expiresIn : '12h'}
             )
 
-            const {password:pass , ...rest} = newUser._id
+            const {password:pass , ...rest} = newUser._doc
 
             res.status(200).json({success:true , rest , token})
             

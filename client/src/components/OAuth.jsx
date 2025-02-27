@@ -89,7 +89,7 @@ export default function OAuth() {
 
             if(res.data.success)
             {
-                dispatch(signInSuccess(res.data.res))
+                dispatch(signInSuccess(res.data.rest))
 
                 localStorage.setItem("token", res.data.token)
 

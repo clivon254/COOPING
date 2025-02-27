@@ -22,7 +22,7 @@ import { GiClothes } from "react-icons/gi";
 import { IoRestaurantSharp } from "react-icons/io5";
 import { CiCircleRemove } from "react-icons/ci";
 
-
+ 
 
 export default function Header() {
 
@@ -396,7 +396,7 @@ export default function Header() {
           {/* lower */}
           <div className="bg-white p-3 lg:flex justify-center items-center">
 
-              <div className="flex items-center justify-between gap-x-10">
+              <div className="flex items-center justify-between gap-x-8 xl:gap-x-10">
                 
                 {/* left navs */}
                 <div className="hidden lg:flex gap-x-7 ">
