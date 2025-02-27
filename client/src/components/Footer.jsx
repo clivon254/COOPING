@@ -4,6 +4,12 @@ import React from 'react'
 import LOGO from "../assets/LOGOO.png"
 import { FaInstagram } from "react-icons/fa";
 import { FaFacebookF,FaWhatsapp,FaTiktok } from "react-icons/fa";
+import {Link} from "react-router-dom"
+import { CiLocationOn } from "react-icons/ci";
+import { RiUserLocationLine } from "react-icons/ri";
+import { SlEnvolope } from "react-icons/sl";
+import { FaRegClock } from "react-icons/fa";
+
 
 
 
@@ -16,12 +22,12 @@ export default function Footer() {
     <footer className="w-full border-t-2 border-orange-400 p-5 space-y-3">
 
       {/* upper */} 
-      <div className="w-full flex justify-between flex-wrap gap-x-10 gap-y-2">
+      <div className="w-full flex justify-between flex-wrap gap-x-10 gap-y-5">
 
         {/*info */}
-        <div className="space-y-2">
+        <div className="space-y-5">
 
-          {/* image */}
+          {/* logo*/}
           <div className="h-12 w-36 sm:h-16 sm:w-48 md:h-20 md:w-60 lg:h-24 lg:w-72 ">
 
             <img 
@@ -32,29 +38,32 @@ export default function Footer() {
 
           </div>
 
-          <div className="flex flex-col gap-y-2 text-sm font-semibold">
+          {/* details */}
+          <div className="flex flex-col gap-y-3 text-sm font-semibold">
 
-            <span className="">
+            <div className="flex gap-x-1">
 
-              <span className="font-bold">Address : </span> <span className="">Nairobi , Kenya</span>
+              <span className="font-bold flex gap-x-1 items-center"> <CiLocationOn size={18}/> Address : </span> 
+              
+              <span className="">Nairobi , Kenya</span>
 
-            </span>
+            </div>
 
-            <span className="">
+            <span className="flex gap-x-1">
 
-              <span className="font-bold"> Contact : </span> <span className=""> + 254111202895</span>
-
-            </span>
-
-            <span className="">
-
-              <span className="font-bold">Email : </span> <span className="">cooping@gmail.com</span>
+              <span className="font-bold flex gap-x-1 items-center"> <RiUserLocationLine size={18}/> Contact : </span> <span className=""> + 254111202895</span>
 
             </span>
 
-            <span className="">
+            <span className="flex gap-x-1">
 
-              <span className="font-bold">Working Hours: </span> <span className="">8:00 am - 10:00 pm , Mon - Mon </span>
+              <span className="font-bold flex gap-x-1 items-center"> <SlEnvolope size={18}/> Email : </span> <span className="">cooping@gmail.com</span>
+
+            </span>
+
+            <span className="flex gap-x-1">
+
+              <span className="font-bold flex gap-x-1 items-center"> <FaRegClock size={18}/> Working Hours: </span> <span className="">8:00 am - 10:00 pm , Mon - Mon </span>
 
             </span>
 
@@ -63,23 +72,23 @@ export default function Footer() {
           {/* socials */}
           <div className="flex items-center mt-5 gap-x-5">
 
-            <span className="h-12 w-12 bg-orange-100 rounded-full flex items-center justify-center text-[#FF9900] shadow-md cursor-pointer">
+            <span className="h-12 w-12 bg-orange-100 hover:bg-black rounded-md flex items-center justify-center text-[#FF9900] hover:text-rose-500 shadow cursor-pointer">
               
               <FaInstagram className=""/>
 
             </span>
 
-            <span className="h-12 w-12 bg-orange-100 rounded-full flex items-center justify-center text-[#FF9900] shadow-md cursor-pointer">
+            <span className="h-12 w-12 bg-orange-100 hover:bg-blue-600 rounded-md flex items-center justify-center text-[#FF9900] hover:text-white shadow cursor-pointer">
               
               <FaFacebookF />
 
             </span>
 
-            <span className="h-12 w-12 bg-orange-100 rounded-full flex items-center justify-center text-[#FF9900] shadow-md cursor-pointer">
+            <span className="h-12 w-12 bg-orange-100 hover:bg-black rounded-md flex items-center justify-center text-[#FF9900] hover:text-rose-500 shadow cursor-pointer">
               <FaTiktok />
             </span>
 
-            <span className="h-12 w-12 bg-orange-100 rounded-full flex items-center justify-center text-[#FF9900] shadow-md cursor-pointer">
+            <span className="h-12 w-12 bg-orange-100 hover:bg-white rounded-md flex items-center justify-center text-[#FF9900] hover:text-green-500 shadow cursor-pointer">
               <FaWhatsapp />
             </span>
 
@@ -91,21 +100,45 @@ export default function Footer() {
         {/* useful links  */}
         <div className="space-y-3">
 
-          <h2 className="text-xl font-bold tracking-tighter text-slate-500">useful link</h2>
+          <h2 className="text-xl font-bold tracking-tighter text-primary">useful link</h2>
 
           <div className="flex flex-col gap-y-1 text-sm font-semibold">
 
-            <span className="">Contact us</span>
+            <span className="">
 
-            <span className="">About us</span>
+              <Link to="/contact">Contact us</Link>
 
-            <span className="">Food</span>
+            </span>
 
-            <span className="">Merchendise</span>
+            <span className="">
 
-            <span className="">Liqour</span>
+              <Link to="/about">About us</Link>
 
-            <span className="">Drink</span>
+            </span>
+
+            <span className="">
+
+              <Link to="/food">Food</Link>
+
+            </span>
+
+            <span className="">
+
+              <Link to="/merchendise">Merchendise</Link>
+
+            </span>
+
+            <span className="">
+
+              <Link to="/liqour">booze</Link>
+
+            </span>
+
+            <span className="">
+
+              <Link to="/drink">Drink</Link>
+
+            </span>
 
           </div>
 
@@ -114,7 +147,7 @@ export default function Footer() {
         {/* support  */}
         <div className="space-y-2">
 
-          <h2 className="text-xl font-bold tracking-tighter text-slate-500">Support</h2>
+          <h2 className="text-xl font-bold tracking-tighter text-primary">Support</h2>
 
           <div className="flex flex-col gap-y-1 text-sm font-semibold">
 
@@ -131,7 +164,7 @@ export default function Footer() {
         {/*legal  */}
         <div className="space-y-2">
 
-          <h2 className="text-xl font-bold tracking-tighter text-slate-500">Legal</h2>
+          <h2 className="text-xl font-bold tracking-tighter text-primary">Legal</h2>
 
           <div className="flex flex-col gap-y-2 text-sm font-semibold">
 
@@ -147,10 +180,10 @@ export default function Footer() {
 
       </div>
 
-      <hr />
+      <hr className="bg-primary h-1/2"/>
 
       {/* lower */}
-      <div className="text-sm">
+      <div className="text-sm font-semibold">
 
         <p className="text-center">Copyright {current_year} &copy;  Cooping | | All rights Reserved</p>
 
