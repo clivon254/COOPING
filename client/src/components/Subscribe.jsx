@@ -6,7 +6,7 @@ export default function Subscribe() {
 
   return (
 
-    <div className="w-full relative isolate overflow-hidden  px-5 py-10 sm:py-16 lg:py-24 border-b-8 border-[#FF9900] bg-orange-50">
+    <div className="w-full relative isolate overflow-hidden  px-5 py-10 sm:py-16 lg:py-24 border-b-8 border-primary bg-gradient-to-r from-yellow-400 via-yellow-300 to-yellow-400">
 
        <div className="grid grid-cols-1 md:grid-cols-2">
             
@@ -49,7 +49,7 @@ export default function Subscribe() {
 
             </div>
 
-        </div>
+       </div>
 
     </div>
 
